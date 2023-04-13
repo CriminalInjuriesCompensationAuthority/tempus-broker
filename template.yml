@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Lambda application that integrates Tempus and KTA into the new cloud-hosted Apply service.
+Resources:
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: function/.
+      Description: Call the AWS Lambda API
+      Timeout: 30
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+      Tracing: Active
+      Layers:
+        - !Ref libs
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: tempus-broker-nodejs-lib
+      Description: Dependencies for the tempus broker function.
+      ContentUri: lib/.
+      CompatibleRuntimes:
+        - nodejs18.x
