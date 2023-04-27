@@ -3,31 +3,37 @@
 const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
 
 // Creates the S3 Client with a given profile
+// TO-DO use local stack instead of personal AWS
 const s3Client = new S3Client({
     region: 'eu-west-2',
     profile: 'tempus-broker-s3'
 });
 
-/**
- * @param bucket - String of bucket to access object from
- * @param objectKey - String of object key to retrieve
- * @returns
- */
+// validates that the S3 response is a JSON
+function validateS3Response(response) {
+    if (response.ContentType !== 'application/json') {
+        throw new Error(`${response.ContentType} content type is not supported`);
+    } else {
+        console.log('File retrieved from S3 is valid');
+    }
+}
+
+// Gets an object from a bucket based on key
 async function retrieveObjectFromBucket(bucket, objectKey) {
     const command = new GetObjectCommand({
         Bucket: bucket,
         Key: objectKey
     });
 
-    try {
-        const response = await s3Client.send(command);
-        const str = await response.Body.transformToString();
-        console.log(str);
-        return str;
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
+    const response = await s3Client.send(command);
+
+    // validate response is valid file type
+    validateS3Response(response);
+
+    // convert response to JSON object
+    const str = await response.Body.transformToString();
+    const jsonObj = JSON.parse(str);
+    return jsonObj;
 }
 
 module.exports = retrieveObjectFromBucket;
