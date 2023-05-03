@@ -22,7 +22,7 @@
         "json-schema-ref-parser": "^6.1.0",
         "lint-staged": "^11.0.0",
         "nodemon": "^2.0.19",
-        "pino-pretty": "^3.2.0",
+        "pino-pretty": "^3.6.1",
         "prettier": "^1.19.1",
         "speccy": "github:wework/speccy#740d19d88935db7735250c16abc2ad09256b5854",
         "supertest": "^4.0.2",
@@ -32,11 +32,12 @@
         "@aws-sdk/client-s3": "^3.312.0",
         "@aws-sdk/client-sqs": "^3.312.0",
         "@aws-sdk/util-stream-node": "^3.321.1",
-        "aws-xray-sdk": "^3.5.0"
+        "aws-xray-sdk": "^3.5.0",
+        "pino": "^8.12.1"
     },
     "scripts": {
-        "test": "jest",
-        "coverage": "jest --coverage",
+        "test": "jest | npx pino-pretty",
+        "test:coverage": "jest --coverage | npx pino-pretty ",
         "lint": "eslint .",
         "lint:fix": "eslint --fix ."
     },

@@ -1,6 +1,7 @@
 'use strict';
 
 const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
+const logger = require('../logging/logger');
 
 // Creates the S3 Client with a given profile
 // TO-DO use local stack instead of personal AWS
@@ -14,7 +15,7 @@ function validateS3Response(response) {
     if (response.ContentType !== 'application/json') {
         throw new Error(`${response.ContentType} content type is not supported`);
     } else {
-        console.log('File retrieved from S3 is valid');
+        logger.info('File retrieved from S3 is valid');
     }
 }
 

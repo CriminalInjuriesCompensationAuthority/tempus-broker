@@ -1,10 +1,12 @@
 'use strict';
 
+const logger = require('../logging/logger');
+
 // validate that the response contains JSON and PDF keys only
 function validateS3Keys(keys) {
     Object.values(keys).forEach(value => {
         if (value.endsWith('.json') || value.endsWith('.pdf')) {
-            console.log('S3 Key received from tempus broker queue: ', value);
+            logger.info('S3 Key received from tempus broker queue: ', value);
         } else {
             throw new Error(
                 'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'

@@ -2,30 +2,29 @@
 
 const retrieveObjectFromBucket = require('../services/s3/index');
 const handleTempusBrokerMessage = require('../services/sqs/index');
+const logger = require('../services/logging/logger');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
 }
 // Handler
 exports.handler = async function(event, context) {
-    console.log(`## ENVIRONMENT VARIABLES: ${serialize(process.env)}`);
-    console.log(`## CONTEXT: ${serialize(context)}`);
-    console.log(`## EVENT: ${serialize(event)}`);
+    logger.info(`## CONTEXT: ${serialize(context)}`);
+    logger.info(`## EVENT: ${serialize(event)}`);
 
     // Currently the tempus broker is setup to handle one event at a time
     const record = event.Records[0];
-    console.log('Tempus broker message recieved: ', record.body);
+    logger.info('Tempus broker message recieved: ', record.body);
 
     try {
         const s3Keys = await handleTempusBrokerMessage(record.body);
-        console.log(s3Keys);
         const s3ApplicationData = await retrieveObjectFromBucket(
             'cica-document-store',
             Object.values(s3Keys)[1]
         );
-        console.log(s3ApplicationData);
+        logger.info(s3ApplicationData);
     } catch (error) {
-        console.trace();
+        logger.error(error);
         throw error;
     }
 
