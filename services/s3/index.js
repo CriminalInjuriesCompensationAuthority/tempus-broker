@@ -32,8 +32,7 @@ async function retrieveObjectFromBucket(bucket, objectKey) {
 
     // convert response to JSON object
     const str = await response.Body.transformToString();
-    const jsonObj = JSON.parse(str);
-    return jsonObj;
+    return JSON.parse(str);
 }
 
 module.exports = retrieveObjectFromBucket;
