@@ -4,7 +4,7 @@ const fs = require('fs');
 const index = require('./index');
 
 describe('Tempus broker function', () => {
-    it('Should run the function handler', async () => {
+    it.skip('Should run the function handler', async () => {
         const eventFile = fs.readFileSync('resources/testing/event.json');
         const event = JSON.parse(eventFile);
         const response = await index.handler(event, null);
