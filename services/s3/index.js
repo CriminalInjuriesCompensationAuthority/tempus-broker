@@ -25,15 +25,19 @@ async function retrieveObjectFromBucket(bucket, objectKey) {
         Bucket: bucket,
         Key: objectKey
     });
+    try {
+        const response = await s3Client.send(command);
 
-    const response = await s3Client.send(command);
+        // validate response is valid file type
+        validateS3Response(response);
 
-    // validate response is valid file type
-    validateS3Response(response);
-
-    // convert response to JSON object
-    const str = await response.Body.transformToString();
-    return JSON.parse(str);
+        // convert response to JSON object
+        const str = await response.Body.transformToString();
+        return JSON.parse(str);
+    } catch (error) {
+        logger.Error(error);
+        throw error;
+    }
 }
 
 module.exports = retrieveObjectFromBucket;
