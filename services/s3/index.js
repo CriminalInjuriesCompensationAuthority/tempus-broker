@@ -1,14 +1,17 @@
 'use strict';
 
+const AWSXRay = require('aws-xray-sdk');
 const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
 const logger = require('../logging/logger');
 
 // Creates the S3 Client with a given profile
 // TO-DO use local stack instead of personal AWS
-const s3Client = new S3Client({
-    region: 'eu-west-2',
-    profile: 'tempus-broker-s3'
-});
+const s3Client = AWSXRay.captureAWSv3Client(
+    new S3Client({
+        region: 'eu-west-2',
+        profile: 'tempus-broker-s3'
+    })
+);
 
 // validates that the S3 response is a JSON
 function validateS3Response(response) {
@@ -35,7 +38,7 @@ async function retrieveObjectFromBucket(bucket, objectKey) {
         const str = await response.Body.transformToString();
         return JSON.parse(str);
     } catch (error) {
-        logger.Error(error);
+        logger.error(error);
         throw error;
     }
 }
