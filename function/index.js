@@ -1,23 +1,42 @@
-// Example of using AWS SDK - probably want to take this out into a service class
-// AWS X-Ray is a great tracing tool
-const {S3Client} = require('@aws-sdk/client-s3');
-const AWSXRay = require('aws-xray-sdk');
+'use strict';
 
-// Create client outside of handler to reuse
-const s3 = AWSXRay.captureAWSv3Client(new S3Client({region: 'eu-west-2'}));
+const retrieveObjectFromBucket = require('../services/s3/index');
+const handleTempusBrokerMessage = require('../services/sqs/index');
+const logger = require('../services/logging/logger');
 
+function serialize(object) {
+    return JSON.stringify(object, null, 2);
+}
 // Handler
 exports.handler = async function(event, context) {
-    event.Records.forEach(record => {
-        console.log(record.body);
-    });
-    console.log(`## ENVIRONMENT VARIABLES: ${serialize(process.env)}`);
-    console.log(`## CONTEXT: ${serialize(context)}`);
-    console.log(`## EVENT: ${serialize(event)}`);
+    logger.info(`## CONTEXT: ${serialize(context)}`);
+    logger.info(`## EVENT: ${serialize(event)}`);
 
-    return serialize('success');
-};
+    // Currently the tempus broker is setup to handle one event at a time
+    const record = event.Records[0];
+    logger.info('Tempus broker message recieved: ', record.body);
 
-var serialize = function(object) {
-    return JSON.stringify(object, null, 2);
+    try {
+        const s3Keys = await handleTempusBrokerMessage(record.body);
+        const s3ApplicationData = await retrieveObjectFromBucket(
+            'cica-document-store',
+            Object.values(s3Keys)[1]
+        );
+        logger.info(s3ApplicationData);
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+
+    /** ----------------------- TO-DO -----------------------
+     *
+     *  Map application data to Oracle object
+     *  Submit Oracle object to tempus
+     *  Delete JSON from S3
+     *  Send request to KTA with S3 Key
+     *
+     *  -----------------------       -----------------------
+     */
+
+    return 'success';
 };
