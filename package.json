@@ -37,6 +37,7 @@
     },
     "scripts": {
         "test": "jest | npx pino-pretty",
+        "test-ci": "jest",
         "test:coverage": "jest --coverage | npx pino-pretty ",
         "lint": "eslint .",
         "lint:fix": "eslint --fix ."
