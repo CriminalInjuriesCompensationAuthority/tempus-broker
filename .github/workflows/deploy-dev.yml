@@ -5,6 +5,8 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    environment: 
+      name: develop
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -14,9 +16,14 @@ jobs:
       - uses: aws-actions/setup-sam@v2
       - uses: aws-actions/configure-aws-credentials@v2
         with: 
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: GitHubWorkflow
           aws-region: eu-west-2
+
+      # assume the relevant role via AWS Profile
+      - run: sh ./github/scripts/assume-role
+        env:
+          ROLE_ARN: ${{ secrets.ASSUMED_ROLE }}
 
       # install dependencies
       - run: npm ci
