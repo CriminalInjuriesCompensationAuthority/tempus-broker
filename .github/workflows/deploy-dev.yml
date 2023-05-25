@@ -6,7 +6,7 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     environment: 
-      name: develop
+      name: dev
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -24,7 +24,7 @@ jobs:
           aws-region: eu-west-2
 
       # assume the relevant role via AWS Profile
-      - run: sh ./github/scripts/assume-role
+      - run: sh ./.github/scripts/assume-role-profile.sh
         env:
           ROLE_ARN: ${{ secrets.ASSUMED_ROLE }}
 
