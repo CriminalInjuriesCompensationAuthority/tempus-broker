@@ -12,6 +12,21 @@ Resources:
       Timeout: 30
       # Function's execution role
       Policies:
+        # Policies defined inline for S3 and SQS
+        - Statement:
+            - Sid: TempusBrokerFunctionQueuePolicy
+              Effect: Allow
+              Action:
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+                - sqs:GetQueueAttributes
+              Resource: '' #tempus broker queue resource (not yet created)
+            - Sid: TempusBrokerFunctionS3Policy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:DeleteObject
+              Resource: '' #CICA S3 store here
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
