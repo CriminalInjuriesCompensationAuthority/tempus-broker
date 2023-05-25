@@ -1,6 +1,11 @@
 on:
   push:
     branches: develop
+    paths-ignore:
+      - '**/*.md'
+      - '**/LICENSE'
+      - '**/.gitignore'
+
 
 jobs:
   build-deploy:
