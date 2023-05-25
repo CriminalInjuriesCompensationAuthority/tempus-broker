@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Lambda application that integrates Tempus and KTA into the new cloud-hosted Apply service.
+Parameters:
+  AccountId:
+    Type: String
+    Default: '754256621582'
+    Description: Account ID of the MOJ CP Account
 Resources:
   function:
     Type: AWS::Serverless::Function
@@ -12,7 +17,7 @@ Resources:
       Timeout: 30
       # Function's execution role
       Policies:
-        # Policies defined inline for S3 and SQS
+        # Policies defined inline for AWS Services
         - Statement:
             - Sid: TempusBrokerFunctionQueuePolicy
               Effect: Allow
@@ -20,13 +25,27 @@ Resources:
                 - sqs:ReceiveMessage
                 - sqs:DeleteMessage
                 - sqs:GetQueueAttributes
-              Resource: '' #tempus broker queue resource (not yet created)
+              Resource: '*'
+              Condition:
+                StringEquals:
+                'aws:ResourceAccount': !Ref AccountId
             - Sid: TempusBrokerFunctionS3Policy
               Effect: Allow
               Action:
                 - s3:GetObject
                 - s3:DeleteObject
-              Resource: '' #CICA S3 store here
+              Resource: '*'
+              Condition:
+                StringEquals:
+                'aws:ResourceAccount': !Ref AccountId
+            - Sid: TempisBrokerFunctionSSMPolicy
+              Effect: Allow
+              Action:
+                - ssm:GetParameter
+              Resource: '*'
+              Condition:
+                StringEquals:
+                'aws:ResourceAccount': !Ref AccountId
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
