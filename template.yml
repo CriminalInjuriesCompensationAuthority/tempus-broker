@@ -27,8 +27,8 @@ Resources:
                 - sqs:GetQueueAttributes
               Resource: '*'
               Condition:
-                StringEquals:
-                'aws:ResourceAccount': !Ref AccountId
+                StringEquals: 
+                  'aws:ResourceAccount': !Ref AccountId
             - Sid: TempusBrokerFunctionS3Policy
               Effect: Allow
               Action:
@@ -37,7 +37,7 @@ Resources:
               Resource: '*'
               Condition:
                 StringEquals:
-                'aws:ResourceAccount': !Ref AccountId
+                  'aws:ResourceAccount': !Ref AccountId
             - Sid: TempusBrokerFunctionSecretsPolicy
               Effect: Allow
               Action:
@@ -50,13 +50,3 @@ Resources:
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
       Tracing: Active
-      Layers:
-        - !Ref libs
-  libs:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: tempus-broker-nodejs-lib
-      Description: Dependencies for the tempus broker function.
-      ContentUri: lib/.
-      CompatibleRuntimes:
-        - nodejs18.x
