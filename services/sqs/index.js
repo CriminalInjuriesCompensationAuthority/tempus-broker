@@ -6,7 +6,7 @@ const logger = require('../logging/logger');
 function validateS3Keys(keys) {
     Object.values(keys).forEach(value => {
         if (value.endsWith('.json') || value.endsWith('.pdf')) {
-            logger.info('S3 Key received from tempus broker queue: ', value);
+            logger.info(`S3 Key received from tempus broker queue: ${value}`);
         } else {
             throw new Error(
                 'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'

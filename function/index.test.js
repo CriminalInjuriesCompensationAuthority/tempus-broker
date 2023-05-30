@@ -8,7 +8,7 @@ describe('Tempus broker function', () => {
         const eventFile = fs.readFileSync('resources/testing/event.json');
         const event = JSON.parse(eventFile);
         const response = await index.handler(event, null);
-        expect(response).toContain('success');
+        expect(response).toContain('Success!');
     });
 
     it('Should error if event body contains files with invalid types', async () => {
