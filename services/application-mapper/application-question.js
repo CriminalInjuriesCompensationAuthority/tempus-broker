@@ -82,11 +82,16 @@ module.exports = class ApplicationQuestion {
             // Map Y, N or null
             case 'q-applicant-infections':
             case 'q-applicant-pregnancy-loss':
+            case 'q-applicant-affect-future-duration':
+            case 'q-applicant-future-work':
                 if (this.value === 'yes') {
                     this.columnValue = 'Y';
                     break;
                 } else if (this.value === 'no') {
                     this.columnValue = 'N';
+                    break;
+                } else if (this.value === 'dont-know') {
+                    this.columnValue = 'dont-know';
                     break;
                 } else {
                     this.columnValue = null;

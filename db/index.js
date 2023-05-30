@@ -2,7 +2,8 @@
 
 const oracledb = require('oracledb');
 
-oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
+// Comment and uncomment to toggle between thin and thick mode
+// oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
 const getSecret = require('../services/secret-manager/index');
 const logger = require('../services/logging/logger');
 
