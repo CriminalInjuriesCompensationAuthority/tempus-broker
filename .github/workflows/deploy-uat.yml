@@ -6,7 +6,6 @@ on:
       - '**/LICENSE'
       - '**/.gitignore'
 
-
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
