@@ -1,32 +1,65 @@
 'use strict';
 
-function createDBQuery(spec) {
-    const {logger} = spec;
+const oracledb = require('oracledb');
 
-    // TODO: Integrate with ORACLE
+// Comment and uncomment to toggle between thin and thick mode
+// oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
+const getSecret = require('../services/secret-manager/index');
+const logger = require('../services/logging/logger');
 
-    // // https://node-postgres.com/guides/project-structure
-    // async function query(text, params) {
-    //     const hrstart = process.hrtime();
-    //     const results = await pool.query(text, params);
-    //     const hrend = process.hrtime(hrstart);
-    //     const executionTime = {
-    //         seconds: hrend[0],
-    //         milliseconds: hrend[1] / 1000000
-    //     };
-    //     const duration = `${executionTime.seconds}s ${executionTime.milliseconds}ms`;
+// Generates an insert statment for tarriff
+function generateInsertStatement(jsonObject, table) {
+    let columnsList = '';
+    let columnsValues = '';
+    Object.keys(jsonObject).forEach(column => {
+        columnsList = `${columnsList + column}, `;
+        columnsValues = `${columnsValues}:${column}, `;
+    });
+    columnsList = columnsList.slice(0, -2);
+    columnsValues = columnsValues.slice(0, -2);
 
-    //     logger.info(
-    //         {query: {text, duration, executionTime, rows: results.rowCount}},
-    //         'DB QUERY EXECUTED'
-    //     );
+    const statement = `INSERT INTO ${table} (${columnsList}) VALUES (${columnsValues})`;
 
-    //     return results;
-    // }
-
-    // return Object.freeze({
-    //     query
-    // });
+    return statement;
 }
 
-module.exports = createDBQuery;
+async function createDBConnection(oracleObject) {
+    let connection;
+    try {
+        connection = await oracledb.getConnection({
+            user: await getSecret('TARIFF-ORACLE-DEV-USER'),
+            password: await getSecret('TARIFF-ORACLE-DEV-PASS'),
+            connectString: await getSecret('TARIFF-ORACLE-DEV-CONNECT-STRING')
+        });
+
+        const applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+        const addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
+
+        const formInsertStatement = generateInsertStatement(
+            applicationFormJson,
+            'APPLICATION_FORM'
+        );
+        const addressInsertStatement = generateInsertStatement(
+            addressDetailsJson,
+            'ADDRESS_DETAILS'
+        );
+        logger.info(formInsertStatement);
+        logger.info(addressInsertStatement);
+
+        await connection.execute(formInsertStatement, applicationFormJson, {autoCommit: true});
+        await connection.execute(addressInsertStatement, addressDetailsJson, {autoCommit: true});
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                logger.error(err);
+            }
+        }
+    }
+}
+
+module.exports = createDBConnection;
