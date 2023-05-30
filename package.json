@@ -38,8 +38,9 @@
         "pino": "^8.12.1"
     },
     "scripts": {
-        "test": "node_modules/jest/bin/jest.js | npx pino-pretty",
-        "test:coverage": "node_modules/jest/bin/jest.js --coverage | npx pino-pretty ",
+        "test": "jest | npx pino-pretty",
+        "test-ci": "jest",
+        "test:coverage": "jest --coverage | npx pino-pretty ",
         "lint": "eslint .",
         "lint:fix": "eslint --fix ."
     },

@@ -38,14 +38,14 @@ Resources:
               Condition:
                 StringEquals:
                 'aws:ResourceAccount': !Ref AccountId
-            - Sid: TempisBrokerFunctionSSMPolicy
+            - Sid: TempusBrokerFunctionSecretsPolicy
               Effect: Allow
               Action:
                 - ssm:GetParameter
+                - secretsmanager:GetSecretValue
+                - kms:Decrypt*
+                - kms:GenerateDataKey
               Resource: '*'
-              Condition:
-                StringEquals:
-                'aws:ResourceAccount': !Ref AccountId
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
