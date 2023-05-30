@@ -50,3 +50,13 @@ Resources:
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
       Tracing: Active
+      Layers:
+        - !Ref libs
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: tempus-broker-nodejs-lib
+      Description: Dependencies for the tempus broker function.
+      ContentUri: lib/.
+      CompatibleRuntimes:
+        - nodejs18.x
