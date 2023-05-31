@@ -1,7 +1,7 @@
 'use strict';
 
 const {DateTime} = require('luxon');
-const ApplicationQuestion = require('./application-question');
+const mapApplicationQuestion = require('./application-question');
 const addressDetailsColumns = require('../../constants/address-details-columns');
 
 // The initial oracle object
@@ -45,8 +45,7 @@ async function mapApplicationDataToOracleObject(data) {
         }
         if (key === 'id') {
             // If the key is an id then map the value to json and concatenate to the oracle object
-            const applicationQuestion = new ApplicationQuestion(data, oracleJsonObject);
-
+            const applicationQuestion = mapApplicationQuestion(data, oracleJsonObject);
             // Map the question to either applicationForm or addressDetails
             // When address details, generate one object for each address type
             if (applicationQuestion.columnName) {
