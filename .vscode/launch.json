@@ -9,7 +9,7 @@
             "program": "${workspaceFolder}/node_modules/.bin/jest",
             "args": ["function/index.test.js", "--config", "jest.config.js"],
             "console": "integratedTerminal",
-            "disableOptimisticBPs": true,
+            "sourceMaps": true,
             "windows": {
                 "program": "${workspaceFolder}/node_modules/jest/bin/jest"
             }
@@ -22,7 +22,7 @@
             "program": "${workspaceFolder}/node_modules/.bin/jest",
             "args": ["--config", "jest.config.js"],
             "console": "integratedTerminal",
-            "disableOptimisticBPs": true,
+            "sourceMaps": true,
             "windows": {
                 "program": "${workspaceFolder}/node_modules/jest/bin/jest"
             }

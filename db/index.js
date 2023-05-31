@@ -8,10 +8,10 @@ const getSecret = require('../services/secret-manager/index');
 const logger = require('../services/logging/logger');
 
 // Generates an insert statment for tarriff
-function generateInsertStatement(jsonObject, table) {
+function generateInsertStatement(jsonData, table) {
     let columnsList = '';
     let columnsValues = '';
-    Object.keys(jsonObject).forEach(column => {
+    Object.keys(jsonData).forEach(column => {
         columnsList = `${columnsList + column}, `;
         columnsValues = `${columnsValues}:${column}, `;
     });
@@ -23,31 +23,28 @@ function generateInsertStatement(jsonObject, table) {
     return statement;
 }
 
-async function createDBConnection(oracleObject) {
-    let connection;
+async function createDBPool() {
     try {
-        connection = await oracledb.getConnection({
+        await oracledb.createPool({
             user: await getSecret('TARIFF-ORACLE-DEV-USER'),
             password: await getSecret('TARIFF-ORACLE-DEV-PASS'),
-            connectString: await getSecret('TARIFF-ORACLE-DEV-CONNECT-STRING')
+            connectString: await getSecret('TARIFF-ORACLE-DEV-CONNECT-STRING'),
+            poolAlias: 'TempusBrokerPool'
         });
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}
 
-        const applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
-        const addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
-
-        const formInsertStatement = generateInsertStatement(
-            applicationFormJson,
-            'APPLICATION_FORM'
-        );
-        const addressInsertStatement = generateInsertStatement(
-            addressDetailsJson,
-            'ADDRESS_DETAILS'
-        );
-        logger.info(formInsertStatement);
-        logger.info(addressInsertStatement);
-
-        await connection.execute(formInsertStatement, applicationFormJson, {autoCommit: true});
-        await connection.execute(addressInsertStatement, addressDetailsJson, {autoCommit: true});
+async function insertIntoTempus(jsonData, table) {
+    let connection;
+    try {
+        connection = await oracledb.getConnection('TempusBrokerPool');
+        logger.info(jsonData);
+        const insertStatement = generateInsertStatement(jsonData, table);
+        logger.info(insertStatement);
+        await connection.execute(insertStatement, jsonData, {autoCommit: true});
     } catch (error) {
         logger.error(error);
         throw error;
@@ -62,4 +59,4 @@ async function createDBConnection(oracleObject) {
     }
 }
 
-module.exports = createDBConnection;
+module.exports = {createDBPool, insertIntoTempus};

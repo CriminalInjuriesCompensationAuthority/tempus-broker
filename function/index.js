@@ -1,9 +1,11 @@
 'use strict';
 
+const oracledb = require('oracledb');
 const retrieveObjectFromBucket = require('../services/s3/index');
 const handleTempusBrokerMessage = require('../services/sqs/index');
 const mapApplicationDataToOracleObject = require('../services/application-mapper/index');
-const createDBConnection = require('../db/index');
+const db = require('../db/index');
+
 const logger = require('../services/logging/logger');
 
 function serialize(object) {
@@ -25,7 +27,15 @@ exports.handler = async function(event, context) {
             Object.values(s3Keys)[1]
         );
         const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
-        await createDBConnection(applicationOracleObject);
+
+        logger.info(applicationOracleObject);
+        const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
+        const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
+
+        await db.createDBPool();
+
+        await db.insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
+        await db.insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
         /** ----------------------- TO-DO -----------------------
          *
@@ -37,6 +47,8 @@ exports.handler = async function(event, context) {
     } catch (error) {
         logger.error(error);
         throw error;
+    } finally {
+        await oracledb.getPool('TempusBrokerPool').close(0);
     }
 
     return 'Success!';
