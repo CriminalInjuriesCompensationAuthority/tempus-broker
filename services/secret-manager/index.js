@@ -5,6 +5,7 @@ const AWSXRay = require('aws-xray-sdk');
 
 // Gets a secret with a given name using SSM
 async function getSecret(secretName) {
+    AWSXRay.setContextMissingStrategy('IGNORE_ERROR');
     const client = AWSXRay.captureAWSv3Client(
         new SSMClient({region: 'eu-west-2', profile: 'tempus-broker-s3'})
     );
