@@ -21,7 +21,6 @@ exports.handler = async function(event, context) {
     logger.info('Tempus broker message recieved: ', record.body);
 
     try {
-        await db.createDBPool();
         const s3Keys = await handleTempusBrokerMessage(record.body);
         const s3ApplicationData = await retrieveObjectFromBucket(
             'cica-document-store',
@@ -33,6 +32,7 @@ exports.handler = async function(event, context) {
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
+        await db.createDBPool();
         await db.insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await db.insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
