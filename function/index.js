@@ -19,6 +19,7 @@ exports.handler = async function(event, context) {
     // Currently the tempus broker is setup to handle one event at a time
     const record = event.Records[0];
     logger.info('Tempus broker message recieved: ', record.body);
+    let dbConn;
 
     try {
         const s3Keys = await handleTempusBrokerMessage(record.body);
@@ -32,7 +33,7 @@ exports.handler = async function(event, context) {
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
-        await db.createDBPool();
+        dbConn = await db.createDBPool();
         await db.insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await db.insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
@@ -47,7 +48,9 @@ exports.handler = async function(event, context) {
         logger.error(error);
         throw error;
     } finally {
-        await oracledb.getPool('TempusBrokerPool').close(0);
+        if (dbConn) {
+            await oracledb.getPool('TempusBrokerPool').close(0);
+        }
     }
 
     return 'Success!';

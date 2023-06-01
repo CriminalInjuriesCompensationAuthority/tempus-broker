@@ -31,6 +31,10 @@ async function createDBPool() {
             connectString: await getSecret('TARIFF-ORACLE-DEV-CONNECT-STRING'),
             poolAlias: 'TempusBrokerPool'
         });
+        if (oracledb.getPool('TempusBrokerPool')) {
+            return true;
+        }
+        return false;
     } catch (error) {
         logger.error(error);
         throw error;
