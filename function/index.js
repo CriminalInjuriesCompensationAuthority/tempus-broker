@@ -1,7 +1,7 @@
 'use strict';
 
 const oracledb = require('oracledb');
-const retrieveObjectFromBucket = require('../services/s3/index');
+const s3 = require('../services/s3/index');
 const handleTempusBrokerMessage = require('../services/sqs/index');
 const mapApplicationDataToOracleObject = require('../services/application-mapper/index');
 const db = require('../db/index');
@@ -23,22 +23,22 @@ exports.handler = async function(event, context) {
     try {
         await db.createDBPool();
         const s3Keys = await handleTempusBrokerMessage(record.body);
-        const s3ApplicationData = await retrieveObjectFromBucket(
+        const s3ApplicationData = await s3.retrieveObjectFromBucket(
             'cica-document-store',
             Object.values(s3Keys)[1]
         );
         const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
 
-        logger.info(applicationOracleObject);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
         await db.insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await db.insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
+        await s3.deleteObjectFromBucket('cica-document-store', Object.values(s3Keys)[1]);
+
         /** ----------------------- TO-DO -----------------------
          *
-         *  Delete JSON from S3
          *  Send request to KTA with S3 Key
          *
          *  -----------------------       -----------------------
