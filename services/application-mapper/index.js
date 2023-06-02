@@ -14,9 +14,11 @@ const oracleJsonObject = {
             }
         },
         {
-            ADDRESS_DETAILS: {
-                address_type: 'ICA'
-            }
+            ADDRESS_DETAILS: [
+                {
+                    address_type: 'ICA'
+                }
+            ]
         }
     ]
 };
@@ -29,7 +31,7 @@ async function mapApplicationDataToOracleObject(data) {
 
         // Check if the key is a metadata key which needs to be mapped
         // TO-DO We should expand this to a separate mapper to check for the metadata key if it becomes too long
-        if (key === 'tariffID') {
+        if (key === 'caseReference') {
             const crn = value.split('\\')[1];
             const refYear = value.split('\\')[0];
             applicationFormJson.claim_reference_number = crn;
@@ -46,16 +48,34 @@ async function mapApplicationDataToOracleObject(data) {
         if (key === 'id') {
             // If the key is an id then map the value to json and concatenate to the oracle object
             const applicationQuestion = mapApplicationQuestion(data, oracleJsonObject);
+
             // Map the question to either applicationForm or addressDetails
             // When address details, generate one object for each address type
             if (applicationQuestion.columnName) {
-                if (Object.values(addressDetailsColumns).find(qid => qid === value)) {
-                    addressDetailsJson[applicationQuestion.columnName] =
-                        applicationQuestion.columnValue;
-                } else {
-                    applicationFormJson[applicationQuestion.columnName] =
-                        applicationQuestion.columnValue;
-                }
+                Object.entries(addressDetailsColumns).forEach(column => {
+                    const [type, val] = column;
+                    if (Object.values(val).find(qid => qid === value)) {
+                        // if the type already exists add to existing object - else create new type
+                        addressDetailsJson.forEach(obj => {
+                            if (Object.values(obj).find(addressType => addressType === type)) {
+                                const i = Object.values(obj).findIndex(
+                                    addressType => addressType === type
+                                );
+                                addressDetailsJson[i][applicationQuestion.columnName] =
+                                    applicationQuestion.columnValue;
+                            } else {
+                                addressDetailsJson.push({
+                                    address_type: type,
+                                    [applicationQuestion.columnName]:
+                                        applicationQuestion.columnValue
+                                });
+                            }
+                        });
+                    } else {
+                        applicationFormJson[applicationQuestion.columnName] =
+                            applicationQuestion.columnValue;
+                    }
+                });
             }
         }
         if (typeof value === 'object') {
