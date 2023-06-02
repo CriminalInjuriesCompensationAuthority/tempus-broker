@@ -1,10 +1,8 @@
 'use strict';
 
 const oracledb = require('oracledb');
-
 // Comment and uncomment to toggle between thin and thick mode
 // oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
-const getSecret = require('../services/secret-manager/index');
 const logger = require('../services/logging/logger');
 
 // Generates an insert statment for tarriff
@@ -21,24 +19,6 @@ function generateInsertStatement(jsonData, table) {
     const statement = `INSERT INTO ${table} (${columnsList}) VALUES (${columnsValues})`;
 
     return statement;
-}
-
-async function createDBPool() {
-    try {
-        await oracledb.createPool({
-            user: await getSecret('TARIFF-ORACLE-DEV-USER'),
-            password: await getSecret('TARIFF-ORACLE-DEV-PASS'),
-            connectString: await getSecret('TARIFF-ORACLE-DEV-CONNECT-STRING'),
-            poolAlias: 'TempusBrokerPool'
-        });
-        if (oracledb.getPool('TempusBrokerPool')) {
-            return true;
-        }
-        return false;
-    } catch (error) {
-        logger.error(error);
-        throw error;
-    }
 }
 
 async function insertIntoTempus(jsonData, table) {
@@ -63,4 +43,4 @@ async function insertIntoTempus(jsonData, table) {
     }
 }
 
-module.exports = {createDBPool, insertIntoTempus};
+module.exports = insertIntoTempus;

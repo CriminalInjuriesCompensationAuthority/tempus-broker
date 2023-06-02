@@ -6,8 +6,6 @@ const {SSMClient, GetParameterCommand} = require('@aws-sdk/client-ssm');
 const index = require('./index');
 
 describe('Tempus broker function', () => {
-    const mockSSMClient = mockClient(SSMClient);
-
     it.skip('Should run the function handler', async () => {
         const eventFile = fs.readFileSync('resources/testing/event.json');
         const event = JSON.parse(eventFile);
@@ -16,6 +14,7 @@ describe('Tempus broker function', () => {
     });
 
     it('Should error if event body contains files with invalid types', async () => {
+        const mockSSMClient = mockClient(SSMClient);
         const eventFile = fs.readFileSync('resources/testing/event-with-invalid-files.json');
         const event = JSON.parse(eventFile);
 

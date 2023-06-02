@@ -4,9 +4,10 @@ const oracledb = require('oracledb');
 const retrieveObjectFromBucket = require('../services/s3/index');
 const handleTempusBrokerMessage = require('../services/sqs/index');
 const mapApplicationDataToOracleObject = require('../services/application-mapper/index');
-const db = require('../db/index');
-
+const createDBPool = require('../db/dbPool');
+const insertIntoTempus = require('../db/index');
 const logger = require('../services/logging/logger');
+const getSecret = require('../services/secret-manager');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
@@ -22,9 +23,10 @@ exports.handler = async function(event, context) {
     let dbConn;
 
     try {
+        const bucketName = await getSecret('kta-bucket-name');
         const s3Keys = await handleTempusBrokerMessage(record.body);
         const s3ApplicationData = await retrieveObjectFromBucket(
-            'cica-document-store',
+            bucketName,
             Object.values(s3Keys)[1]
         );
         const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
@@ -33,9 +35,9 @@ exports.handler = async function(event, context) {
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
-        dbConn = await db.createDBPool();
-        await db.insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
-        await db.insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
+        dbConn = await createDBPool();
+        await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
+        await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
         /** ----------------------- TO-DO -----------------------
          *

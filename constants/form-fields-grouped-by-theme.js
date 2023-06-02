@@ -2,71 +2,72 @@
 
 module.exports = Object.freeze({
     'about-application': {
-        incident_rep_police: 'q--was-the-crime-reported-to-police',
-        is_injured_person: 'q-applicant-who-are-you-applying-for',
-        residency_02: 'q-applicant-british-citizen-or-eu-national'
+        'q--was-the-crime-reported-to-police': 'incident_rep_police',
+        'q-applicant-who-are-you-applying-for': 'is_injured_person',
+        'q-applicant-british-citizen-or-eu-national': 'residency_02'
     },
     'applicant-details': {
-        other_names: 'q-applicant-what-other-names-have-you-used',
-        date_of_birth: 'q-applicant-enter-your-date-of-birth',
-        claimant_email_address: 'q-applicant-enter-your-email-address',
-        day_phone: 'q-applicant-enter-your-telephone-number',
-        incident_delay_reason_code:
-            'q-applicant-select-reasons-for-the-delay-in-making-your-application'
+        'q-applicant-what-other-names-have-you-used': 'other_names',
+        'q-applicant-enter-your-date-of-birth': 'date_of_birth',
+        'q-applicant-enter-your-email-address': 'claimant_email_address',
+        'q-applicant-enter-your-telephone-number': 'day_phone',
+
+        'q-applicant-select-reasons-for-the-delay-in-making-your-application':
+            'incident_delay_reason_code'
     },
     crime: {
-        date_time_of_incident: 'q-applicant-when-did-the-crime-happen',
-        date_time_pol_first_told: 'q--when-was-the-crime-reported-to-police',
-        application_type: 'q-applicant-did-the-crime-happen-once-or-over-time',
-        crime_ref_no: 'q--whats-the-crime-reference-number',
-        incident_country: 'q-applicant-where-did-the-crime-happen',
-        address_line_1: [
-            'q-applicant-scottish-location',
-            'q-applicant-english-location',
-            'q-applicant-welsh-location'
-        ],
-        address_line_4: [
-            'q-applicant-scottish-town-or-city',
-            'q-applicant-english-town-or-city',
-            'q-applicant-welsh-town-or-city'
-        ],
-        police_force_area: 'q-police-force-id'
+        'q-applicant-when-did-the-crime-happen': 'date_time_of_incident',
+        'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
+        'q-applicant-did-the-crime-happen-once-or-over-time': 'application_type',
+        'q--whats-the-crime-reference-number': 'crime_ref_no',
+        'q-applicant-where-did-the-crime-happen': 'incident_country',
+        'q-applicant-scottish-location': 'address_line_1',
+        'q-applicant-english-location': 'address_line_1',
+        'q-applicant-welsh-location': 'address_line_1',
+        'q-applicant-scottish-town-or-city': 'address_line_4',
+        'q-applicant-english-town-or-city': 'address_line_4',
+        'q-applicant-welsh-town-or-city': 'address_line_4',
+        'q-police-force-id': 'police_force_area'
     },
     impact: {
-        earn_lost_gt_28_weeks: 'q-applicant-unable-to-work-duration',
-        work_situation: ['q-applicant-work-details-option', 'q-applicant-job-when-crime-happened'],
-        unable_to_work: 'q-applicant-unable-to-work',
-        work_situation_other: 'q-applicant-work-details-other',
-        affect_daily_capacity: 'q-applicant-affected-daily-capacity',
-        affect_gt_28_weeks: 'q-applicant-affect-duration',
-        affect_future_gt_28_weeks: 'q-applicant-affect-future-duration',
-        future_work: 'q-applicant-future-work'
+        'q-applicant-unable-to-work-duration': 'earn_lost_gt_28_weeks',
+        'q-applicant-work-details-option': 'work_situation',
+        'q-applicant-job-when-crime-happened': 'work_situation',
+        'q-applicant-unable-to-work': 'unable_to_work',
+        'q-applicant-work-details-other': 'work_situation_other',
+        'q-applicant-affected-daily-capacity': 'affect_daily_capacity',
+        'q-applicant-affect-duration': 'affect_gt_28_weeks',
+        'q-applicant-affect-future-duration': 'affect_future_gt_28_weeks',
+        'q-applicant-future-work': 'future_work'
     },
     injuries: {
-        infections: 'q-applicant-infections',
-        physical_injuries: 'q-applicant-are-you-claiming-for-physical-injuries',
-        injury_details_code: 'q-applicant-physical-injury'
+        'q-applicant-infections': 'infections',
+        'q-applicant-are-you-claiming-for-physical-injuries': 'physical_injuries',
+        'q-applicant-physical-injury': 'injury_details_code'
     },
     'mental-health': {
-        dmi: 'q-applicant-do-you-have-disabling-mental-injury',
-        dmi_gt_6_weeks: 'q-applicant-mental-injury-duration'
+        'q-applicant-do-you-have-disabling-mental-injury': 'dmi',
+        'q-applicant-mental-injury-duration': 'dmi_gt_6_weeks'
     },
     offender: {
-        assailant_identified: 'q-offender-do-you-know-the-name-of-the-offender',
-        name_of_perpetrator: 'q-offender-enter-offenders-name'
+        'q-offender-do-you-know-the-name-of-the-offender': 'assailant_identified',
+        'q-offender-enter-offenders-name': 'name_of_perpetrator'
     },
     'other-compensation': {
-        previous_application_submitted: 'q-applicant-have-you-applied-to-us-before',
-        prev_case_ref_num_01: 'q-enter-your-previous-reference-number',
-        claimed_other_compensation:
-            'q-applicant-have-you-applied-for-or-received-any-other-compensation',
-        why_no_other_compensation:
-            'q-applicant-applied-for-other-compensation-briefly-explain-why-not'
+        'q-applicant-have-you-applied-to-us-before': 'previous_application_submitted',
+        'q-enter-your-previous-reference-number': 'prev_case_ref_num_01',
+        'q-applicant-have-you-applied-for-or-received-any-other-compensation':
+            'claimed_other_compensation',
+        'q-applicant-applied-for-other-compensation-briefly-explain-why-not':
+            'why_no_other_compensation'
     },
-    pregnancy: {pregnancy: 'q-applicant-pregnancy', loss_of_foetus: 'q-applicant-pregnancy-loss'},
-    treatement: {
-        gp_name: 'q-gp-organisation-name',
-        registered_with_gp: 'q-applicant-are-you-registered-with-gp',
-        registered_gp_attended: 'q-applicant-have-you-seen-a-gp'
+    pregnancy: {
+        'q-applicant-pregnancy': 'pregnancy',
+        'q-applicant-pregnancy-loss': 'loss_of_foetus'
+    },
+    treatment: {
+        'q-gp-organisation-name': 'gp_name',
+        'q-applicant-are-you-registered-with-gp': 'registered_with_gp',
+        'q-applicant-have-you-seen-a-gp': 'registered_gp_attended'
     }
 });
