@@ -14,6 +14,7 @@ async function getSecret(secretName) {
         Name: secretName
     };
     const command = new GetParameterCommand(input);
+
     const response = await client.send(command);
     return response.Parameter.Value;
 }

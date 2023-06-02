@@ -29,7 +29,7 @@ async function mapApplicationDataToOracleObject(data) {
 
         // Check if the key is a metadata key which needs to be mapped
         // TO-DO We should expand this to a separate mapper to check for the metadata key if it becomes too long
-        if (key === 'tariffID') {
+        if (key === 'caseReference') {
             const crn = value.split('\\')[1];
             const refYear = value.split('\\')[0];
             applicationFormJson.claim_reference_number = crn;
