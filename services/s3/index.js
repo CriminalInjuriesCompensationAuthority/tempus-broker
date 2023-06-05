@@ -6,6 +6,7 @@ const logger = require('../logging/logger');
 
 // Creates the S3 Client with a given profile
 // TO-DO use local stack instead of personal AWS
+AWSXRay.setContextMissingStrategy('IGNORE_ERROR');
 const s3Client = AWSXRay.captureAWSv3Client(
     new S3Client({
         region: 'eu-west-2',
