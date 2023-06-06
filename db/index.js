@@ -25,10 +25,18 @@ async function insertIntoTempus(jsonData, table) {
     let connection;
     try {
         connection = await oracledb.getConnection('TempusBrokerPool');
-        logger.info(jsonData);
-        const insertStatement = generateInsertStatement(jsonData, table);
-        logger.info(insertStatement);
-        await connection.execute(insertStatement, jsonData, {autoCommit: true});
+        // Handle multiple address details insert statements
+        if (Array.isArray(jsonData)) {
+            jsonData.forEach(async addressDetailEntry => {
+                const insertStatement = generateInsertStatement(addressDetailEntry, table);
+                logger.info(insertStatement);
+                await connection.execute(insertStatement, addressDetailEntry, {autoCommit: true});
+            });
+        } else {
+            const insertStatement = generateInsertStatement(jsonData, table);
+            logger.info(insertStatement);
+            await connection.execute(insertStatement, jsonData, {autoCommit: true});
+        }
     } catch (error) {
         logger.error(error);
         throw error;

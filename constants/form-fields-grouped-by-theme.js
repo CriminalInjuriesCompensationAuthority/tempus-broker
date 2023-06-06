@@ -66,8 +66,14 @@ module.exports = Object.freeze({
         'q-applicant-pregnancy-loss': 'loss_of_foetus'
     },
     treatment: {
-        'q-gp-organisation-name': 'gp_name',
         'q-applicant-are-you-registered-with-gp': 'registered_with_gp',
-        'q-applicant-have-you-seen-a-gp': 'registered_gp_attended'
+        'q-applicant-have-you-seen-a-gp': 'registered_gp_attended',
+        'q-gp-organisation-name': 'name',
+        'q-gp-building-and-street': 'address_line_1',
+        'q-gp-building-and-street-2': 'address_line_2',
+        'q-gp-building-and-street-3': 'address_line_3',
+        'q-gp-town-or-city': 'address_line_4',
+        'q-gp-county': 'address_line_5',
+        'q-gp-postcode': 'post_code'
     }
 });

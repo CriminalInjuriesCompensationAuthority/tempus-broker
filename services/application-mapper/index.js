@@ -22,23 +22,23 @@ const oracleJsonObject = {
         }
     ]
 };
+let crn;
+let refYear;
 
 async function mapApplicationDataToOracleObject(data) {
     const applicationFormJson = Object.values(oracleJsonObject)[0][0].APPLICATION_FORM;
     const addressDetailsJson = Object.values(oracleJsonObject)[0][1].ADDRESS_DETAILS;
+
     Object.entries(data).forEach(entry => {
         const [key, value] = entry;
 
         // Check if the key is a metadata key which needs to be mapped
         // TO-DO We should expand this to a separate mapper to check for the metadata key if it becomes too long
         if (key === 'caseReference') {
-            const crn = value.split('\\')[1];
-            const refYear = value.split('\\')[0];
+            // crn = value.split('\\')[1];
+            [refYear, crn] = value.split('\\')[(0, 1)];
             applicationFormJson.claim_reference_number = crn;
-            addressDetailsJson.claim_reference_number = crn;
-
             applicationFormJson.ref_year = refYear;
-            addressDetailsJson.ref_year = refYear;
         }
         if (key === 'submittedDate') {
             applicationFormJson.created_date = DateTime.fromISO(value)
@@ -52,18 +52,28 @@ async function mapApplicationDataToOracleObject(data) {
             // Map the question to either applicationForm or addressDetails
             // When address details, generate one object for each address type
             if (applicationQuestion.columnName) {
+                let entryExistsInAddressDetails;
+                Object.values(addressDetailsColumns).forEach(val => {
+                    if (Object.keys(val).includes(value)) {
+                        entryExistsInAddressDetails = Object.keys(val).includes(value);
+                    }
+                });
                 Object.entries(addressDetailsColumns).forEach(column => {
                     const [type, val] = column;
-                    if (Object.values(val).find(qid => qid === value)) {
-                        // if the type already exists add to existing object - else create new type
-                        addressDetailsJson.forEach(obj => {
-                            if (Object.values(obj).find(addressType => addressType === type)) {
-                                const i = Object.values(obj).findIndex(
-                                    addressType => addressType === type
+                    if (
+                        Object.keys(val).find(qid => qid === value) &&
+                        entryExistsInAddressDetails
+                    ) {
+                        // If the type already exists add to existing object - else create new type
+                        addressDetailsJson.forEach((obj, i) => {
+                            if (obj.address_type === type) {
+                                const j = Object.values(addressDetailsJson).findIndex(
+                                    index => index === obj
                                 );
-                                addressDetailsJson[i][applicationQuestion.columnName] =
+
+                                addressDetailsJson[j][applicationQuestion.columnName] =
                                     applicationQuestion.columnValue;
-                            } else {
+                            } else if (i === addressDetailsJson.length - 1) {
                                 addressDetailsJson.push({
                                     address_type: type,
                                     [applicationQuestion.columnName]:
@@ -71,7 +81,7 @@ async function mapApplicationDataToOracleObject(data) {
                                 });
                             }
                         });
-                    } else {
+                    } else if (!entryExistsInAddressDetails) {
                         applicationFormJson[applicationQuestion.columnName] =
                             applicationQuestion.columnValue;
                     }
@@ -81,6 +91,12 @@ async function mapApplicationDataToOracleObject(data) {
         if (typeof value === 'object') {
             mapApplicationDataToOracleObject(value);
         }
+    });
+
+    // Add in the CRN and refYear to each address details object
+    Object.values(addressDetailsJson).forEach((values, i) => {
+        addressDetailsJson[i].claim_reference_number = crn;
+        addressDetailsJson[i].ref_year = refYear;
     });
     return oracleJsonObject;
 }
