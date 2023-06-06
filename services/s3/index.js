@@ -1,7 +1,7 @@
 'use strict';
 
 const AWSXRay = require('aws-xray-sdk');
-const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
+const {S3Client, GetObjectCommand, DeleteObjectCommand} = require('@aws-sdk/client-s3');
 const logger = require('../logging/logger');
 
 // Creates the S3 Client with a given profile
@@ -44,4 +44,13 @@ async function retrieveObjectFromBucket(bucket, objectKey) {
     }
 }
 
-module.exports = retrieveObjectFromBucket;
+async function deleteObjectFromBucket(bucket, objectKey) {
+    const input = {
+        Bucket: bucket,
+        Key: objectKey
+    };
+    const command = new DeleteObjectCommand(input);
+    await s3Client.send(command);
+}
+
+module.exports = {retrieveObjectFromBucket, deleteObjectFromBucket};
