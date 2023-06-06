@@ -35,8 +35,10 @@ async function mapApplicationDataToOracleObject(data) {
         // Check if the key is a metadata key which needs to be mapped
         // TO-DO We should expand this to a separate mapper to check for the metadata key if it becomes too long
         if (key === 'caseReference') {
-            // crn = value.split('\\')[1];
-            [refYear, crn] = value.split('\\')[(0, 1)];
+            // eslint-disable-next-line prefer-destructuring
+            crn = value.split('\\')[1];
+            // eslint-disable-next-line prefer-destructuring
+            refYear = value.split('\\')[0];
             applicationFormJson.claim_reference_number = crn;
             applicationFormJson.ref_year = refYear;
         }
