@@ -90,6 +90,6 @@ Resources:
     Properties:
       LayerName: tempus-broker-nodejs-lib
       Description: Dependencies for the tempus broker function.
-      ContentUri: ./
+      ContentUri: lib/.
       CompatibleRuntimes:
         - nodejs18.x
