@@ -36,7 +36,7 @@ jobs:
           ROLE_ARN: ${{ secrets.ASSUMED_ROLE }}
 
       # install dependencies
-      - run: npm ci
+      - run: npm ci --production
 
       # sam build
       - run: sam build --use-container
