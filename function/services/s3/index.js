@@ -10,7 +10,7 @@ AWSXRay.setContextMissingStrategy('IGNORE_ERROR');
 const s3Client = AWSXRay.captureAWSv3Client(
     new S3Client({
         region: 'eu-west-2',
-        profile: 'tempus-broker-s3'
+        profile: process.env.NODE_ENV === 'local' ? 'tempus-broker-s3' : undefined
     })
 );
 
