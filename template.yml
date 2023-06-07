@@ -1,11 +1,27 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Lambda application that integrates Tempus and KTA into the new cloud-hosted Apply service.
+
 Parameters:
-  AccountId:
+  MoJCPAccountId:
     Type: String
     Default: '754256621582'
     Description: Account ID of the MOJ CP Account
+  Environment:
+    Type: String
+    Default: dev
+    Description: Parameter for the environment
+    AllowedValues: ["dev", "uat", "prod"]
+
+Mappings:
+  EnvironmentMap:
+    dev:
+      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-dev-claim-criminal-injuries-tempus-queue
+    uat:
+      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-uat-claim-criminal-injuries-tempus-queue
+    prod:
+      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
+
 Resources:
   function:
     Type: AWS::Serverless::Function
@@ -15,6 +31,13 @@ Resources:
       CodeUri: function/.
       Description: Call the AWS Lambda API
       Timeout: 30
+      # Trigger
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Ref: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueArn]
       # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
@@ -25,26 +48,36 @@ Resources:
                 - sqs:ReceiveMessage
                 - sqs:DeleteMessage
                 - sqs:GetQueueAttributes
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
               Resource: '*'
               Condition:
                 StringEquals: 
-                  'aws:ResourceAccount': !Ref AccountId
+                  'aws:ResourceAccount': !Ref MoJCPAccountId
             - Sid: TempusBrokerFunctionS3Policy
               Effect: Allow
               Action:
                 - s3:GetObject
                 - s3:DeleteObject
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
               Resource: '*'
-              Condition:
-                StringEquals:
-                  'aws:ResourceAccount': !Ref AccountId
             - Sid: TempusBrokerFunctionSecretsPolicy
               Effect: Allow
               Action:
                 - ssm:GetParameter
                 - secretsmanager:GetSecretValue
-                - kms:Decrypt*
-                - kms:GenerateDataKey
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
               Resource: '*'
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
