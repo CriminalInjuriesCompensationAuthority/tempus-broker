@@ -7,7 +7,7 @@ const index = require('./index');
 
 describe('Tempus broker function', () => {
     it.skip('Should run the function handler', async () => {
-        const eventFile = fs.readFileSync('resources/testing/event.json');
+        const eventFile = fs.readFileSync('function/resources/testing/event.json');
         const event = JSON.parse(eventFile);
         const response = await index.handler(event, null);
         expect(response).toContain('Success!');
@@ -15,7 +15,9 @@ describe('Tempus broker function', () => {
 
     it('Should error if event body contains files with invalid types', async () => {
         const mockSSMClient = mockClient(SSMClient);
-        const eventFile = fs.readFileSync('resources/testing/event-with-invalid-files.json');
+        const eventFile = fs.readFileSync(
+            'function/resources/testing/event-with-invalid-files.json'
+        );
         const event = JSON.parse(eventFile);
 
         mockSSMClient.on(GetParameterCommand).resolves({

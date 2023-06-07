@@ -1,13 +1,13 @@
 'use strict';
 
 const oracledb = require('oracledb');
-const retrieveObjectFromBucket = require('../services/s3/index');
-const handleTempusBrokerMessage = require('../services/sqs/index');
-const mapApplicationDataToOracleObject = require('../services/application-mapper/index');
-const createDBPool = require('../db/dbPool');
-const insertIntoTempus = require('../db/index');
-const logger = require('../services/logging/logger');
-const getSecret = require('../services/secret-manager');
+const retrieveObjectFromBucket = require('./services/s3/index');
+const handleTempusBrokerMessage = require('./services/sqs/index');
+const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
+const createDBPool = require('./db/dbPool');
+const insertIntoTempus = require('./db/index');
+const logger = require('./services/logging/logger');
+const getSecret = require('./services/secret-manager');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
