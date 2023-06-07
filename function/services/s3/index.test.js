@@ -19,7 +19,9 @@ describe('S3 Service', () => {
             Bucket: 'test',
             Key: 'test.json'
         };
-        const stream = createReadStream('./resources/testing/check-your-answers-sample.json');
+        const stream = createReadStream(
+            'function/resources/testing/check-your-answers-sample.json'
+        );
         const sdkStream = sdkStreamMixin(stream);
         mockS3Client.on(GetObjectCommand, mockCommand).resolves({
             Body: sdkStream,
@@ -28,7 +30,7 @@ describe('S3 Service', () => {
 
         const response = await retrieveObjectFromBucket('test', 'test.json');
         expect(response).toEqual(
-            JSON.parse(readFileSync('./resources/testing/check-your-answers-sample.json'))
+            JSON.parse(readFileSync('function/resources/testing/check-your-answers-sample.json'))
         );
     });
 
