@@ -7,7 +7,10 @@ const AWSXRay = require('aws-xray-sdk');
 async function getSecret(secretName) {
     AWSXRay.setContextMissingStrategy('IGNORE_ERROR');
     const client = AWSXRay.captureAWSv3Client(
-        new SSMClient({region: 'eu-west-2', profile: 'tempus-broker-s3'})
+        new SSMClient({
+            region: 'eu-west-2',
+            profile: process.env.NODE_ENV === 'local' ? 'tempus-broker-s3' : undefined
+        })
     );
 
     const input = {
