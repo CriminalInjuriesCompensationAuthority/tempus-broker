@@ -39,15 +39,13 @@ function mapApplicationQuestion(data, oracleJson) {
                     Object.hasOwn(Object.values(oracleJson)[0][0].APPLICATION_FORM, 'work_details')
                 ) {
                     columnValue = Object.values(oracleJson)[0][0].APPLICATION_FORM.work_details;
-                    data.value.forEach(option => {
-                        columnValue = `,${columnValue + option[0].toUpperCase()}`;
-                    });
                 } else {
                     columnValue = '';
-                    data.value.forEach(option => {
-                        columnValue = `${columnValue + option[0].toUpperCase()}`;
-                    });
                 }
+                data.value.forEach(option => {
+                    columnValue = `${columnValue + option[0].toUpperCase()},`;
+                });
+                columnValue = columnValue.slice(0, -1);
                 break;
             case 'q-applicant-job-when-crime-happened':
                 if (
@@ -56,7 +54,7 @@ function mapApplicationQuestion(data, oracleJson) {
                 ) {
                     columnValue = `${
                         Object.values(oracleJson)[0][0].APPLICATION_FORM.work_details
-                    }I`;
+                    },I`;
                 } else if (data.value === true) {
                     columnValue = 'I,';
                 }
