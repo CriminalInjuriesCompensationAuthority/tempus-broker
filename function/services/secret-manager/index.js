@@ -14,7 +14,8 @@ async function getSecret(secretName) {
     );
 
     const input = {
-        Name: secretName
+        Name: secretName,
+        WithDecryption: process.env.NODE_ENV !== 'local'
     };
     const command = new GetParameterCommand(input);
 
