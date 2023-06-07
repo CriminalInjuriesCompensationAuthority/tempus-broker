@@ -28,7 +28,7 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs18.x
-      CodeUri: .
+      CodeUri: function/.
       Description: Call the AWS Lambda API
       Timeout: 30
       # Trigger
@@ -83,6 +83,11 @@ Resources:
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
       Tracing: Active
-    Metadata:
-      BuildProperties:
-        UseNpmCi: True
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: tempus-broker-nodejs-lib
+      Description: Dependencies for the tempus broker function.
+      ContentUri: ./
+      CompatibleRuntimes:
+        - nodejs18.x
