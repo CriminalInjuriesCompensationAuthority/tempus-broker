@@ -48,6 +48,11 @@ Resources:
                 - sqs:ReceiveMessage
                 - sqs:DeleteMessage
                 - sqs:GetQueueAttributes
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
               Resource: '*'
               Condition:
                 StringEquals: 
@@ -57,17 +62,22 @@ Resources:
               Action:
                 - s3:GetObject
                 - s3:DeleteObject
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
               Resource: '*'
-              Condition:
-                StringEquals:
-                  'aws:ResourceAccount': !Ref MoJCPAccountId
             - Sid: TempusBrokerFunctionSecretsPolicy
               Effect: Allow
               Action:
                 - ssm:GetParameter
                 - secretsmanager:GetSecretValue
-                - kms:Decrypt*
-                - kms:GenerateDataKey
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
               Resource: '*'
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
