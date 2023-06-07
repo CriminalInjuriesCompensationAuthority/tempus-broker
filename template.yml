@@ -28,7 +28,7 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs18.x
-      CodeUri: function/.
+      CodeUri: .
       Description: Call the AWS Lambda API
       Timeout: 30
       # Trigger
