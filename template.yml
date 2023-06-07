@@ -37,7 +37,7 @@ Resources:
           Type: SQS
           Properties:
             Queue:
-              Ref: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueArn]
+              !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueArn]
       # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
