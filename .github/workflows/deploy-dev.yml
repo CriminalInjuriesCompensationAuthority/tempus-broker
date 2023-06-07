@@ -35,8 +35,8 @@ jobs:
         env:
           ROLE_ARN: ${{ secrets.ASSUMED_ROLE }}
 
-      # install dependencies
-      - run: npm ci --production
+      # install dependencies into a lambda layer
+      - run: sh ./.github/scripts/build-layer.sh
 
       # sam build
       - run: sam build --use-container
