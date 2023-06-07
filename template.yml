@@ -83,3 +83,6 @@ Resources:
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
       Tracing: Active
+    Metadata:
+      BuildProperties:
+        UseNpmCi: True
