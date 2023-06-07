@@ -4,7 +4,7 @@ const {GetObjectCommand, S3Client} = require('@aws-sdk/client-s3');
 const {createReadStream, readFileSync} = require('fs');
 const {sdkStreamMixin} = require('@aws-sdk/util-stream-node');
 const {mockClient} = require('aws-sdk-client-mock');
-const retrieveObjectFromBucket = require('.');
+const s3 = require('.');
 
 describe('S3 Service', () => {
     const mockS3Client = mockClient(S3Client);
@@ -26,7 +26,7 @@ describe('S3 Service', () => {
             ContentType: 'application/json'
         });
 
-        const response = await retrieveObjectFromBucket('test', 'test.json');
+        const response = await s3.retrieveObjectFromBucket('test', 'test.json');
         expect(response).toEqual(
             JSON.parse(readFileSync('./resources/testing/check-your-answers-sample.json'))
         );
@@ -41,7 +41,7 @@ describe('S3 Service', () => {
             .on(GetObjectCommand, mockCommand)
             .rejects('The specified bucket does not exist');
         await expect(async () =>
-            retrieveObjectFromBucket(
+            s3.retrieveObjectFromBucket(
                 '8d20901b-ed27-4bae-9884-8c5bb7c89b1c',
                 'check-your-answers-sample.json'
             )

@@ -51,7 +51,7 @@ async function mapApplicationDataToOracleObject(data) {
             // If the key is an id then map the value to json and concatenate to the oracle object
             const applicationQuestion = mapApplicationQuestion(data, oracleJsonObject);
 
-            // Map the question to either applicationForm or addressDetails
+            // Map the question to applicationForm or addressDetails or both
             // When address details, generate one object for each address type
             if (applicationQuestion.columnName) {
                 let entryExistsInAddressDetails;
@@ -86,6 +86,26 @@ async function mapApplicationDataToOracleObject(data) {
                     } else if (!entryExistsInAddressDetails) {
                         applicationFormJson[applicationQuestion.columnName] =
                             applicationQuestion.columnValue;
+                    }
+                });
+            }
+
+            // Question needs to be mapped to address details AND application form
+            // TO-DO Move duplicated code to function
+            if (applicationQuestion.addressColumn) {
+                addressDetailsJson.forEach((obj, i) => {
+                    if (obj.address_type === applicationQuestion.addressType) {
+                        const j = Object.values(addressDetailsJson).findIndex(
+                            index => index === obj
+                        );
+
+                        addressDetailsJson[j][applicationQuestion.addressColumn] =
+                            applicationQuestion.addressValue;
+                    } else if (i === addressDetailsJson.length - 1) {
+                        addressDetailsJson.push({
+                            address_type: applicationQuestion.addressType,
+                            [applicationQuestion.addressColumn]: applicationQuestion.addressValue
+                        });
                     }
                 });
             }
