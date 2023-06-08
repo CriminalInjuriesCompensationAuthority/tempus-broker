@@ -11,17 +11,22 @@ Parameters:
     Type: String
     Default: dev
     Description: Parameter for the environment
-    AllowedValues: ["dev", "uat", "prod"]
+    AllowedValues: ['dev', 'uat', 'prod']
 
 Mappings:
   EnvironmentMap:
     dev:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-dev-claim-criminal-injuries-tempus-queue
+      SubnetIdA: subnet-02f7ae7f6b1db987f
+      SubnetIdB: subnet-0a5e7b48efcb931ba
     uat:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-uat-claim-criminal-injuries-tempus-queue
+      SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
+      SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
     prod:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
-
+      SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
+      SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
 Resources:
   function:
     Type: AWS::Serverless::Function
@@ -36,8 +41,7 @@ Resources:
         SqsEvent:
           Type: SQS
           Properties:
-            Queue:
-              !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueArn]
+            Queue: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueArn]
       # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
@@ -55,7 +59,7 @@ Resources:
                 - kms:DescribeKey
               Resource: '*'
               Condition:
-                StringEquals: 
+                StringEquals:
                   'aws:ResourceAccount': !Ref MoJCPAccountId
             - Sid: TempusBrokerFunctionS3Policy
               Effect: Allow
@@ -85,6 +89,12 @@ Resources:
       Tracing: Active
       Layers:
         - !Ref libs
+      VpcConfig:
+        SubnetIds:
+          [
+            !FindInMap [EnvironmentMap, !Ref Environment, SubnetIdA],
+            !FindInMap [EnvironmentMap, !Ref Environment, SubnetIdB],
+          ]
   libs:
     Type: AWS::Serverless::LayerVersion
     Properties:
