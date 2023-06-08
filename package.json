@@ -30,6 +30,7 @@
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.312.0",
+        "@aws-sdk/client-secrets-manager": "^3.348.0",
         "@aws-sdk/client-sqs": "^3.312.0",
         "@aws-sdk/client-ssm": "^3.338.0",
         "@aws-sdk/util-stream-node": "^3.321.1",

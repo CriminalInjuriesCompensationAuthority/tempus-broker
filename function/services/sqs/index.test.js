@@ -6,7 +6,7 @@ const handleTempusBrokerMessage = require('./index');
 describe('SQS Service', () => {
     it('Should successfully poll the tempus broker queue', () => {
         const sqsMessage = fs.readFileSync(
-            'resources/testing/tempus-broker-application-message.json'
+            'function/resources/testing/tempus-broker-application-message.json'
         );
         const response = handleTempusBrokerMessage(sqsMessage);
         expect(Object.keys(response)).toContain('applicationJSONDocumentSummaryKey');
@@ -15,7 +15,7 @@ describe('SQS Service', () => {
 
     it('Should throw an error if the file types are wrong', () => {
         const sqsMessage = fs.readFileSync(
-            'resources/testing/tempus-broker-application-message-invalid.json'
+            'function/resources/testing/tempus-broker-application-message-invalid.json'
         );
         expect(() => handleTempusBrokerMessage(sqsMessage)).toThrowError(
             'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
@@ -23,7 +23,7 @@ describe('SQS Service', () => {
     });
 
     it('Should error if file is not valid json', () => {
-        const sqsMessage = fs.readFileSync('resources/testing/invalid-json.txt');
+        const sqsMessage = fs.readFileSync('function/resources/testing/invalid-json.txt');
         expect(() => handleTempusBrokerMessage(sqsMessage)).toThrowError(SyntaxError);
     });
 });
