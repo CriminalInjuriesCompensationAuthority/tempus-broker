@@ -26,14 +26,14 @@
         "prettier": "^1.19.1",
         "speccy": "github:wework/speccy#740d19d88935db7735250c16abc2ad09256b5854",
         "supertest": "^4.0.2",
-        "yamljs": "^0.3.0"
-    },
-    "dependencies": {
+        "yamljs": "^0.3.0",
         "@aws-sdk/client-s3": "^3.312.0",
         "@aws-sdk/client-sqs": "^3.312.0",
         "@aws-sdk/client-ssm": "^3.338.0",
         "@aws-sdk/util-stream-node": "^3.321.1",
-        "aws-xray-sdk": "^3.5.0",
+        "aws-xray-sdk": "^3.5.0"
+    },
+    "dependencies": {
         "luxon": "^3.3.0",
         "oracledb": "^6.0.0",
         "pino": "^8.12.1"
