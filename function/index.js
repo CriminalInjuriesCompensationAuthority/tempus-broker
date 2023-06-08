@@ -7,7 +7,7 @@ const mapApplicationDataToOracleObject = require('./services/application-mapper/
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
 const logger = require('./services/logging/logger');
-const getSecret = require('./services/secret-manager');
+const getParameter = require('./services/ssm');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
@@ -23,7 +23,7 @@ exports.handler = async function(event, context) {
     let dbConn;
 
     try {
-        const bucketName = await getSecret('kta-bucket-name');
+        const bucketName = await getParameter('kta-bucket-name');
         const s3Keys = await handleTempusBrokerMessage(record.body);
         const s3ApplicationData = await retrieveObjectFromBucket(
             bucketName,
@@ -43,7 +43,7 @@ exports.handler = async function(event, context) {
          *
          *  Delete JSON from S3
          *  Send request to KTA with S3 Key
-         * 
+         *
          *
          *  -----------------------       -----------------------
          */
