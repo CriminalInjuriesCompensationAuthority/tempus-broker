@@ -14,7 +14,7 @@ Parameters:
     AllowedValues: ['dev', 'uat', 'prod']
   OnPremIpRange:
     Type: String
-    Default: ''
+    Default: '192.168.0.1/16'
     Description: "The CIDR range for CICA's on premise"
 
 Mappings:
@@ -117,6 +117,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: 'TempusBrokerSecurityGroup'
+      GroupDescription: Security group for the tempus broker lamdba function to allow communications out to Tariff and Tempus.
       VpcId: !FindInMap [EnvironmentMap, !Ref Environment, VpcId]
       SecurityGroupEgress:
         - IpProtocol: tcp
