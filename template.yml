@@ -105,6 +105,7 @@ Resources:
             !FindInMap [EnvironmentMap, !Ref Environment, SubnetIdA],
             !FindInMap [EnvironmentMap, !Ref Environment, SubnetIdB],
           ]
+        SecurityGroupIds: [!Ref tempusBrokerSecurityGroup]
   libs:
     Type: AWS::Serverless::LayerVersion
     Properties:
