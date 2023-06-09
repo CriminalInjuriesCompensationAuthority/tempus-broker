@@ -8,8 +8,13 @@ const getSecret = require('../services/secret-manager/index');
 const logger = require('../services/logging/logger');
 
 async function createDBPool() {
+    logger.info('Creation initiatied');
+
     const tariffArn = await getParameter('tariff-secret-arn');
     const tariffSecret = JSON.parse(await getSecret(tariffArn));
+
+    logger.info('Retreived Tariff secret');
+
     const connectString = `${tariffSecret.host}/${tariffSecret.dbname}`;
     logger.info(`Connecting to Oracle Database on: ${connectString}}`);
 
