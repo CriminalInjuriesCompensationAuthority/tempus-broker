@@ -72,7 +72,7 @@ function mapApplicationQuestion(data, oracleJson) {
                 if (data.value === 'myself') {
                     columnValue = 'Y';
                 } else {
-                    columnValue = null;
+                    columnValue = 'N';
                 }
                 break;
             case 'q-applicant-physical-injury':

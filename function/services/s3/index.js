@@ -53,7 +53,7 @@ async function deleteObjectFromBucket(bucket, objectKey) {
         Key: objectKey
     };
     const command = new DeleteObjectCommand(input);
-    await s3Client.send(command);
+    return s3Client.send(command);
 }
 
 module.exports = {retrieveObjectFromBucket, deleteObjectFromBucket};
