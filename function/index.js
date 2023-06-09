@@ -23,19 +23,25 @@ exports.handler = async function(event, context) {
     let dbConn;
 
     try {
+        logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
         const s3Keys = await handleTempusBrokerMessage(record.body);
         const s3ApplicationData = await retrieveObjectFromBucket(
             bucketName,
             Object.values(s3Keys)[1]
         );
+
+        logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
 
-        logger.info(applicationOracleObject);
+        logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
+        logger.info('Creating Database Pool');
         dbConn = await createDBPool();
+
+        logger.info('Writing application data into Tariff');
         await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
