@@ -11,6 +11,9 @@ async function createDBPool() {
     logger.info('Creation initiatied');
 
     const tariffArn = await getParameter('tariff-secret-arn');
+
+    logger.info(`SecretARN: ${tariffArn}`);
+
     const tariffSecret = JSON.parse(await getSecret(tariffArn));
 
     logger.info('Retreived Tariff secret');
