@@ -129,3 +129,7 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: !Ref OnPremIpRange
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidIp: '0.0.0.0/0'
