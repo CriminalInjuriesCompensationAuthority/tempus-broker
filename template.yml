@@ -132,4 +132,4 @@ Resources:
         - IpProtocol: tcp
           FromPort: 0
           ToPort: 65535
-          CidIp: '0.0.0.0/0'
+          CidrIp: '0.0.0.0/0'
