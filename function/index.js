@@ -6,6 +6,7 @@ const handleTempusBrokerMessage = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
+const createJob = require('./services/kta/index');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
 
@@ -34,14 +35,26 @@ exports.handler = async function(event, context) {
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
 
+        logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
+        logger.info('Creating Database Pool');
         dbConn = await createDBPool();
 
         logger.info('Writing application data into Tariff');
         await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
+
+        logger.info('Call out to KTA SDK');
+        const sessionId = getParameter('kta-session-id');
+        const inputVars = [
+            {Id: 'TARIFF_REFERENCE', Value: s3ApplicationData.metadata['case-reference']},
+            {Id: 'SUMMARY_URL', Value: Object.values(s3Keys)[0]}
+        ];
+        logger.info(`InputVars: ${inputVars}`);
+
+        await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
 
         /** ----------------------- TO-DO -----------------------
          *
