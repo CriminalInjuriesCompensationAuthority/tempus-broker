@@ -12,16 +12,31 @@ Parameters:
     Default: dev
     Description: Parameter for the environment
     AllowedValues: ['dev', 'uat', 'prod']
+  OnPremIpRange:
+    Type: String
+    Default: '192.168.0.1/16'
+    Description: "The CIDR range for CICA's on premise"
 
 Mappings:
   EnvironmentMap:
     dev:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-dev-claim-criminal-injuries-tempus-queue
+      VpcId: vpc-0e42a25379fa895ec
+      SubnetIdA: subnet-02f7ae7f6b1db987f
+      SubnetIdB: subnet-0a5e7b48efcb931ba
+      TariffSGId: sg-0ebad8b7f67749a6e
     uat:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-uat-claim-criminal-injuries-tempus-queue
+      VpcId: vpc-0e42a25379fa895ec # needs updating
+      SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
+      SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
+      TariffSGId: sg-0ebad8b7f67749a6e
     prod:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
-
+      VpcId: vpc-0e42a25379fa895ec # needs updating
+      SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
+      SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
+      TariffSGId: sg-0ebad8b7f67749a6e
 Resources:
   function:
     Type: AWS::Serverless::Function
@@ -84,6 +99,13 @@ Resources:
       Tracing: Active
       Layers:
         - !Ref libs
+      VpcConfig:
+        SubnetIds:
+          [
+            !FindInMap [EnvironmentMap, !Ref Environment, SubnetIdA],
+            !FindInMap [EnvironmentMap, !Ref Environment, SubnetIdB],
+          ]
+        SecurityGroupIds: [!Ref tempusBrokerSecurityGroup]
   libs:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -92,3 +114,22 @@ Resources:
       ContentUri: lib/.
       CompatibleRuntimes:
         - nodejs18.x
+  tempusBrokerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'TempusBrokerSecurityGroup'
+      GroupDescription: Security group for the tempus broker lamdba function to allow communications out to Tariff and Tempus.
+      VpcId: !FindInMap [EnvironmentMap, !Ref Environment, VpcId]
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1521
+          ToPort: 1521
+          DestinationSecurityGroupId: !FindInMap [EnvironmentMap, !Ref Environment, TariffSGId]
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref OnPremIpRange
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: '0.0.0.0/0'
