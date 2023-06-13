@@ -14,6 +14,10 @@ function serialize(object) {
     return JSON.stringify(object, null, 2);
 }
 
+function extractTariffReference(applicationJson) {
+    return applicationJson.meta.caseReference.split('\\')[1];
+}
+
 exports.handler = async function(event, context) {
     logger.info(`## CONTEXT: ${serialize(context)}`);
     logger.info(`## EVENT: ${serialize(event)}`);
@@ -47,10 +51,10 @@ exports.handler = async function(event, context) {
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
         logger.info('Call out to KTA SDK');
-        const sessionId = getParameter('kta-session-id');
+        const sessionId = await getParameter('kta-session-id');
         const inputVars = [
-            {Id: 'TARIFF_REFERENCE', Value: s3ApplicationData.meta.caseReference},
-            {Id: 'SUMMARY_URL', Value: Object.values(s3Keys)[0]}
+            {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
+            {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}${Object.values(s3Keys)[0]}`}
         ];
         logger.info(`InputVars: ${inputVars}`);
 
