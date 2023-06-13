@@ -59,8 +59,6 @@ exports.handler = async function(event, context) {
         /** ----------------------- TO-DO -----------------------
          *
          *  Delete JSON from S3
-         *  Send request to KTA with S3 Key
-         *
          *
          *  -----------------------       -----------------------
          */
