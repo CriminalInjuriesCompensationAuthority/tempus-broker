@@ -54,9 +54,9 @@ exports.handler = async function(event, context) {
         const sessionId = await getParameter('kta-session-id');
         const inputVars = [
             {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
-            {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}${Object.values(s3Keys)[0]}`}
+            {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}/${Object.values(s3Keys)[0]}`}
         ];
-        logger.info(`InputVars: ${inputVars}`);
+        logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
         await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
 
