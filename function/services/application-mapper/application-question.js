@@ -125,6 +125,16 @@ function mapApplicationQuestion(data, oracleJson) {
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
+
+            // If the crime was not reported, the claim is ineligible
+            case 'q-was-crime-reported-to-police':
+                if (!data.value) {
+                    columnValue = 'N';
+                    Object.values(oracleJson)[0][0].APPLICATION_FORM.is_eligible = 'N';
+                } else {
+                    columnValue = 'Y';
+                }
+                break;
             // If custom mapping is not required, map in a generic way
             default:
                 // Check if the applicant is eligible for special expenses

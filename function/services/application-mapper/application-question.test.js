@@ -11,7 +11,8 @@ describe('Application question', () => {
                 {
                     APPLICATION_FORM: {
                         prefix: 'U',
-                        section_ref: 'TEMP'
+                        section_ref: 'TEMP',
+                        is_eligible: 'Y'
                     }
                 },
                 {

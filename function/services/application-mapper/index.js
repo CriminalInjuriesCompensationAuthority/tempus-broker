@@ -10,7 +10,8 @@ const oracleJsonObject = {
         {
             APPLICATION_FORM: {
                 prefix: 'U',
-                section_ref: 'TEMP'
+                section_ref: 'TEMP',
+                is_eligible: true
             }
         },
         {
