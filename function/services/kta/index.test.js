@@ -28,7 +28,7 @@ describe('KTA Service', () => {
         spy.mockImplementation(() => Promise.reject(new Error('Failure')));
         await expect(
             createJob(sessionId, 'Case Work - Application for Compensation', inputVars)
-        ).rejects.toBe(new Error('Failure'));
+        ).rejects.toEqual(new Error('Failure'));
     });
 
     afterAll(() => {
