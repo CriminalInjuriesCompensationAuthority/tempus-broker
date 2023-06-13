@@ -49,7 +49,7 @@ exports.handler = async function(event, context) {
         logger.info('Call out to KTA SDK');
         const sessionId = getParameter('kta-session-id');
         const inputVars = [
-            {Id: 'TARIFF_REFERENCE', Value: s3ApplicationData.metadata['case-reference']},
+            {Id: 'TARIFF_REFERENCE', Value: s3ApplicationData.meta.caseReference},
             {Id: 'SUMMARY_URL', Value: Object.values(s3Keys)[0]}
         ];
         logger.info(`InputVars: ${inputVars}`);
