@@ -87,6 +87,7 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue).toBeTruthy();
 
         specialExpensesQuestionData.value = false;
+        Object.values(oracleJsonObject)[0][0].APPLICATION_FORM.applicant_expenses = true;
         mappedQuestion = mapApplicationQuestion(specialExpensesQuestionData, oracleJsonObject);
         expect(mappedQuestion.columnName).toBe('applicant_expenses');
         expect(mappedQuestion.columnValue).toBeTruthy();
@@ -102,5 +103,96 @@ describe('Application question', () => {
         const mappedQuestion = mapApplicationQuestion(addressQuestionData);
         expect(mappedQuestion.columnValue).toBe('kfc');
         expect(mappedQuestion.addressValue).toBe('kfc');
+    });
+
+    it('Should map the application type', () => {
+        const questionData = {
+            theme: 'crime',
+            id: 'q-applicant-did-the-crime-happen-once-or-over-time',
+            value: 'once'
+        };
+        let mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('2');
+
+        questionData.value = 'over a period of time';
+        mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('3');
+    });
+
+    it('Should map who the applicant is', () => {
+        const questionData = {
+            theme: 'about-application',
+            id: 'q-applicant-who-are-you-applying-for',
+            value: 'myself'
+        };
+        let mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('Y');
+
+        questionData.value = 'someone else';
+        mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+    });
+
+    it('Should map physical injuries', () => {
+        const physicalInjuryData = {
+            theme: 'injuries',
+            id: 'q-applicant-physical-injury',
+            value: ['phyinj-001', 'phyinj-027', 'phinj-727']
+        };
+        const mappedQuestion = mapApplicationQuestion(physicalInjuryData);
+        expect(mappedQuestion.columnValue).toBe('phyinj-001:phyinj-027:phinj-727');
+    });
+
+    it('Should map the reporter type', () => {
+        const questionData = {
+            theme: 'rep-details',
+            id: 'q-rep-type',
+            value: 'Solicitor',
+            valueLabel: 'Solicitor'
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toContainEqual('Solicitor', 'Y');
+    });
+
+    it('Should concatenate applicant names', () => {
+        const questionData = {
+            theme: 'applicant-details',
+            id: 'q-applicant-title',
+            value: 'Miss'
+        };
+        let mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.columnValue).toBe('Miss');
+        expect(mappedQuestion.addressValue).toBe('Miss');
+
+        questionData.value = 'Sabina';
+        Object.values(oracleJsonObject)[0][1].ADDRESS_DETAILS.push({
+            address_type: 'APA',
+            name: 'Miss'
+        });
+        mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.addressValue).toBe('Miss Sabina');
+    });
+
+    it('Should create an array of selected options for work details', () => {
+        const questionData = {
+            theme: 'impact',
+            id: 'q-applicant-work-details-option',
+            value: ['education', 'other']
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.columnValue).toContainEqual('E', 'O');
+    });
+
+    it('Should map when crime happened', () => {
+        const questionData = {
+            theme: 'impact',
+            id: 'q-applicant-job-when-crime-happened',
+            value: true
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.columnValue).toContainEqual('I');
     });
 });

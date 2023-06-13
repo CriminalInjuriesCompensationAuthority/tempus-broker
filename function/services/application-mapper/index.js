@@ -35,10 +35,7 @@ async function mapApplicationDataToOracleObject(data) {
         // Check if the key is a metadata key which needs to be mapped
         // TO-DO We should expand this to a separate mapper to check for the metadata key if it becomes too long
         if (key === 'caseReference') {
-            // eslint-disable-next-line prefer-destructuring
-            crn = value.split('\\')[1];
-            // eslint-disable-next-line prefer-destructuring
-            refYear = value.split('\\')[0];
+            [refYear, crn] = value.split('\\');
             applicationFormJson.claim_reference_number = crn;
             applicationFormJson.ref_year = refYear;
         }
@@ -55,25 +52,17 @@ async function mapApplicationDataToOracleObject(data) {
             // When address details, generate one object for each address type
             if (applicationQuestion.columnName) {
                 let entryExistsInAddressDetails;
-                Object.values(addressDetailsColumns).forEach(val => {
-                    if (Object.keys(val).includes(value)) {
-                        entryExistsInAddressDetails = Object.keys(val).includes(value);
-                    }
+                Object.values(addressDetailsColumns).forEach(addressTypeObject => {
+                    entryExistsInAddressDetails =
+                        entryExistsInAddressDetails || value in addressTypeObject;
                 });
                 Object.entries(addressDetailsColumns).forEach(column => {
-                    const [type, val] = column;
-                    if (
-                        Object.keys(val).find(qid => qid === value) &&
-                        entryExistsInAddressDetails
-                    ) {
+                    const [type, addressTypeObject] = column;
+                    if (addressTypeObject?.[value] && entryExistsInAddressDetails) {
                         // If the type already exists add to existing object - else create new type
                         addressDetailsJson.forEach((obj, i) => {
                             if (obj.address_type === type) {
-                                const j = Object.values(addressDetailsJson).findIndex(
-                                    index => index === obj
-                                );
-
-                                addressDetailsJson[j][applicationQuestion.columnName] =
+                                addressDetailsJson[i][applicationQuestion.columnName] =
                                     applicationQuestion.columnValue;
                             } else if (i === addressDetailsJson.length - 1) {
                                 addressDetailsJson.push({
@@ -82,6 +71,14 @@ async function mapApplicationDataToOracleObject(data) {
                                         applicationQuestion.columnValue
                                 });
                             }
+                        });
+                    } else if (
+                        !entryExistsInAddressDetails &&
+                        Array.isArray(applicationQuestion.columnValue)
+                    ) {
+                        applicationQuestion.columnValue.forEach((columnValue, i) => {
+                            applicationFormJson[applicationQuestion.columnName[i]] =
+                                applicationQuestion.columnValue[i];
                         });
                     } else if (!entryExistsInAddressDetails) {
                         applicationFormJson[applicationQuestion.columnName] =
@@ -95,11 +92,7 @@ async function mapApplicationDataToOracleObject(data) {
             if (applicationQuestion.addressColumn) {
                 addressDetailsJson.forEach((obj, i) => {
                     if (obj.address_type === applicationQuestion.addressType) {
-                        const j = Object.values(addressDetailsJson).findIndex(
-                            index => index === obj
-                        );
-
-                        addressDetailsJson[j][applicationQuestion.addressColumn] =
+                        addressDetailsJson[i][applicationQuestion.addressColumn] =
                             applicationQuestion.addressValue;
                     } else if (i === addressDetailsJson.length - 1) {
                         addressDetailsJson.push({

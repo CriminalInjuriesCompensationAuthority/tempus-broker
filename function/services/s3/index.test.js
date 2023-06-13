@@ -49,6 +49,25 @@ describe('S3 Service', () => {
         ).rejects.toThrowError('The specified bucket does not exist');
     });
 
+    it('Should throw an error if the content type is not supported', async () => {
+        const mockCommand = {
+            Bucket: 'test',
+            Key: 'test.exe'
+        };
+        const stream = createReadStream(
+            'function/resources/testing/check-your-answers-sample.json'
+        );
+        const sdkStream = sdkStreamMixin(stream);
+        mockS3Client.on(GetObjectCommand, mockCommand).resolves({
+            Body: sdkStream,
+            ContentType: 'application/exe'
+        });
+
+        await expect(() => s3.retrieveObjectFromBucket('test', 'test.exe')).rejects.toThrowError(
+            'application/exe content type is not supported'
+        );
+    });
+
     it('Should delete an object from a bucket', async () => {
         const mockCommand = {
             Bucket: '8d20901b-ed27-4bae-9884-8c5bb7c89b1c',
@@ -63,7 +82,6 @@ describe('S3 Service', () => {
             '8d20901b-ed27-4bae-9884-8c5bb7c89b1c',
             'check-your-answers-sample.json'
         );
-        expect(Object.hasOwn(response, 'DeleteMarker')).toBeTruthy();
-        expect(response.DeleteMarker).toBeTruthy();
+        expect(response?.DeleteMarker).toBeTruthy();
     });
 });
