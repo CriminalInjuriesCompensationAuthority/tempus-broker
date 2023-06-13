@@ -28,7 +28,12 @@ async function createJob(sessionId, processName, inputVariables) {
         }
     };
 
-    return KtaNtlmClient.sendRequest('JobService.svc/json/CreateJob', params);
+    try {
+        return await KtaNtlmClient.sendRequest('JobService.svc/json/CreateJob', params);
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
 }
 
 module.exports = createJob;
