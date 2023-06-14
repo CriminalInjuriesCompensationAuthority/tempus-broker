@@ -196,4 +196,24 @@ describe('Application question', () => {
         const mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
         expect(mappedQuestion.columnValue).toContainEqual('I');
     });
+
+    it('Should map other physical injuries code', () => {
+        const questionData = {
+            theme: 'injuries',
+            id: 'q-applicant-physical-injuries-upper-face-other',
+            value: 'confetti'
+        };
+
+        let mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.columnValue).toBe('phyinj-149');
+
+        Object.values(oracleJsonObject)[0][0].APPLICATION_FORM.injury_details_code =
+            'phyinj-001:phyinj-027:phinj-727';
+        mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.columnValue).toBe('phyinj-001:phyinj-027:phinj-727:phyinj-149');
+
+        questionData.id = 'q-applicant-physical-injuries-legs-hip-other';
+        mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        expect(mappedQuestion.columnValue).toBe('phyinj-001:phyinj-027:phinj-727:phyinj-149');
+    });
 });

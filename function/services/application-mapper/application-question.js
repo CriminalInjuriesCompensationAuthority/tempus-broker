@@ -117,20 +117,21 @@ function mapApplicationQuestion(data, oracleJson) {
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
-
-            // If the crime was not reported, the claim is ineligible
-            case 'q-was-crime-reported-to-police':
-                if (!data.value) {
-                    columnValue = 'N';
-                    Object.values(oracleJson)[0][0].APPLICATION_FORM.is_eligible = 'N';
-                } else {
-                    columnValue = 'Y';
-                }
-                break;
-            // If custom mapping is not required, map in a generic way
             default:
+                // Check if phyinj-149 (Other) should be added
+                if (
+                    data.id.startsWith('q-applicant-physical-injuries-') &&
+                    data.id.endsWith('-other')
+                ) {
+                    columnValue = applicationForm?.injury_details_code
+                        ? applicationForm.injury_details_code
+                        : 'phyinj-149';
+                    if (!columnValue.endsWith('phyinj-149')) {
+                        columnValue += ':phyinj-149';
+                    }
+                }
                 // Check if the applicant is eligible for special expenses
-                if (data.theme === 'special-expenses') {
+                else if (data.theme === 'special-expenses') {
                     if (
                         applicationForm?.applicant_expenses &&
                         applicationForm.applicant_expenses === true
@@ -145,7 +146,9 @@ function mapApplicationQuestion(data, oracleJson) {
                     columnValue = DateTime.fromISO(data.value)
                         .toFormat('dd-MMM-yy')
                         .toLocaleUpperCase();
-                } else {
+                }
+                // If custom mapping is not required, map in a generic way
+                else {
                     switch (data.value) {
                         case true:
                             columnValue = 'Y';
