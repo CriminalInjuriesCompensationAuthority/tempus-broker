@@ -7,7 +7,7 @@ function concatenateToExistingAddressColumn(oracleJson, addressType, addressColu
     let exists;
     let index;
     Object.values(oracleJson)[0][1].ADDRESS_DETAILS.forEach(value => {
-        exists = Object.hasOwn(value, addressColumn) && value.address_type === addressType;
+        exists = value?.[addressColumn] && value.address_type === addressType;
         if (exists) {
             index = Object.values(oracleJson)[0][1].ADDRESS_DETAILS.findIndex(
                 found => found === value
@@ -24,6 +24,7 @@ function concatenateToExistingAddressColumn(oracleJson, addressType, addressColu
 
 function mapApplicationQuestion(data, oracleJson) {
     const columnName = FormFieldsGroupedByTheme[data.theme]?.[data.id];
+    const applicationForm = oracleJson ? Object.values(oracleJson)[0][0].APPLICATION_FORM : null;
     let columnValue = null;
     let addressColumn = null;
     let addressValue = null;
@@ -35,26 +36,16 @@ function mapApplicationQuestion(data, oracleJson) {
         switch (data.id) {
             // Creates string I,E,S,C,O based on selected options
             case 'q-applicant-work-details-option':
-                if (
-                    Object.hasOwn(Object.values(oracleJson)[0][0].APPLICATION_FORM, 'work_details')
-                ) {
-                    columnValue = Object.values(oracleJson)[0][0].APPLICATION_FORM.work_details;
-                } else {
-                    columnValue = '';
-                }
+                columnValue = applicationForm?.work_details ? applicationForm.work_details : '';
+
                 data.value.forEach(option => {
                     columnValue = `${columnValue + option[0].toUpperCase()},`;
                 });
                 columnValue = columnValue.slice(0, -1);
                 break;
             case 'q-applicant-job-when-crime-happened':
-                if (
-                    data.value === true &&
-                    Object.hasOwn(Object.values(oracleJson)[0][0].APPLICATION_FORM, 'work_details')
-                ) {
-                    columnValue = `${
-                        Object.values(oracleJson)[0][0].APPLICATION_FORM.work_details
-                    },I`;
+                if (data.value === true && applicationForm?.work_details) {
+                    columnValue = `${applicationForm.work_details},I`;
                 } else if (data.value === true) {
                     columnValue = 'I,';
                 }
@@ -113,11 +104,12 @@ function mapApplicationQuestion(data, oracleJson) {
                 );
                 break;
 
-            // Maps representative type using value label
+            // We need to map this value to multiple columns, so we return an array of values
             case 'q-rep-type':
-                columnValue = data.valueLabel;
-                Object.values(oracleJson)[0][0].APPLICATION_FORM.has_representative = 'Y';
-                Object.values(oracleJson)[0][0].APPLICATION_FORM.rep_correspond_direct = 'Y';
+                columnValue = [];
+                columnValue[0] = data.valueLabel;
+                columnValue[1] = 'Y';
+                columnValue[2] = 'Y';
                 break;
             case 'q-rep-organisation-name':
                 addressType = 'RPA';
@@ -140,11 +132,8 @@ function mapApplicationQuestion(data, oracleJson) {
                 // Check if the applicant is eligible for special expenses
                 if (data.theme === 'special-expenses') {
                     if (
-                        Object.hasOwn(
-                            Object.values(oracleJson)[0][0].APPLICATION_FORM,
-                            'applicant_expenses'
-                        ) &&
-                        Object.values(oracleJson)[0][0].APPLICATION_FORM.applicant_expenses === true
+                        applicationForm?.applicant_expenses &&
+                        applicationForm.applicant_expenses === true
                     ) {
                         columnValue = 'true';
                     } else {

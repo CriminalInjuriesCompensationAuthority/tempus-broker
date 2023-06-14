@@ -97,8 +97,8 @@ describe('Application mapper', () => {
 
         addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
         addressDetailsJson.forEach(entry => {
-            expect(Object.hasOwn(entry, 'claim_reference_number')).toBeTruthy();
-            expect(Object.hasOwn(entry, 'ref_year')).toBeTruthy();
+            expect(entry?.claim_reference_number).toBeTruthy();
+            expect(entry?.ref_year).toBeTruthy();
         });
     });
 
@@ -115,7 +115,7 @@ describe('Application mapper', () => {
         expect(applicationFormJson[formField]).toBe(applicationSummaryJson.value);
         addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
         addressDetailsJson.forEach((entry, i) => {
-            if (Object.hasOwn(entry, 'name') && addressDetailsJson[i] === 'PAB') {
+            if (entry?.name && addressDetailsJson[i] === 'PAB') {
                 expect(entry.name).toBe(applicationSummaryJson.value);
             }
         });
