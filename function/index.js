@@ -6,11 +6,16 @@ const handleTempusBrokerMessage = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
+const createJob = require('./services/kta/index');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
+}
+
+function extractTariffReference(applicationJson) {
+    return applicationJson.meta.caseReference.split('\\')[1];
 }
 
 exports.handler = async function(event, context) {
@@ -34,9 +39,11 @@ exports.handler = async function(event, context) {
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
 
+        logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
+        logger.info('Creating Database Pool');
         dbConn = await createDBPool();
 
         logger.info('Writing application data into Tariff');
@@ -44,14 +51,15 @@ exports.handler = async function(event, context) {
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
         await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
+        logger.info('Call out to KTA SDK');
+        const sessionId = await getParameter('kta-session-id');
+        const inputVars = [
+            {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
+            {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}/${Object.values(s3Keys)[0]}`}
+        ];
+        logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
-        /** ----------------------- TO-DO -----------------------
-         *
-         *  Send request to KTA with S3 Key
-         *
-         *
-         *  -----------------------       -----------------------
-         */
+        await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
     } catch (error) {
         logger.error(error);
         throw error;

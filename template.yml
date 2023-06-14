@@ -20,7 +20,7 @@ Parameters:
 Mappings:
   EnvironmentMap:
     dev:
-      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-dev-claim-criminal-injuries-tempus-queue
+      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-staging-claim-criminal-injuries-tempus-queue
       VpcId: vpc-0e42a25379fa895ec
       SubnetIdA: subnet-02f7ae7f6b1db987f
       SubnetIdB: subnet-0a5e7b48efcb931ba
