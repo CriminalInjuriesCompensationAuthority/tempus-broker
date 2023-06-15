@@ -36,7 +36,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 data.value.forEach(option => {
                     columnValue = `${columnValue + option[0].toUpperCase()},`;
                 });
-                columnValue = columnValue.slice(0, -1);
+                columnValue = columnValue ? columnValue.slice(0, -1) : null;
                 break;
             case 'q-applicant-job-when-crime-happened':
                 if (data.value && applicationForm?.work_details) {
