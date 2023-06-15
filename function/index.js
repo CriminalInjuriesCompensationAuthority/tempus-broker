@@ -1,7 +1,7 @@
 'use strict';
 
 const oracledb = require('oracledb');
-const retrieveObjectFromBucket = require('./services/s3/index');
+const s3 = require('./services/s3/index');
 const handleTempusBrokerMessage = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
 const createDBPool = require('./db/dbPool');
@@ -31,7 +31,7 @@ exports.handler = async function(event, context) {
         logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
         const s3Keys = await handleTempusBrokerMessage(record.body);
-        const s3ApplicationData = await retrieveObjectFromBucket(
+        const s3ApplicationData = await s3.retrieveObjectFromBucket(
             bucketName,
             Object.values(s3Keys)[1]
         );
@@ -50,6 +50,7 @@ exports.handler = async function(event, context) {
         await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
+        await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
         logger.info('Call out to KTA SDK');
         const sessionId = await getParameter('kta-session-id');
         const inputVars = [
@@ -59,13 +60,6 @@ exports.handler = async function(event, context) {
         logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
         await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
-
-        /** ----------------------- TO-DO -----------------------
-         *
-         *  Delete JSON from S3
-         *
-         *  -----------------------       -----------------------
-         */
     } catch (error) {
         logger.error(error);
         throw error;
