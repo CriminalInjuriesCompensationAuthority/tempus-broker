@@ -5,30 +5,19 @@ const mapApplicationQuestion = require('./application-question');
 const addressDetailsColumns = require('../../constants/address-details-columns');
 
 // The initial oracle object
-const oracleJsonObject = {
-    tables: [
-        {
-            APPLICATION_FORM: {
-                prefix: 'U',
-                section_ref: 'TEMP'
-            }
-        },
-        {
-            ADDRESS_DETAILS: [
-                {
-                    address_type: 'ICA'
-                }
-            ]
-        }
-    ]
+const applicationFormJson = {
+    prefix: 'U',
+    section_ref: 'TEMP'
 };
+const addressDetailsJson = [
+    {
+        address_type: 'ICA'
+    }
+];
 let crn;
 let refYear;
 
 async function mapApplicationDataToOracleObject(data) {
-    const applicationFormJson = Object.values(oracleJsonObject)[0][0].APPLICATION_FORM;
-    const addressDetailsJson = Object.values(oracleJsonObject)[0][1].ADDRESS_DETAILS;
-
     Object.entries(data).forEach(entry => {
         const [key, value] = entry;
 
@@ -46,7 +35,11 @@ async function mapApplicationDataToOracleObject(data) {
         }
         if (key === 'id') {
             // If the key is an id then map the value to json and concatenate to the oracle object
-            const applicationQuestion = mapApplicationQuestion(data, oracleJsonObject);
+            const applicationQuestion = mapApplicationQuestion(
+                data,
+                applicationFormJson,
+                addressDetailsJson
+            );
 
             // Map the question to applicationForm or addressDetails or both
             // When address details, generate one object for each address type
@@ -60,18 +53,18 @@ async function mapApplicationDataToOracleObject(data) {
                     const [type, addressTypeObject] = column;
                     if (addressTypeObject?.[value] && entryExistsInAddressDetails) {
                         // If the type already exists add to existing object - else create new type
-                        addressDetailsJson.forEach((obj, i) => {
-                            if (obj.address_type === type) {
-                                addressDetailsJson[i][applicationQuestion.columnName] =
-                                    applicationQuestion.columnValue;
-                            } else if (i === addressDetailsJson.length - 1) {
-                                addressDetailsJson.push({
-                                    address_type: type,
-                                    [applicationQuestion.columnName]:
-                                        applicationQuestion.columnValue
-                                });
-                            }
-                        });
+                        const addressIndex = addressDetailsJson.findIndex(
+                            obj => obj.address_type === type
+                        );
+                        if (addressIndex > -1) {
+                            addressDetailsJson[addressIndex][applicationQuestion.columnName] =
+                                applicationQuestion.columnValue;
+                        } else {
+                            addressDetailsJson.push({
+                                address_type: type,
+                                [applicationQuestion.columnName]: applicationQuestion.columnValue
+                            });
+                        }
                     } else if (
                         !entryExistsInAddressDetails &&
                         Array.isArray(applicationQuestion.columnValue)
@@ -113,7 +106,16 @@ async function mapApplicationDataToOracleObject(data) {
         addressDetailsJson[i].claim_reference_number = crn;
         addressDetailsJson[i].ref_year = refYear;
     });
-    return oracleJsonObject;
+    return {
+        tables: [
+            {
+                APPLICATION_FORM: applicationFormJson
+            },
+            {
+                ADDRESS_DETAILS: addressDetailsJson
+            }
+        ]
+    };
 }
 
 module.exports = mapApplicationDataToOracleObject;

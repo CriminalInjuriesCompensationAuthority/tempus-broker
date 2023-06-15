@@ -4,25 +4,18 @@ const mapApplicationQuestion = require('./application-question');
 const FormFieldsGroupedByTheme = require('../../constants/form-fields-grouped-by-theme');
 
 describe('Application question', () => {
-    let oracleJsonObject;
+    let applicationForm;
+    let addressDetails;
     beforeAll(() => {
-        oracleJsonObject = {
-            tables: [
-                {
-                    APPLICATION_FORM: {
-                        prefix: 'U',
-                        section_ref: 'TEMP'
-                    }
-                },
-                {
-                    ADDRESS_DETAILS: [
-                        {
-                            address_type: 'ICA'
-                        }
-                    ]
-                }
-            ]
+        applicationForm = {
+            prefix: 'U',
+            section_ref: 'TEMP'
         };
+        addressDetails = [
+            {
+                address_type: 'ICA'
+            }
+        ];
     });
 
     it('Should not map if the columnName is not found in the form fields list', () => {
@@ -82,13 +75,21 @@ describe('Application question', () => {
             value: true
         };
 
-        let mappedQuestion = mapApplicationQuestion(specialExpensesQuestionData, oracleJsonObject);
+        let mappedQuestion = mapApplicationQuestion(
+            specialExpensesQuestionData,
+            applicationForm,
+            addressDetails
+        );
         expect(mappedQuestion.columnName).toBe('applicant_expenses');
         expect(mappedQuestion.columnValue).toBeTruthy();
 
         specialExpensesQuestionData.value = false;
-        Object.values(oracleJsonObject)[0][0].APPLICATION_FORM.applicant_expenses = true;
-        mappedQuestion = mapApplicationQuestion(specialExpensesQuestionData, oracleJsonObject);
+        applicationForm.applicant_expenses = true;
+        mappedQuestion = mapApplicationQuestion(
+            specialExpensesQuestionData,
+            applicationForm,
+            addressDetails
+        );
         expect(mappedQuestion.columnName).toBe('applicant_expenses');
         expect(mappedQuestion.columnValue).toBeTruthy();
     });
@@ -161,16 +162,16 @@ describe('Application question', () => {
             id: 'q-applicant-title',
             value: 'Miss'
         };
-        let mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        let mappedQuestion = mapApplicationQuestion(questionData, applicationForm, addressDetails);
         expect(mappedQuestion.columnValue).toBe('Miss');
         expect(mappedQuestion.addressValue).toBe('Miss');
 
         questionData.value = 'Sabina';
-        Object.values(oracleJsonObject)[0][1].ADDRESS_DETAILS.push({
+        addressDetails.push({
             address_type: 'APA',
             name: 'Miss'
         });
-        mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        mappedQuestion = mapApplicationQuestion(questionData, applicationForm, addressDetails);
         expect(mappedQuestion.addressValue).toBe('Miss Sabina');
     });
 
@@ -181,7 +182,11 @@ describe('Application question', () => {
             value: ['education', 'other']
         };
 
-        const mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        const mappedQuestion = mapApplicationQuestion(
+            questionData,
+            applicationForm,
+            addressDetails
+        );
         expect(mappedQuestion.columnValue).toContainEqual('E', 'O');
     });
 
@@ -192,7 +197,11 @@ describe('Application question', () => {
             value: true
         };
 
-        const mappedQuestion = mapApplicationQuestion(questionData, oracleJsonObject);
+        const mappedQuestion = mapApplicationQuestion(
+            questionData,
+            applicationForm,
+            addressDetails
+        );
         expect(mappedQuestion.columnValue).toContainEqual('I');
     });
 });
