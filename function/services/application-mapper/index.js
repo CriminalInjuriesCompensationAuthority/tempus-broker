@@ -7,7 +7,8 @@ const addressDetailsColumns = require('../../constants/address-details-columns')
 // The initial oracle object
 const applicationFormJson = {
     prefix: 'U',
-    section_ref: 'TEMP'
+    section_ref: 'TEMP',
+    is_eligible: 'Y'
 };
 const addressDetailsJson = [
     {

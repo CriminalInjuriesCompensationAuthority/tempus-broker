@@ -6,6 +6,7 @@ const handleTempusBrokerMessage = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
+const checkEligibility = require('./services/eligibility-checker/index');
 const createJob = require('./services/kta/index');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
@@ -43,11 +44,14 @@ exports.handler = async function(event, context) {
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
+        logger.info('Checking application eligibility');
+        const applicationFormJsonChecked = checkEligibility(applicationFormJson);
+
         logger.info('Creating Database Pool');
         dbConn = await createDBPool();
 
         logger.info('Writing application data into Tariff');
-        await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
+        await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
         await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);

@@ -9,7 +9,8 @@ describe('Application question', () => {
     beforeAll(() => {
         applicationForm = {
             prefix: 'U',
-            section_ref: 'TEMP'
+            section_ref: 'TEMP',
+            is_eligible: 'Y'
         };
         addressDetails = [
             {
@@ -203,5 +204,24 @@ describe('Application question', () => {
             addressDetails
         );
         expect(mappedQuestion.columnValue).toContainEqual('I');
+    });
+
+    it('Should map other physical injuries code', () => {
+        const questionData = {
+            theme: 'injuries',
+            id: 'q-applicant-physical-injuries-upper-face-other',
+            value: 'confetti'
+        };
+
+        let mappedQuestion = mapApplicationQuestion(questionData, applicationForm, addressDetails);
+        expect(mappedQuestion.columnValue).toBe('phyinj-149');
+
+        applicationForm.injury_details_code = 'phyinj-001:phyinj-027:phinj-727';
+        mappedQuestion = mapApplicationQuestion(questionData, applicationForm, addressDetails);
+        expect(mappedQuestion.columnValue).toBe('phyinj-001:phyinj-027:phinj-727:phyinj-149');
+
+        questionData.id = 'q-applicant-physical-injuries-legs-hip-other';
+        mappedQuestion = mapApplicationQuestion(questionData, applicationForm, addressDetails);
+        expect(mappedQuestion.columnValue).toBe('phyinj-001:phyinj-027:phinj-727:phyinj-149');
     });
 });
