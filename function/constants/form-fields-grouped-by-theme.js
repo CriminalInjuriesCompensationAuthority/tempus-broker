@@ -169,5 +169,23 @@ module.exports = Object.freeze({
         'q-applicant-se-equipment': 'applicant_expenses',
         'q-applicant-se-aids': 'applicant_expenses',
         'q-applicant-se-other': 'applicant_expenses'
+    },
+    'additional-info': {
+        'q-applicant-additional-information': 'additional_info'
+    },
+    deceased: {
+        'q-deceased-date-of-birth': 'dec_date_of_birth',
+        'q-deceased-date-of-death': 'dec_date_of_death',
+        'q-deceased-title': 'name',
+        'q-deceased-first-name': 'name',
+        'q-deceased-last-name': 'name',
+        'q-deceased-building-and-street': 'address_line_1',
+        'q-deceased-building-and-street-2': 'address_line_2',
+        'q-deceased-building-and-street-3': 'address_line_3',
+        'q-deceased-town-or-city': 'address_line_4',
+        'q-deceased-county': 'address_line_5',
+        'q-deceased-postcode': 'post_code',
+        'q-applicant-relationship-to-deceased': 'relationship_to_deceased',
+        'q-applicant-relationship-other': 'other_relationship_to_deceased'
     }
 });

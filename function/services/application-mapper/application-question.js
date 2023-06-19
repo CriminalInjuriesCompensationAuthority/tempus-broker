@@ -20,7 +20,7 @@ function concatenateToExistingAddressColumn(addressDetails, addressType, address
 
 function mapApplicationQuestion(data, applicationForm, addressDetails) {
     const columnName = FormFieldsGroupedByTheme[data.theme]?.[data.id];
-    let columnValue = null;
+    let columnValue = '';
     let addressColumn = null;
     let addressValue = null;
     let addressType = null;
@@ -31,12 +31,12 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
         switch (data.id) {
             // Creates string I,E,S,C,O based on selected options
             case 'q-applicant-work-details-option':
-                columnValue = applicationForm?.work_details ? applicationForm.work_details : null;
+                columnValue = applicationForm?.work_details ? applicationForm.work_details : '';
 
                 data.value.forEach(option => {
                     columnValue = `${columnValue + option[0].toUpperCase()},`;
                 });
-                columnValue = columnValue ? columnValue.slice(0, -1) : null;
+                columnValue = columnValue.slice(0, -1);
                 break;
             case 'q-applicant-job-when-crime-happened':
                 if (data.value && applicationForm?.work_details) {
@@ -90,6 +90,21 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case 'q-mainapplicant-last-name':
                 addressColumn = 'name';
                 addressType = 'PAB';
+                columnValue = data.value;
+                addressValue = concatenateToExistingAddressColumn(
+                    addressDetails,
+                    addressType,
+                    addressColumn,
+                    data.value
+                );
+                break;
+
+            // Concatenate all these values to the name column under DCA address type
+            case 'q-deceased-title':
+            case 'q-deceased-first-name':
+            case 'q-deceased-last-name':
+                addressColumn = 'name';
+                addressType = 'DCA';
                 columnValue = data.value;
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
