@@ -125,30 +125,31 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 columnValue = applicationForm?.applicant_expenses ? 'true' : 'false';
                 break;
 
-            // Check to see if value can be parsed from an ISO to a DateTime
-            case !DateTime.fromISO(data.value).invalidReason:
-                columnValue = DateTime.fromISO(data.value)
-                    .toFormat('dd-MMM-yy')
-                    .toLocaleUpperCase();
-                break;
-
+            // If custom mapping is not required, map in a generic way
             default:
-                switch (data.value) {
-                    case true:
-                        columnValue = 'Y';
-                        break;
-                    case false:
-                        columnValue = 'N';
-                        break;
-                    case 'yes':
-                        columnValue = 'Y';
-                        break;
-                    case 'no':
-                        columnValue = 'N';
-                        break;
-                    default:
-                        columnValue = data.value;
-                        break;
+                // Check to see if value can be parsed from an ISO to a DateTime
+                if (!DateTime.fromISO(data.value).invalidReason) {
+                    columnValue = DateTime.fromISO(data.value)
+                        .toFormat('dd-MMM-yy')
+                        .toLocaleUpperCase();
+                } else {
+                    switch (data.value) {
+                        case true:
+                            columnValue = 'Y';
+                            break;
+                        case false:
+                            columnValue = 'N';
+                            break;
+                        case 'yes':
+                            columnValue = 'Y';
+                            break;
+                        case 'no':
+                            columnValue = 'N';
+                            break;
+                        default:
+                            columnValue = data.value;
+                            break;
+                    }
                 }
         }
     }
