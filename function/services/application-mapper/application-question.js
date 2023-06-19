@@ -28,9 +28,9 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
     // Check to see if id needs custom mapping
     // Mapping methods sourced from the data dictionary
     if (columnName) {
-        switch (data.id) {
+        switch (true) {
             // Creates string I,E,S,C,O based on selected options
-            case 'q-applicant-work-details-option':
+            case data.id === 'q-applicant-work-details-option':
                 columnValue = applicationForm?.work_details ? applicationForm.work_details : null;
 
                 data.value.forEach(option => {
@@ -38,7 +38,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 });
                 columnValue = columnValue ? columnValue.slice(0, -1) : null;
                 break;
-            case 'q-applicant-job-when-crime-happened':
+            case data.id === 'q-applicant-job-when-crime-happened':
                 if (data.value && applicationForm?.work_details) {
                     columnValue = `${applicationForm.work_details},I`;
                 } else if (data.value) {
@@ -47,21 +47,21 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
 
             // Sets application to PI or POA
-            case 'q-applicant-did-the-crime-happen-once-or-over-time':
+            case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
                 if (data.value === 'once') {
                     columnValue = '2';
                 } else if (data.value === 'over a period of time') {
                     columnValue = '3';
                 }
                 break;
-            case 'q-applicant-who-are-you-applying-for':
+            case data.id === 'q-applicant-who-are-you-applying-for':
                 if (data.value === 'myself') {
                     columnValue = 'Y';
                 } else {
                     columnValue = 'N';
                 }
                 break;
-            case 'q-applicant-physical-injury':
+            case data.id === 'q-applicant-physical-injury':
                 columnValue = '';
                 Object.values(data.value).forEach(option => {
                     columnValue = `${columnValue + option}:`;
@@ -70,9 +70,9 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
 
             // Concatenate all these values to the name column under APA address type
-            case 'q-applicant-title':
-            case 'q-applicant-first-name':
-            case 'q-applicant-last-name':
+            case data.id === 'q-applicant-title':
+            case data.id === 'q-applicant-first-name':
+            case data.id === 'q-applicant-last-name':
                 addressColumn = 'name';
                 addressType = 'APA';
                 columnValue = data.value;
@@ -85,9 +85,9 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
 
             // Concatenate all these values to the name column under PAB address type
-            case 'q-mainapplicant-title':
-            case 'q-mainapplicant-first-name':
-            case 'q-mainapplicant-last-name':
+            case data.id === 'q-mainapplicant-title':
+            case data.id === 'q-mainapplicant-first-name':
+            case data.id === 'q-mainapplicant-last-name':
                 addressColumn = 'name';
                 addressType = 'PAB';
                 columnValue = data.value;
@@ -100,57 +100,55 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
 
             // We need to map this value to multiple columns, so we return an array of values
-            case 'q-rep-type':
+            case data.id === 'q-rep-type':
                 columnValue = [data.valueLabel, 'Y', 'Y'];
                 break;
-            case 'q-rep-organisation-name':
+            case data.id === 'q-rep-organisation-name':
                 addressType = 'RPA';
                 addressColumn = 'name';
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
+
+            // Check if phyinj-149 (Other) should be added
+            case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
+                columnValue = applicationForm?.injury_details_code
+                    ? applicationForm.injury_details_code
+                    : 'phyinj-149';
+                if (!columnValue.endsWith('phyinj-149')) {
+                    columnValue += ':phyinj-149';
+                }
+                break;
+
+            // Check if the applicant is eligible for special expenses
+            case data.theme === 'special-expenses':
+                columnValue = applicationForm?.applicant_expenses ? 'true' : 'false';
+                break;
+
+            // Check to see if value can be parsed from an ISO to a DateTime
+            case !DateTime.fromISO(data.value).invalidReason:
+                columnValue = DateTime.fromISO(data.value)
+                    .toFormat('dd-MMM-yy')
+                    .toLocaleUpperCase();
+                break;
+
             default:
-                // Check if phyinj-149 (Other) should be added
-                if (
-                    data.id.startsWith('q-applicant-physical-injuries-') &&
-                    data.id.endsWith('-other')
-                ) {
-                    columnValue = applicationForm?.injury_details_code
-                        ? applicationForm.injury_details_code
-                        : 'phyinj-149';
-                    if (!columnValue.endsWith('phyinj-149')) {
-                        columnValue += ':phyinj-149';
-                    }
-                }
-                // Check if the applicant is eligible for special expenses
-                else if (data.theme === 'special-expenses') {
-                    columnValue = applicationForm?.applicant_expenses ? 'true' : 'false';
-                }
-                // Check to see if value can be parsed from an ISO to a DateTime
-                else if (!DateTime.fromISO(data.value).invalidReason) {
-                    columnValue = DateTime.fromISO(data.value)
-                        .toFormat('dd-MMM-yy')
-                        .toLocaleUpperCase();
-                }
-                // If custom mapping is not required, map in a generic way
-                else {
-                    switch (data.value) {
-                        case true:
-                            columnValue = 'Y';
-                            break;
-                        case false:
-                            columnValue = 'N';
-                            break;
-                        case 'yes':
-                            columnValue = 'Y';
-                            break;
-                        case 'no':
-                            columnValue = 'N';
-                            break;
-                        default:
-                            columnValue = data.value;
-                            break;
-                    }
+                switch (data.value) {
+                    case true:
+                        columnValue = 'Y';
+                        break;
+                    case false:
+                        columnValue = 'N';
+                        break;
+                    case 'yes':
+                        columnValue = 'Y';
+                        break;
+                    case 'no':
+                        columnValue = 'N';
+                        break;
+                    default:
+                        columnValue = data.value;
+                        break;
                 }
         }
     }

@@ -17,6 +17,28 @@ function checkEligibility(applicationFormJson) {
         : null;
     const submittedDate = DateTime.fromFormat(applicationFormJson?.created_date, 'dd-MMM-yy');
 
+    // ------------- Business rules -------------
+    // 1. The crime must be reported to the police
+    const reportedToPolice = applicationFormJson?.incident_rep_police === 'N';
+    // 2. The applicant is not a victim of human trafficking and not seeking asylum
+    const traffickedAndSeekingAsylum =
+        applicationFormJson?.residency_9 === 'N' && applicationFormJson?.residency_10 === 'N';
+    // 3. The crime was reported 48 hours after the crime happened or started
+    const reportedOnTime =
+        dateTimePolFirstTold &&
+        dateTimeOfIncident &&
+        dateTimePolFirstTold.diff(dateTimeOfIncident, 'minutes').toObject().minutes > 2880;
+    // 4. The crime happened 2 years before the user is submitting
+    const reportedWithinTwoYearsPI =
+        dateTimeOfIncident &&
+        dateTimeOfIncident.diff(submittedDate, 'minutes').toObject().minutes > 1051899;
+    // 5. The crime stopped occuring 2 years before the user is submitting
+    const reportedWithinTwoYearsPOA =
+        dateTimeOfIncidentTo &&
+        dateTimeOfIncidentTo.diff(submittedDate, 'minutes').toObject().minutes > 1051899;
+    // 6. The crime did not happen in England, Scotland or Wales
+    const ineligibleLocation = applicationFormJson?.incident_country === 'somewhere-else';
+    // 7. The applicant is ineligible if only claiming for certain injuries
     let ineligibleDueToInjuries = true;
     if (applicationFormJson?.injury_details_code) {
         const injuryCodes = applicationFormJson.injury_details_code.split(':');
@@ -27,18 +49,12 @@ function checkEligibility(applicationFormJson) {
         });
     }
     if (
-        applicationFormJson?.incident_rep_police === 'N' ||
-        (applicationFormJson?.residency_9 === 'N' && applicationFormJson?.residency_10 === 'N') ||
-        // 48 hours in minutes
-        (dateTimePolFirstTold &&
-            dateTimeOfIncident &&
-            dateTimePolFirstTold.diff(dateTimeOfIncident, 'minutes').toObject().minutes > 2880) ||
-        // 2 years in minutes
-        (dateTimeOfIncident &&
-            dateTimeOfIncident.diff(submittedDate, 'minutes').toObject().minutes > 1051899) ||
-        (dateTimeOfIncidentTo &&
-            dateTimeOfIncidentTo.diff(submittedDate, 'minutes').toObject().minutes > 1051899) ||
-        applicationFormJson?.incident_country === 'somewhere-else' ||
+        reportedToPolice ||
+        traffickedAndSeekingAsylum ||
+        reportedOnTime ||
+        reportedWithinTwoYearsPI ||
+        reportedWithinTwoYearsPOA ||
+        ineligibleLocation ||
         ineligibleDueToInjuries
     ) {
         checkedApplicationFormJson.is_eligible = 'N';
