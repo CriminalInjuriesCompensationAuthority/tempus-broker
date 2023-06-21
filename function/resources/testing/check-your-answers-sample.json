@@ -875,6 +875,93 @@
                     "theme": "funeral-costs"
                 }
             ]
+        },
+        {
+            "type": "theme",
+            "id": "residency-statements",
+            "title": "residency-statements",
+            "values": [
+                {
+                    "id": "q-applicant-ordinarily-resident",
+                    "type": "simple",
+                    "label": "Ordinarily resident",
+                    "value": true,
+                    "sectionId": "p-applicant-ordinarily-resident",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-british-citizen",
+                    "type": "simple",
+                    "label": "British citizen",
+                    "value": true,
+                    "sectionId": "p-applicant-british-citizen",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-british-citizen-relative",
+                    "type": "simple",
+                    "label": "British citizen relative",
+                    "value": false,
+                    "sectionId": "p-applicant-british-citizen-relative",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-eu-citizen",
+                    "type": "simple",
+                    "label": "EU citizen",
+                    "value": false,
+                    "sectionId": "p-applicant-eu-citizen",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-eu-citizen-relative",
+                    "type": "simple",
+                    "label": "EU citizen relative",
+                    "value": true,
+                    "sectionId": "p-applicant-eu-citizen-relative",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-other-citizen",
+                    "type": "simple",
+                    "label": "Other citizen",
+                    "value": true,
+                    "sectionId": "p-applicant-other-citizen",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-armed-forces",
+                    "type": "simple",
+                    "label": "Armed forces",
+                    "value": false,
+                    "sectionId": "p-applicant-armed-forces",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-armed-forces-relative",
+                    "type": "simple",
+                    "label": "Armed forces relative",
+                    "value": false,
+                    "sectionId": "p-applicant-armed-forces-relative",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-victim-human-trafficking",
+                    "type": "simple",
+                    "label": "Victim of human trafficking",
+                    "value": false,
+                    "sectionId": "p-applicant-victim-human-trafficking",
+                    "theme": "residency-statements"
+                },
+                {
+                    "id": "q-applicant-applied-for-asylum",
+                    "type": "simple",
+                    "label": "Applied for asylum",
+                    "value": true,
+                    "sectionId": "p-applicant-applied-for-asylum",
+                    "theme": "residency-statements"
+                }
+            ]
         }
     ]
 }

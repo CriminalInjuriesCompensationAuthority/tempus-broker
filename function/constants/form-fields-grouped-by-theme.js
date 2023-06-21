@@ -202,5 +202,22 @@ module.exports = Object.freeze({
     'funeral-costs': {
         'q-applicant-funeral-costs-paid': 'funeral_claim',
         'q-applicant-funeral-costs-total': 'funeral_total_cost'
+    },
+
+    // Note: Theme may be incorrect due to not having test data
+    // Question IDs should be correct though
+    'residency-statements': {
+        'q-applicant-ordinarily-resident': 'residency_01',
+        'q-applicant-british-citizen': 'residency_02',
+        'q-applicant-british-citizen-relative': 'residency_03',
+        'q-applicant-eu-citizen': 'residency_04',
+        'q-applicant-eu-citizen-relative': 'residency_05',
+        'q-applicant-eea-citizen': 'residency_04',
+        'q-applicant-eea-citizen-relative': 'residency_05',
+        'q-applicant-other-citizen': 'residency_06',
+        'q-applicant-armed-forces': 'residency_07',
+        'q-applicant-armed-forces-relative': 'residency_08',
+        'q-applicant-victim-human-trafficking': 'residency_09',
+        'q-applicant-applied-for-asylum': 'residency_10'
     }
 });
