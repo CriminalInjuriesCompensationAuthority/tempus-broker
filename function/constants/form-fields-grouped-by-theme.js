@@ -4,7 +4,8 @@ module.exports = Object.freeze({
     'about-application': {
         'q--was-the-crime-reported-to-police': 'incident_rep_police',
         'q-applicant-who-are-you-applying-for': 'is_injured_person',
-        'q-applicant-british-citizen-or-eu-national': 'residency_02'
+        'q-applicant-british-citizen-or-eu-national': 'residency_02',
+        'q-applicant-claim-type': ['funeral_only', 'application_type']
     },
     'applicant-details': {
         'q-applicant-what-other-names-have-you-used': 'other_names',
@@ -176,16 +177,30 @@ module.exports = Object.freeze({
     deceased: {
         'q-deceased-date-of-birth': 'dec_date_of_birth',
         'q-deceased-date-of-death': 'dec_date_of_death',
-        'q-deceased-title': 'name',
-        'q-deceased-first-name': 'name',
-        'q-deceased-last-name': 'name',
+        'q-deceased-title': 'dec_title',
+        'q-deceased-first-name': 'dec_first_name',
+        'q-deceased-last-name': 'dec_last_name',
         'q-deceased-building-and-street': 'address_line_1',
         'q-deceased-building-and-street-2': 'address_line_2',
         'q-deceased-building-and-street-3': 'address_line_3',
         'q-deceased-town-or-city': 'address_line_4',
         'q-deceased-county': 'address_line_5',
-        'q-deceased-postcode': 'post_code',
+        'q-deceased-postcode': 'post_code'
+    },
+    'relationship-to-deceased': {
         'q-applicant-relationship-to-deceased': 'relationship_to_deceased',
-        'q-applicant-relationship-other': 'other_relationship_to_deceased'
+        'q-applicant-relationship-other': 'other_relationship_to_deceased',
+        'q-applicant-living-together': 'estranged_from_deceased',
+        'q-applicant-living-apart': 'estranged_from_deceased',
+        'q-applicant-contact-with-deceased': 'estranged_from_deceased',
+        'q-applicant-financial-help': 'financially_dependent',
+        'q-applicant-physical-help': 'financially_dependent',
+        'q-other-claimants': 'other_claimants',
+        'q-other-claimants-details': 'other_claimant_name_01',
+        'q-applicant-immediate-aftermath': 'present_at_incident'
+    },
+    'funeral-costs': {
+        'q-applicant-funeral-costs-paid': 'funeral_claim',
+        'q-applicant-funeral-costs-total': 'funeral_total_cost'
     }
 });

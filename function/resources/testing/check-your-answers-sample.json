@@ -1,6 +1,6 @@
 {
     "meta": {
-        "caseReference": "23\\700001",
+        "caseReference": "23\\327906",
         "submittedDate": "2023-05-19T13:06:12.693Z"
     },
     "themes": [
@@ -70,6 +70,14 @@
                     "value": true,
                     "valueLabel": "Yes",
                     "sectionId": "p-applicant-british-citizen-or-eu-national",
+                    "theme": "about-application"
+                },
+                {
+                    "id": "q-applicant-claim-type",
+                    "type": "simple",
+                    "label": "Applicant claim type",
+                    "value": "I want to claim funeral costs only",
+                    "sectionId": "p-funeral-costs",
                     "theme": "about-application"
                 }
             ]
@@ -645,6 +653,226 @@
                     "valueLabel": "No",
                     "sectionId": "p-applicant-provide-additional-information",
                     "theme": "additional-info"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "deceased",
+            "title": "Deceased",
+            "values": [
+                {
+                    "id": "deceased-name",
+                    "type": "composite",
+                    "label": "Their name",
+                    "values": [
+                        {
+                            "id": "q-deceased-title",
+                            "type": "simple",
+                            "label": "Title",
+                            "value": "Mr",
+                            "sectionId": "p-deceased-title",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-first-name",
+                            "type": "simple",
+                            "label": "First name",
+                            "value": "Lane",
+                            "sectionId": "p-deceased-name",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-last-name",
+                            "type": "simple",
+                            "label": "Last name",
+                            "value": "Pryce",
+                            "sectionId": "p-deceased-name",
+                            "theme": "deceased"
+                        }
+                    ],
+                    "sectionId": "p-deceased-name",
+                    "theme": "deceased"
+                },
+                {
+                    "id": "q-deceased-date-of-birth",
+                    "type": "simple",
+                    "label": "Enter their date of birth",
+                    "value": "1970-01-01T00:00:00.000Z",
+                    "sectionId": "p-deceased-date-of-birth",
+                    "theme": "deceased"
+                },
+                {
+                    "id": "q-deceased-date-of-death",
+                    "type": "simple",
+                    "label": "Enter their date of death",
+                    "value": "2019-01-01T00:00:00.000Z",
+                    "sectionId": "p-deceased-date-of-death",
+                    "theme": "deceased"
+                },
+                {
+                    "id": "deceased-address",
+                    "type": "composite",
+                    "label": "Their address",
+                    "values": [
+                        {
+                            "id": "q-deceased-building-and-street",
+                            "type": "simple",
+                            "label": "Building and street",
+                            "value": "36 Dickinson street",
+                            "sectionId": "p-deceased-building-and-street",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-building-and-street-2",
+                            "type": "simple",
+                            "label": "Building and street line 2",
+                            "value": "Highgate",
+                            "sectionId": "p-deceased-building-and-street-2",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-building-and-street-3",
+                            "type": "simple",
+                            "label": "Building and street line 3",
+                            "value": "Pripyat",
+                            "sectionId": "p-deceased-building-and-street-3",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-town-or-city",
+                            "type": "simple",
+                            "label": "Town or city",
+                            "value": "Wakefield",
+                            "sectionId": "p-deceased-town-or-city",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-county",
+                            "type": "simple",
+                            "label": "County (optional)",
+                            "value": "West Yorkshire",
+                            "sectionId": "p-deceased-county",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-postcode",
+                            "type": "simple",
+                            "label": "Postcode (optional)",
+                            "value": "WF1 1BW",
+                            "sectionId": "p-deceased-postcode",
+                            "theme": "deceased"
+                        }
+                    ],
+                    "sectionId": "p-deceased-address",
+                    "theme": "deceased"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "relationship-to-deceased",
+            "title": "relationship-to-deceased",
+            "values": [
+                {
+                    "id": "q-applicant-relationship-to-deceased",
+                    "type": "simple",
+                    "label": "What is your relationship to the person who died?",
+                    "value": "other",
+                    "sectionId": "p-applicant-relationship-to-deceased",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-relationship-other",
+                    "type": "simple",
+                    "label": "Tell us how you are related",
+                    "value": "Associate",
+                    "sectionId": "p-applicant-relationship-to-deceased",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-living-together",
+                    "type": "simple",
+                    "label": "Living together",
+                    "value": true,
+                    "sectionId": "p-applicant-living-together",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-living-apart",
+                    "type": "simple",
+                    "label": "Living apart",
+                    "value": false,
+                    "sectionId": "p-applicant-living-apart",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-contact-with-deceased",
+                    "type": "simple",
+                    "label": "Contact with deceased",
+                    "value": "We were out of touch with each other",
+                    "sectionId": "p-applicant-contact-with-deceased",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-financial-help",
+                    "type": "simple",
+                    "label": "Financial help",
+                    "value": true,
+                    "sectionId": "p-applicant-financial-help",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-physical-help",
+                    "type": "simple",
+                    "label": "Physical help",
+                    "value": false,
+                    "sectionId": "p-applicant-physical-help",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-other-claimants",
+                    "type": "Other claimants",
+                    "value": true,
+                    "sectionId": "p-other-claimants",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-other-claimants-details",
+                    "type": "Other claimants name",
+                    "value": "Don Draper",
+                    "sectionId": "p-other-claimants-details",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-immediate-aftermath",
+                    "type": "Present at incident",
+                    "value": false,
+                    "sectionId": "p-applicant-immediate-aftermath",
+                    "theme": "relationship-to-deceased"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "funeral-costs",
+            "title": "funeral-costs",
+            "values": [
+                {
+                    "id": "q-applicant-funeral-costs-paid",
+                    "type": "simple",
+                    "label": "Funeral costs paid",
+                    "value": true,
+                    "sectionId": "p-applicant-funeral-costs-paid",
+                    "theme": "funeral-costs"
+                },
+                {
+                    "id": "q-applicant-funeral-costs-total",
+                    "type": "simple",
+                    "label": "Funeral costs total",
+                    "value": 10002,
+                    "sectionId": "p-applicant-funeral-costs-total",
+                    "theme": "funeral-costs"
                 }
             ]
         }
