@@ -123,7 +123,9 @@ Resources:
   tempusBrokerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: 'TempusBrokerSecurityGroup'
+      GroupName: !Sub
+        - 'TempusBrokerSecurityGroup${Env}'
+        - Env: !Ref Environment
       GroupDescription: Security group for the tempus broker lamdba function to allow communications out to Tariff and Tempus.
       VpcId: !FindInMap [EnvironmentMap, !Ref Environment, VpcId]
       SecurityGroupEgress:
