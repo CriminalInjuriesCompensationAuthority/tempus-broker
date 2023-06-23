@@ -43,4 +43,5 @@ jobs:
 
       # deploy
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name tempus-broker --resolve-s3 --capabilities CAPABILITY_IAM --region eu-west-2 --profile assumed-role --parameter-overrides Environment=dev
+      - run: aws cloudformation delete-stack --stack-name tempus-broker-stag
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name tempus-broker-stag --resolve-s3 --capabilities CAPABILITY_IAM --region eu-west-2 --profile assumed-role --parameter-overrides Environment=stag
