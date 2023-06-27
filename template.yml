@@ -11,7 +11,7 @@ Parameters:
     Type: String
     Default: dev
     Description: Parameter for the environment
-    AllowedValues: ['dev', 'uat', 'prod']
+    AllowedValues: ['dev', 'uat', 'stag', 'prod']
   OnPremIpRange:
     Type: String
     Default: '192.168.0.1/16'
@@ -20,7 +20,7 @@ Parameters:
 Mappings:
   EnvironmentMap:
     dev:
-      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-staging-claim-criminal-injuries-tempus-queue
+      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-dev-claim-criminal-injuries-tempus-queue
       VpcId: vpc-0e42a25379fa895ec
       SubnetIdA: subnet-02f7ae7f6b1db987f
       SubnetIdB: subnet-0a5e7b48efcb931ba
@@ -30,6 +30,12 @@ Mappings:
       VpcId: vpc-0e42a25379fa895ec # needs updating
       SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
       SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
+      TariffSGId: sg-0ebad8b7f67749a6e
+    stag:
+      TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-staging-claim-criminal-injuries-tempus-queue
+      VpcId: vpc-0e42a25379fa895ec
+      SubnetIdA: subnet-02f7ae7f6b1db987f
+      SubnetIdB: subnet-0a5e7b48efcb931ba
       TariffSGId: sg-0ebad8b7f67749a6e
     prod:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
@@ -117,7 +123,9 @@ Resources:
   tempusBrokerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: 'TempusBrokerSecurityGroup'
+      GroupName: !Sub
+        - 'TempusBrokerSecurityGroup${Env}'
+        - Env: !Ref Environment
       GroupDescription: Security group for the tempus broker lamdba function to allow communications out to Tariff and Tempus.
       VpcId: !FindInMap [EnvironmentMap, !Ref Environment, VpcId]
       SecurityGroupEgress:
