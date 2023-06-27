@@ -51,7 +51,8 @@ Configure local AWS environment:
 - Copy contents of `function/resources/check-your-answers-sample.json` into a local document and upload it to S3.
 - Ensure the name of the document uploaded aligns with that in `function/resources/event.json`.
 
-- Create new secret in AWS Secret manager containing oracle db data.
+- Create new secret in AWS Secret manager containing oracle db data. Contents can be found in confluence under 
+  'CICA-CIR -> Secrets - CICA -> Secrets - Tempus -> MRCORCL01 Tariff connection string'
 - Create new parameter in AWS parameter store with AWS systems manager containing the ARN of that secret.
 
 - Create an IAM role for the tempus broker with acccess to the created resources.
