@@ -46,15 +46,17 @@ Configure local code:
     Comment lines 57 - 66 in `function/index.js`
 
 Configure local AWS environment:
-    - Create an S3 bucket with a name of your choice
-    - Create new parameter called `kta-bucket-name` in AWS parameter store with AWS systems manager containing that bucket name.
-    - Copy contents of `function/resources/check-your-answers-sample.json` into a local document and upload it to S3.
-    - Ensure the name of the document uploaded aligns with that in `function/resources/event.json`.
+- Create an S3 bucket with a name of your choice
+- Create new parameter called `kta-bucket-name` in AWS parameter store with AWS systems manager containing that bucket name.
+- Copy contents of `function/resources/check-your-answers-sample.json` into a local document and upload it to S3.
+- Ensure the name of the document uploaded aligns with that in `function/resources/event.json`.
 
-    - Create new secret in AWS Secret manager containing oracle db data.
-    - Create new parameter in AWS parameter store with AWS systems manager containing the ARN of that secret.
+- Create new secret in AWS Secret manager containing oracle db data.
+- Create new parameter in AWS parameter store with AWS systems manager containing the ARN of that secret.
 
-    - Create an IAM role for the tempus broker with acccess to the created resources.
+- Create an IAM role for the tempus broker with acccess to the created resources.
+- If you use the AWS Toolkit extension, you can make a new AWS profile called `tempus-broker-s3` with the secret
+  key and access key of the IAM role.
 
 Use `npm run test` to run the function handler locally.
 
