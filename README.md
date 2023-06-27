@@ -41,9 +41,9 @@ Add an .env file containing:
    `NODE_ENV = 'local'`
 
 Configure local code:
-    In `function/index.test.js` unskip the `'Should run the function handler'` test
-    In `function/db/dbPooljs` and `function/db/index.js` uncomment the lines starting with `oracledb.initOracleClient`
-    Comment lines 57 - 66 in `function/index.js`
+- In `function/index.test.js` unskip the `'Should run the function handler'` test
+- In `function/db/dbPooljs` and `function/db/index.js` uncomment the lines starting with `oracledb.initOracleClient`
+- Comment lines 57 - 66 in `function/index.js`
 
 Configure local AWS environment:
 - Create an S3 bucket with a name of your choice
