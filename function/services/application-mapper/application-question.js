@@ -143,23 +143,14 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // Check if the applicant is financially dependent
             case data.id === 'q-applicant-financial-help':
             case data.id === 'q-applicant-physical-help':
-                if (applicationForm?.financially_dependent === 'Y') {
-                    columnValue = 'Y';
-                } else if (data.value) {
-                    columnValue = 'Y';
-                } else {
-                    columnValue = 'N';
-                }
+                columnValue =
+                    applicationForm?.financially_dependent === 'Y' || data.value ? 'Y' : 'N';
                 break;
 
             // TO-DO finalise business logic with team
             case data.id === 'q-applicant-claim-type': {
-                const funeralOnly = data.value === 'I want to claim funeral costs only';
-                columnValue = [
-                    funeralOnly ? 'Y' : 'N',
-                    // If not funeral only then the application type should be retrieved from the meta tag?
-                    funeralOnly ? 7 : 4
-                ];
+                columnValue =
+                    data.value === 'I want to claim funeral costs only' ? ['Y', 7] : ['N', 4];
                 break;
             }
             // If custom mapping is not required, map in a generic way
