@@ -27,6 +27,7 @@ The project source includes the following directories:
 # Requirements
 - [Node.js 14.6 or later with npm](https://nodejs.org/en/download/releases/)
 - The Bash shell. For Linux and macOS, this is included by default. In Windows 10, you can install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to get a Windows-integrated version of Ubuntu and Bash.
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - Will need to follow step 2.3 onwards to set this up.
 
 Not mandatory but useful if using VSCode:
@@ -55,7 +56,7 @@ Configure local AWS environment:
   'CICA-CIR -> Secrets - CICA -> Secrets - Tempus -> MRCORCL01 Tariff connection string'
 - Create new parameter in AWS parameter store with AWS systems manager containing the ARN of that secret.
 
-- Create an IAM role for the tempus broker with acccess to the created resources.
+- Create an IAM role for the tempus broker with access to the created resources.
 - If you use the AWS Toolkit extension, you can make a new AWS profile called `tempus-broker-s3` with the secret
   key and access key of the IAM role.
 
