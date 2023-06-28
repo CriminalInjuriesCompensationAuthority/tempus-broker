@@ -54,16 +54,18 @@ exports.handler = async function(event, context) {
         await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
 
-        await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
-        logger.info('Call out to KTA SDK');
-        const sessionId = await getParameter('kta-session-id');
-        const inputVars = [
-            {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
-            {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}/${Object.values(s3Keys)[0]}`}
-        ];
-        logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
+        if (!process.env.NODE_ENV === 'local' && !process.env.NODE_ENV === 'test') {
+            await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
+            logger.info('Call out to KTA SDK');
+            const sessionId = await getParameter('kta-session-id');
+            const inputVars = [
+                {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
+                {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}/${Object.values(s3Keys)[0]}`}
+            ];
+            logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
-        await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
+            await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
+        }
     } catch (error) {
         logger.error(error);
         throw error;

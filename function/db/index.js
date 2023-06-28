@@ -1,8 +1,10 @@
 'use strict';
 
 const oracledb = require('oracledb');
-// Comment and uncomment to toggle between thin and thick mode
-// oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
+// Toggle between thin and thick mode for dev and deployment
+if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test') {
+    oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
+}
 const logger = require('../services/logging/logger');
 
 // Generates an insert statment for tarriff

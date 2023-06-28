@@ -47,18 +47,20 @@ Configure local code:
 - Comment lines 57 - 66 in `function/index.js`
 
 Configure local AWS environment:
-- Create an S3 bucket with a name of your choice
-- Create new parameter called `kta-bucket-name` in AWS parameter store with AWS systems manager containing that bucket name.
-- Copy contents of `function/resources/check-your-answers-sample.json` into a local document and upload it to S3.
-- Ensure the name of the document uploaded aligns with that in `function/resources/event.json`.
 
-- Create new secret in AWS Secret manager containing oracle db data. Contents can be found in confluence under 
-  'CICA-CIR -> Secrets - CICA -> Secrets - Tempus -> MRCORCL01 Tariff connection string'
-- Create new parameter in AWS parameter store with AWS systems manager containing the ARN of that secret.
+The tempus broker uses localstack for easy setup of AWS services and resources. The setup can be found in the Makefile of this directory.
 
-- Create an IAM role for the tempus broker with access to the created resources.
-- If you use the AWS Toolkit extension, you can make a new AWS profile called `tempus-broker-s3` with the secret
-  key and access key of the IAM role.
+In the Makefile `create-secrets` job, you will need to replace the seciton marked as `[REPLACE ME]` with the connection string found on the
+following confluence page:
+'CICA-CIR -> Secrets - CICA -> Secrets - Tempus -> MRCORCL01 Tariff connection string'
+
+Once this is done, open this project directory in terminal and run:
+ - `make init`
+ - `make create-bucket`
+ - `make create-secrets`
+ - `make create-parameters`
+
+To check the localstack container is running, you can run `docker ps`
 
 Use `npm run test` to run the function handler locally.
 
