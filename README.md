@@ -43,6 +43,7 @@ Add an .env file containing:
 
 Configure local code:
 - In `function/index.test.js` unskip the `'Should run the function handler'` test
+- In `db/index.js` and `db/dbPool.js` uncomment the lines starting with `oracledb.init`
 
 Configure local AWS environment:
 
