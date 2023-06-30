@@ -52,5 +52,16 @@ module.exports = Object.freeze({
         'q-rep-town-or-city': 'address_line_4',
         'q-rep-county': 'address_line_5',
         'q-rep-postcode': 'post_code'
+    },
+    DCA: {
+        'q-deceased-title': 'dec_title',
+        'q-deceased-first-name': 'dec_first_name',
+        'q-deceased-last-name': 'dec_last_name',
+        'q-deceased-building-and-street': 'address_line_1',
+        'q-deceased-building-and-street-2': 'address_line_2',
+        'q-deceased-building-and-street-3': 'address_line_3',
+        'q-deceased-town-or-city': 'address_line_4',
+        'q-deceased-county': 'address_line_5',
+        'q-deceased-postcode': 'post_code'
     }
 });

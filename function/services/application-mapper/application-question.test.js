@@ -224,4 +224,43 @@ describe('Application question', () => {
         mappedQuestion = mapApplicationQuestion(questionData, applicationForm, addressDetails);
         expect(mappedQuestion.columnValue).toBe('phyinj-001:phyinj-027:phinj-727:phyinj-149');
     });
+
+    it('Should map if the reporter was estranged from the victim', () => {
+        const questionData = {
+            theme: 'relationship-to-deceased',
+            id: 'q-applicant-living-apart',
+            value: true
+        };
+
+        let mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+
+        questionData.id = 'q-applicant-contact-with-deceased';
+        questionData.value = 'test';
+        mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+    });
+
+    it('Should map if the victim requires financial help', () => {
+        const questionData = {
+            theme: 'relationship-to-deceased',
+            id: 'q-applicant-financial-help',
+            value: true
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('Y');
+    });
+
+    it('Should map if the claim is funeral only, fatality only or part of a split application', () => {
+        const questionData = {
+            theme: 'about-application',
+            id: 'q-applicant-claim-type',
+            value: 'I want to claim funeral costs only'
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toContainEqual('Y');
+        expect(mappedQuestion.columnValue).toContainEqual(7);
+    });
 });

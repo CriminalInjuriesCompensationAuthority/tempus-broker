@@ -4,7 +4,8 @@ module.exports = Object.freeze({
     'about-application': {
         'q--was-the-crime-reported-to-police': 'incident_rep_police',
         'q-applicant-who-are-you-applying-for': 'is_injured_person',
-        'q-applicant-british-citizen-or-eu-national': 'residency_02'
+        'q-applicant-british-citizen-or-eu-national': 'residency_02',
+        'q-applicant-claim-type': ['funeral_only', 'application_type']
     },
     'applicant-details': {
         'q-applicant-what-other-names-have-you-used': 'other_names',
@@ -169,5 +170,54 @@ module.exports = Object.freeze({
         'q-applicant-se-equipment': 'applicant_expenses',
         'q-applicant-se-aids': 'applicant_expenses',
         'q-applicant-se-other': 'applicant_expenses'
+    },
+    'additional-info': {
+        'q-applicant-additional-information': 'additional_info'
+    },
+    deceased: {
+        'q-deceased-date-of-birth': 'dec_date_of_birth',
+        'q-deceased-date-of-death': 'dec_date_of_death',
+        'q-deceased-title': 'dec_title',
+        'q-deceased-first-name': 'dec_first_name',
+        'q-deceased-last-name': 'dec_last_name',
+        'q-deceased-building-and-street': 'address_line_1',
+        'q-deceased-building-and-street-2': 'address_line_2',
+        'q-deceased-building-and-street-3': 'address_line_3',
+        'q-deceased-town-or-city': 'address_line_4',
+        'q-deceased-county': 'address_line_5',
+        'q-deceased-postcode': 'post_code'
+    },
+    'relationship-to-deceased': {
+        'q-applicant-relationship-to-deceased': 'relationship_to_deceased',
+        'q-applicant-relationship-other': 'other_relationship_to_deceased',
+        'q-applicant-living-together': 'estranged_from_deceased',
+        'q-applicant-living-apart': 'estranged_from_deceased',
+        'q-applicant-contact-with-deceased': 'estranged_from_deceased',
+        'q-applicant-financial-help': 'financially_dependent',
+        'q-applicant-physical-help': 'financially_dependent',
+        'q-other-claimants': 'other_claimants',
+        'q-other-claimants-details': 'other_claimant_name_01',
+        'q-applicant-immediate-aftermath': 'present_at_incident'
+    },
+    'funeral-costs': {
+        'q-applicant-funeral-costs-paid': 'funeral_claim',
+        'q-applicant-funeral-costs-total': 'funeral_total_cost'
+    },
+
+    // Note: Theme may be incorrect due to not having test data
+    // Question IDs should be correct though
+    'residency-statements': {
+        'q-applicant-ordinarily-resident': 'residency_01',
+        'q-applicant-british-citizen': 'residency_02',
+        'q-applicant-british-citizen-relative': 'residency_03',
+        'q-applicant-eu-citizen': 'residency_04',
+        'q-applicant-eu-citizen-relative': 'residency_05',
+        'q-applicant-eea-citizen': 'residency_04',
+        'q-applicant-eea-citizen-relative': 'residency_05',
+        'q-applicant-other-citizen': 'residency_06',
+        'q-applicant-armed-forces': 'residency_07',
+        'q-applicant-armed-forces-relative': 'residency_08',
+        'q-applicant-victim-human-trafficking': 'residency_09',
+        'q-applicant-applied-for-asylum': 'residency_10'
     }
 });
