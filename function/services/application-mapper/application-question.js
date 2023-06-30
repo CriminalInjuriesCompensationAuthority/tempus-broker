@@ -20,7 +20,7 @@ function concatenateToExistingAddressColumn(addressDetails, addressType, address
 
 function mapApplicationQuestion(data, applicationForm, addressDetails) {
     const columnName = FormFieldsGroupedByTheme[data.theme]?.[data.id];
-    let columnValue = null;
+    let columnValue = '';
     let addressColumn = null;
     let addressValue = null;
     let addressType = null;
@@ -31,12 +31,12 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
         switch (true) {
             // Creates string I,E,S,C,O based on selected options
             case data.id === 'q-applicant-work-details-option':
-                columnValue = applicationForm?.work_details ? applicationForm.work_details : null;
+                columnValue = applicationForm?.work_details ? applicationForm.work_details : '';
 
                 data.value.forEach(option => {
                     columnValue = `${columnValue + option[0].toUpperCase()},`;
                 });
-                columnValue = columnValue ? columnValue.slice(0, -1) : null;
+                columnValue = columnValue.slice(0, -1);
                 break;
             case data.id === 'q-applicant-job-when-crime-happened':
                 if (data.value && applicationForm?.work_details) {
@@ -61,6 +61,8 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     columnValue = 'N';
                 }
                 break;
+
+            // Adds the physical injury codes
             case data.id === 'q-applicant-physical-injury':
                 columnValue = '';
                 Object.values(data.value).forEach(option => {
@@ -122,9 +124,35 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // Check if the applicant is eligible for special expenses
             case data.theme === 'special-expenses':
-                columnValue = applicationForm?.applicant_expenses ? 'true' : 'false';
+                columnValue = applicationForm?.applicant_expenses ? 'true' : data.value;
                 break;
 
+            // Check if the applicant was estranged from the deceased
+            case data.id === 'q-applicant-living-together':
+            case data.id === 'q-applicant-living-apart':
+                columnValue = data.value ? 'N' : 'Y';
+                break;
+            case data.id === 'q-applicant-contact-with-deceased':
+                if (data.value === 'We were out of touch with each other') {
+                    columnValue = 'Y';
+                } else {
+                    columnValue = 'N';
+                }
+                break;
+
+            // Check if the applicant is financially dependent
+            case data.id === 'q-applicant-financial-help':
+            case data.id === 'q-applicant-physical-help':
+                columnValue =
+                    applicationForm?.financially_dependent === 'Y' || data.value ? 'Y' : 'N';
+                break;
+
+            // TO-DO finalise business logic with team
+            case data.id === 'q-applicant-claim-type': {
+                columnValue =
+                    data.value === 'I want to claim funeral costs only' ? ['Y', 7] : ['N', 4];
+                break;
+            }
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime
