@@ -82,7 +82,7 @@ describe('Application question', () => {
             addressDetails
         );
         expect(mappedQuestion.columnName).toBe('applicant_expenses');
-        expect(mappedQuestion.columnValue).toBeTruthy();
+        expect(mappedQuestion.columnValue).toBe('Y');
 
         specialExpensesQuestionData.value = false;
         applicationForm.applicant_expenses = true;
