@@ -1,104 +1,76 @@
-# Blank function (Node.js)
-This sample application is a Lambda function that calls the Lambda API. It shows the use of logging, environment variables, AWS X-Ray tracing, layers, unit tests and the AWS SDK. You can use it to learn about Lambda features or use it as a starting point for your own projects.
+# Tempus broker function (Node.js)
+This function is set up to run in a lambda environment with the end goals being to insert application data sent by the Datacapture service into Tariff and to trigger a KTA process map.
 
-![Architecture](/sample-apps/blank-nodejs/images/sample-blank-nodejs.png)
+Key process steps:
 
-The project source includes function code and supporting resources:
+- The function is triggered by an SQS event which contains an S3 key for an application PDF and its corresponding JSON data.
+- The function will retrieve the JSON from an S3 bucket then create a new JSON object containing a list of key value pairs.
+- These key value pairs contain the column_name and the value to insert into tempus.
+- Off of this JSON, insert statements are generated for the APPLICATION_FORM and ADDRESS_DETAILS.
 
-- `function` - A Node.js function.
+The project source includes the following directories:
+
+- `function/index.js` - A Node.js which is triggered by an SQS event.
+- `function/db` - Contains methods to create database pools/connections and generate insert statements.
+- `resources/testing` - Various sample data used for testing.
+- `function/resources/constants` - Constant data used in the mapping and eligibility checking processes.
+- `function/services/application-mapper` - Contains logic used in mapping the JSON data to an oracle object.
+- `function/services/eligibility-checker` - Contains logic which sets the eligibility (is_eligible column) of the application.
+- `function/services/kta` - Supports triggering the KTA process map.
+- `function/services/s3` - Supports integration with AWS S3.
+- `function/services/secret-manager` - Supports integration with AWS Secrets Manager.
+- `function/services/sqs` - Supports integration with AWS SQS.
+- `function/services/ssm` - Supports integration with AWS SSM.
 - `template.yml` - An AWS CloudFormation template that creates an application.
-- `1-create-bucket.sh`, `2-deploy.sh`, etc. - Shell scripts that use the AWS CLI to deploy and manage the application.
 
-Variants of this sample application are available for the following languages:
-
-- Python – [blank-python](/sample-apps/blank-python).
-- Ruby – [blank-ruby](/sample-apps/blank-ruby).
-- Java – [blank-java](/sample-apps/blank-java).
-- Go – [blank-go](/sample-apps/blank-go).
-- C# – [blank-csharp](/sample-apps/blank-csharp).
-- PowerShell – [blank-powershell](/sample-apps/blank-powershell).
-
-Use the following instructions to deploy the sample application. For an in-depth look at its architecture and features, see [Blank Function Sample Application for AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/samples-blank-nodejs.html) in the developer guide.
 
 # Requirements
-- [Node.js 10 with npm](https://nodejs.org/en/download/releases/)
+- [Node.js 14.6 or later with npm](https://nodejs.org/en/download/releases/)
 - The Bash shell. For Linux and macOS, this is included by default. In Windows 10, you can install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to get a Windows-integrated version of Ubuntu and Bash.
-- [The AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) v1.17 or newer.
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - Will need to follow step 2.3 onwards to set this up. Version 21_10 required.
 
-If you use the AWS CLI v2, add the following to your [configuration file](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) (`~/.aws/config`):
+Not mandatory but useful if using VSCode:
+- Prettier formatter extension
+- AWS Toolkit extension
 
-```
-cli_binary_format=raw-in-base64-out
-```
+# Local development setup
 
-This setting enables the AWS CLI v2 to load JSON events from a file, matching the v1 behavior.
-
-# Setup
 Download or clone this repository.
+Add an .env file containing:
 
-    $ git clone https://github.com/awsdocs/aws-lambda-developer-guide.git
-    $ cd aws-lambda-developer-guide/sample-apps/blank-nodejs
+   `NODE_ENV = 'local'`
 
-To create a new bucket for deployment artifacts, run `1-create-bucket.sh`.
+Configure local code:
+- In `function/index.test.js` unskip the `'Should run the function handler'` test
+- In `db/index.js` and `db/dbPool.js` uncomment the lines starting with `oracledb.init`
 
-    blank-nodejs$ ./1-create-bucket.sh
-    make_bucket: lambda-artifacts-a5e491dbb5b22e0d
+Configure local AWS environment:
 
-To build a Lambda layer that contains the function's runtime dependencies, run `2-build-layer.sh`. Packaging dependencies in a layer reduces the size of the deployment package that you upload when you modify your code.
+The tempus broker uses localstack for easy setup of AWS services and resources. The setup can be found in the Makefile of this directory.
 
-    blank-nodejs$ ./2-build-layer.sh
+In the Makefile `create-secrets` job, you will need to replace the seciton marked as `[REPLACE ME]` with the connection string found on the
+following confluence page:
+'CICA-CIR -> Secrets - CICA -> Secrets - Tempus -> MRCORCL01 Tariff connection string'
 
-# Deploy
-To deploy the application, run `3-deploy.sh`.
+Once this is done, open this project directory in terminal and run:
+ - `make init`
+ - `make create-bucket`
+ - `make create-secrets`
+ - `make create-parameters`
 
-    blank-nodejs$ ./3-deploy.sh
-    added 16 packages from 18 contributors and audited 18 packages in 0.926s
-    added 17 packages from 19 contributors and audited 19 packages in 0.916s
-    Uploading to e678bc216e6a0d510d661ca9ae2fd941  2737254 / 2737254.0  (100.00%)
-    Successfully packaged artifacts and wrote output template to file out.yml.
-    Waiting for changeset to be created..
-    Waiting for stack create/update to complete
-    Successfully created/updated stack - blank-nodejs
+To check the localstack container is running, you can run `docker ps`
 
-This script uses AWS CloudFormation to deploy the Lambda functions and an IAM role. If the AWS CloudFormation stack that contains the resources already exists, the script updates it with any changes to the template or function code.
+Use `npm run test` to run the function handler locally.
 
 # Test
-To invoke the function, run `4-invoke.sh`.
 
-    blank-nodejs$ ./4-invoke.sh
-    {
-        "StatusCode": 200,
-        "ExecutedVersion": "$LATEST"
-    }
-    {"AccountLimit":{"TotalCodeSize":80530636800,"CodeSizeUnzipped":262144000,"CodeSizeZipped":52428800,"ConcurrentExecutions":1000,"UnreservedConcurrentExecutions":933},"AccountUsage":{"TotalCodeSize":303678359,"FunctionCount":75}}
+To run all tests with test coverage, use:
+`npx --no-install jest --ci --runInBand --bail --silent --coverage --projects jest.config.js`
 
-Let the script invoke the function a few times and then press `CRTL+C` to exit.
+To run tests with a debugger attached, use the Run and Debug panel within VS code. The configurations for this can be adjusted in
+`.vscode/launch.json`
+# Deploy
+ 
+Placeholder
 
-The application uses AWS X-Ray to trace requests. Open the [X-Ray console](https://console.aws.amazon.com/xray/home#/service-map) to view the service map. The following service map shows the function calling Amazon S3.
-
-![Service Map](/sample-apps/blank-nodejs/images/blank-nodejs-servicemap.png)
-
-Choose a node in the main function graph. Then choose **View traces** to see a list of traces. Choose any trace to view a timeline that breaks down the work done by the function.
-
-![Trace](/sample-apps/blank-nodejs/images/blank-nodejs-trace.png)
-
-Finally, view the application in the Lambda console.
-
-*To view the application*
-1. Open the [applications page](https://console.aws.amazon.com/lambda/home#/applications) in the Lambda console.
-2. Choose **blank-nodejs**.
-
-  ![Application](/sample-apps/blank-nodejs/images/blank-nodejs-application.png)
-
-# Cleanup
-To delete the application, run `5-cleanup.sh`.
-
-    blank-nodejs$ ./5-cleanup.sh
-    Deleted blank-nodejs stack.
-    Delete deployment artifacts and bucket (lambda-artifacts-4475xmpl08ba7f8d)?y
-    delete: s3://lambda-artifacts-4475xmpl08ba7f8d/6f2edcce52085e31a4a5ba823dba2c9d
-    delete: s3://lambda-artifacts-4475xmpl08ba7f8d/3d3aee62473d249d039d2d7a37512db3
-    remove_bucket: lambda-artifacts-4475xmpl08ba7f8d
-    Delete function logs? (log group /aws/lambda/blank-nodejs-function-1RQTXMPLR0YSO)y
-
-The cleanup script delete's the application stack, which includes the function and execution role, and local build artifacts. You can choose to delete the bucket and function logs as well.

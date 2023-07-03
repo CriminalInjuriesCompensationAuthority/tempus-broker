@@ -1,0 +1,33 @@
+'use strict';
+
+module.exports = [
+    'phyinj-006',
+    'phyinj-009',
+    'phyinj-014',
+    'phyinj-017',
+    'phyinj-031',
+    'phyinj-033',
+    'phyinj-038',
+    'phyinj-044',
+    'phyinj-048',
+    'phyinj-049',
+    'phyinj-051',
+    'phyinj-052',
+    'phyinj-053',
+    'phyinj-062',
+    'phyinj-075',
+    'phyinj-079',
+    'phyinj-080',
+    'phyinj-154',
+    'phyinj-088',
+    'phyinj-092',
+    'phyinj-106',
+    'phyinj-107',
+    'phyinj-108',
+    'phyinj-122',
+    'phyinj-130',
+    'phyinj-132',
+    'phyinj-134',
+    'phyinj-135',
+    'phyinj-149'
+];
