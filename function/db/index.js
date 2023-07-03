@@ -1,8 +1,9 @@
 'use strict';
 
 const oracledb = require('oracledb');
-// Comment and uncomment to toggle between thin and thick mode
+// Toggle between thin and thick mode for dev and deployment
 // oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
+
 const logger = require('../services/logging/logger');
 
 // Generates an insert statment for tarriff

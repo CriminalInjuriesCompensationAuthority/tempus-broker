@@ -9,9 +9,9 @@ async function getParameter(secretName) {
     const client = AWSXRay.captureAWSv3Client(
         new SSMClient({
             region: 'eu-west-2',
-            profile:
+            endpoint:
                 process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test'
-                    ? 'tempus-broker-s3'
+                    ? 'http://localhost:4566'
                     : undefined
         })
     );

@@ -9,9 +9,9 @@ async function getSecret(arn) {
     const client = AWSXRay.captureAWSv3Client(
         new SecretsManagerClient({
             region: 'eu-west-2',
-            profile:
+            endpoint:
                 process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test'
-                    ? 'tempus-broker-s3'
+                    ? 'http://localhost:4566'
                     : undefined
         })
     );
