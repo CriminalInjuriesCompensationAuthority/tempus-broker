@@ -124,7 +124,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // Check if the applicant is eligible for special expenses
             case data.theme === 'special-expenses':
-                columnValue = applicationForm?.applicant_expenses ? 'true' : data.value;
+                columnValue = applicationForm?.applicant_expenses ? 'true' : data.valueLabel;
                 break;
 
             // Check if the applicant was estranged from the deceased
