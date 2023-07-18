@@ -5,7 +5,7 @@ module.exports = Object.freeze({
         'q--was-the-crime-reported-to-police': 'incident_rep_police',
         'q-applicant-who-are-you-applying-for': 'is_injured_person',
         'q-applicant-british-citizen-or-eu-national': 'residency_02',
-        'q-applicant-claim-type': ['funeral_only', 'application_type']
+        'q-applicant-claim-type': ['fatality_flag', 'application_type']
     },
     'applicant-details': {
         'q-applicant-what-other-names-have-you-used': 'other_names',
