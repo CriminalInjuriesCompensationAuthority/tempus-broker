@@ -264,7 +264,7 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue).toContainEqual(7);
     });
 
-    it('Should map if the victime is capable correctly', () => {
+    it('Should map if the victim is capable correctly', () => {
         const questionData = {
             theme: 'applicant-details',
             id: 'q-applicant-capable',
