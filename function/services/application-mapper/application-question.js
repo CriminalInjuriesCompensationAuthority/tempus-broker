@@ -134,6 +134,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // Check if the applicant was estranged from the deceased
             case data.id === 'q-applicant-living-together':
             case data.id === 'q-applicant-living-apart':
+            case data.id === 'q-applicant-capable':
                 columnValue = data.value ? 'N' : 'Y';
                 break;
             case data.id === 'q-applicant-contact-with-deceased':
