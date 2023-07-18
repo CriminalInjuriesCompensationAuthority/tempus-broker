@@ -263,4 +263,15 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue).toContainEqual('Y');
         expect(mappedQuestion.columnValue).toContainEqual(7);
     });
+
+    it('Should map if the victim is capable correctly', () => {
+        const questionData = {
+            theme: 'applicant-details',
+            id: 'q-applicant-capable',
+            value: true
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+    });
 });
