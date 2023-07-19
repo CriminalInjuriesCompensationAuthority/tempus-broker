@@ -103,7 +103,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // We need to map this value to multiple columns, so we return an array of values
             case data.id === 'q-rep-type':
-                columnValue = [data.valueLabel, 'Y', 'Y'];
+                columnValue = [data.value, 'Y', 'Y', 'Y'];
                 break;
             case data.id === 'q-rep-organisation-name':
                 addressType = 'RPA';
