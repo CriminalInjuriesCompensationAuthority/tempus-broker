@@ -46,7 +46,12 @@ module.exports = Object.freeze({
         'q-mainapplicant-care-order-authority': 'care_order_details'
     },
     'rep-details': {
-        'q-rep-type': ['representative_type', 'has_representative', 'rep_correspond_direct'],
+        'q-rep-type': [
+            'representative_type',
+            'has_representative',
+            'rep_correspond_direct',
+            'rep_claims-company'
+        ],
         'q-rep-organisation-name': 'name',
         'q-rep-building-and-street': 'address_line_1',
         'q-rep-building-and-street-2': 'address_line_2',
