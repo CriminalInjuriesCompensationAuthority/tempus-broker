@@ -252,15 +252,37 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue).toBe('Y');
     });
 
-    it('Should map if the claim is funeral only, fatality only or part of a split application', () => {
+    it('Should map if the claim is fatality only', () => {
         const questionData = {
             theme: 'about-application',
             id: 'q-applicant-claim-type',
             value: 'I want to claim funeral costs only'
         };
 
-        const mappedQuestion = mapApplicationQuestion(questionData);
-        expect(mappedQuestion.columnValue).toContainEqual('Y');
+        const mappedQuestion = mapApplicationQuestion(
+            questionData,
+            applicationForm,
+            addressDetails
+        );
+        expect(mappedQuestion.columnValue).toContainEqual('FatalityOnly');
+        expect(mappedQuestion.columnValue).toContainEqual(4);
+    });
+
+    it('Should map if the claim is funeral only', () => {
+        const questionData = {
+            theme: 'about-application',
+            id: 'q-applicant-claim-type',
+            value: 'I want to claim funeral costs only'
+        };
+
+        applicationForm.split_funeral = true;
+
+        const mappedQuestion = mapApplicationQuestion(
+            questionData,
+            applicationForm,
+            addressDetails
+        );
+        expect(mappedQuestion.columnValue).toContainEqual('FuneralOnly');
         expect(mappedQuestion.columnValue).toContainEqual(7);
     });
 

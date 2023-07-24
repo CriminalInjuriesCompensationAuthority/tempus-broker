@@ -152,10 +152,11 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     applicationForm?.financially_dependent === 'Y' || data.value ? 'Y' : 'N';
                 break;
 
-            // TO-DO finalise business logic with team
+            // Split fatal/funeral applications
             case data.id === 'q-applicant-claim-type': {
-                columnValue =
-                    data.value === 'I want to claim funeral costs only' ? ['Y', 7] : ['N', 4];
+                columnValue = applicationForm?.split_funeral
+                    ? ['FuneralOnly', 7]
+                    : ['FatalityOnly', 4];
                 break;
             }
             // If custom mapping is not required, map in a generic way

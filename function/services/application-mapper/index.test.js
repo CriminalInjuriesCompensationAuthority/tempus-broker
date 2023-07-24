@@ -27,6 +27,7 @@ describe('Application mapper', () => {
         expect(applicationFormJson.claim_reference_number).toEqual('207906');
         expect(applicationFormJson.ref_year).toEqual('44');
         expect(applicationFormJson.created_date).toEqual('19-MAY-23');
+        expect(applicationFormJson.split_funeral).toBeTruthy();
     });
 
     it('Should map an application question to application_form', async () => {

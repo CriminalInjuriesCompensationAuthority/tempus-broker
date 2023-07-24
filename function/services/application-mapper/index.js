@@ -34,6 +34,9 @@ async function mapApplicationDataToOracleObject(data) {
                 .toFormat('dd-MMM-yy')
                 .toLocaleUpperCase();
         }
+        if (key === 'splitFuneral') {
+            applicationFormJson.split_funeral = true;
+        }
         if (key === 'id') {
             // If the key is an id then map the value to json and concatenate to the oracle object
             const applicationQuestion = mapApplicationQuestion(
