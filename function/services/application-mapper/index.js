@@ -29,7 +29,7 @@ async function mapApplicationDataToOracleObject(data) {
             applicationFormJson.claim_reference_number = crn;
             applicationFormJson.ref_year = refYear;
         }
-        if (key === 'submittedDate') {
+        if (key === 'dateSubmitted') {
             applicationFormJson.created_date = DateTime.fromISO(value)
                 .toFormat('dd-MMM-yy')
                 .toLocaleUpperCase();
