@@ -50,7 +50,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
                 if (data.value === 'once') {
                     columnValue = '2';
-                } else if (data.value === 'over a period of time') {
+                } else if (data.value === 'over-a-period-of-time') {
                     columnValue = '3';
                 }
                 break;
