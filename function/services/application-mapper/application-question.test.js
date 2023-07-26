@@ -296,4 +296,51 @@ describe('Application question', () => {
         const mappedQuestion = mapApplicationQuestion(questionData);
         expect(mappedQuestion.columnValue).toBe('N');
     });
+
+    describe('Address splitting when the crime happened outside the UK', () => {
+        it('Should only return one address line when the value is less than 32 characters', () => {
+            const questionData = {
+                theme: 'crime',
+                id: 'q-applicant-crime-location',
+                value: 'Lorem ipsum'
+            };
+            const mappedQuestion = mapApplicationQuestion(questionData);
+            expect(mappedQuestion.columnValue[0]).toBe('Lorem ipsum');
+        });
+
+        it('Should split the value into segments of 32 characters or less', () => {
+            const questionData = {
+                theme: 'crime',
+                id: 'q-applicant-crime-location',
+                value:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien.'
+            };
+            const mappedQuestion = mapApplicationQuestion(questionData);
+            mappedQuestion.columnValue.forEach(addressLine => {
+                expect(addressLine.length).toBeLessThan(32);
+            });
+        });
+
+        it('Should remove overflow data if the value is over 160 characters', () => {
+            const questionData = {
+                theme: 'crime',
+                id: 'q-applicant-crime-location',
+                value:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien'
+            };
+            const mappedQuestion = mapApplicationQuestion(questionData);
+            expect(mappedQuestion.columnValue.length).toBe(5);
+        });
+
+        it('Should generate a 32 character string if the 32nd character is a whitespace', () => {
+            const questionData = {
+                theme: 'crime',
+                id: 'q-applicant-crime-location',
+                value: '0123456789 123456789 123456789 1 abc dhd bin '
+            };
+            const mappedQuestion = mapApplicationQuestion(questionData);
+            expect(mappedQuestion.columnValue.length).toBe(2);
+            expect(mappedQuestion.columnValue[0].length).toBe(32);
+        });
+    });
 });

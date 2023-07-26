@@ -61,8 +61,22 @@ async function mapApplicationDataToOracleObject(data) {
                             obj => obj.address_type === type
                         );
                         if (addressIndex > -1) {
-                            addressDetailsJson[addressIndex][applicationQuestion.columnName] =
-                                applicationQuestion.columnValue;
+                            if (Array.isArray(applicationQuestion.columnValue)) {
+                                applicationQuestion.columnValue.forEach((columnValue, i) => {
+                                    addressDetailsJson[addressIndex][
+                                        applicationQuestion.columnName[i]
+                                    ] = applicationQuestion.columnValue[i];
+                                });
+                            } else {
+                                addressDetailsJson[addressIndex][applicationQuestion.columnName] =
+                                    applicationQuestion.columnValue;
+                            }
+                        } else if (Array.isArray(applicationQuestion.columnValue)) {
+                            addressDetailsJson.push({
+                                address_type: type,
+                                [applicationQuestion.columnName[0]]:
+                                    applicationQuestion.columnValue[0]
+                            });
                         } else {
                             addressDetailsJson.push({
                                 address_type: type,

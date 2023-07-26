@@ -243,34 +243,18 @@
                     "id": "q-applicant-where-did-the-crime-happen",
                     "type": "simple",
                     "label": "Where did the crime happen?",
-                    "value": "scotland",
-                    "valueLabel": "Scotland",
+                    "value": "Somewhere-else",
+                    "valueLabel": "Somewhere-else",
                     "sectionId": "p-applicant-where-did-the-crime-happen",
                     "theme": "crime"
                 },
                 {
-                    "id": "crime-location-scotland",
-                    "type": "composite",
-                    "label": "Where in Scotland did it happen?",
-                    "values": [
-                        {
-                            "id": "q-applicant-scottish-town-or-city",
-                            "type": "simple",
-                            "label": "Town or city",
-                            "value": "Aberdeen",
-                            "sectionId": "p-applicant-where-in-scotland-did-it-happen",
-                            "theme": "crime"
-                        },
-                        {
-                            "id": "q-applicant-scottish-location",
-                            "type": "simple",
-                            "label": "Location",
-                            "value": "Nightclub",
-                            "sectionId": "p-applicant-where-in-scotland-did-it-happen",
-                            "theme": "crime"
-                        }
-                    ],
-                    "sectionId": "p-applicant-where-in-scotland-did-it-happen",
+                    "id": "q-applicant-crime-location",
+                    "type": "simple",
+                    "label": "Where did the crime happen?",
+                    "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien",
+                    "valueLabel": "Somewhere-else",
+                    "sectionId": "p-applicant-crime-location",
                     "theme": "crime"
                 },
                 {

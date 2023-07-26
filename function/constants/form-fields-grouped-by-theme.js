@@ -78,6 +78,13 @@ module.exports = Object.freeze({
         'q-applicant-scottish-town-or-city': 'address_line_4',
         'q-applicant-english-town-or-city': 'address_line_4',
         'q-applicant-welsh-town-or-city': 'address_line_4',
+        'q-applicant-crime-location': [
+            'address_line_1',
+            'address_line_2',
+            'address_line_3',
+            'address_line_4',
+            'address_line_5'
+        ],
         'q-police-force-id': 'police_force_area',
         'q-applicant-incident-type': 'pi_type_cause',
         'q-applicant-incident-description': 'description_of_incident'

@@ -159,6 +159,39 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     : ['FatalityOnly', 4];
                 break;
             }
+            // The Crime didnt happen in England, Scotland or Wales
+            // User is provided with a free text field to enter their address/location
+            case data.id === 'q-applicant-crime-location': {
+                let pointer = 0;
+                let i = 0;
+                addressType = 'ICA';
+                columnValue = [];
+
+                // The max input length for this field is 140 characters on CW so we don't need to worry about overflow or data loss
+                while (pointer < 128) {
+                    const originalPointer = pointer;
+                    // If there are 32 characters or more available
+                    if (data.value[pointer + 33]) {
+                        // If the split would occur mid word
+                        if (
+                            data.value[pointer + 32].match(/^[a-z0-9]+$/i) &&
+                            data.value[pointer + 33].match(/^[a-z0-9]+$/i)
+                        ) {
+                            // Then find the index of the previous whitespace and split there
+                            pointer = data.value.lastIndexOf(' ', originalPointer + 32);
+                            columnValue[i] = data.value.slice(originalPointer, pointer);
+                        } else {
+                            pointer += 32;
+                            columnValue[i] = data.value.slice(originalPointer, pointer);
+                        }
+                    } else {
+                        columnValue[i] = data.value.slice(pointer);
+                        pointer = 130;
+                    }
+                    i += 1;
+                }
+                break;
+            }
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime
