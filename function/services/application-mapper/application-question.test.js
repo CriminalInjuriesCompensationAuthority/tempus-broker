@@ -116,7 +116,7 @@ describe('Application question', () => {
         let mappedQuestion = mapApplicationQuestion(questionData);
         expect(mappedQuestion.columnValue).toBe('2');
 
-        questionData.value = 'over a period of time';
+        questionData.value = 'over-a-period-of-time';
         mappedQuestion = mapApplicationQuestion(questionData);
         expect(mappedQuestion.columnValue).toBe('3');
     });
