@@ -121,4 +121,21 @@ describe('Application mapper', () => {
             }
         });
     });
+
+    it('Should map an array of address details to an array of columns', async () => {
+        applicationSummaryJson = {
+            id: 'q-applicant-crime-location',
+            theme: 'crime',
+            value: 'Should map an array of address details to an array of columns'
+        };
+
+        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        const formField =
+            FormFieldsGroupedByTheme[applicationSummaryJson.theme]?.[applicationSummaryJson.id];
+        expect(Array.isArray(formField)).toBeTruthy();
+
+        addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
+        expect(Object.hasOwn(addressDetailsJson[0], formField[0])).toBeTruthy();
+        expect(addressDetailsJson[0][formField[0]]).toContain('Should');
+    });
 });
