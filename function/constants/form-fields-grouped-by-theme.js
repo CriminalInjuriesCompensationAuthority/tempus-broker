@@ -103,7 +103,7 @@ module.exports = Object.freeze({
     injuries: {
         'q-applicant-infections': 'infections',
         'q-applicant-are-you-claiming-for-physical-injuries': 'physical_injuries',
-        'q-applicant-physical-injury': 'injury_details_code',
+        'q-applicant-physical-injuries': 'injury_details_code',
         'q-applicant-physical-injuries-upper-head-other': 'injury_details_code',
         'q-applicant-physical-injuries-upper-face-other': 'injury_details_code',
         'q-applicant-physical-injuries-upper-neck-other': 'injury_details_code',
