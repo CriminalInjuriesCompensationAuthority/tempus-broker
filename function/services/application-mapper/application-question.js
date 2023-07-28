@@ -63,7 +63,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
 
             // Adds the physical injury codes
-            case data.id === 'q-applicant-physical-injury':
+            case data.id === 'q-applicant-physical-injuries':
                 columnValue = '';
                 Object.values(data.value).forEach(option => {
                     columnValue = `${columnValue + option}:`;

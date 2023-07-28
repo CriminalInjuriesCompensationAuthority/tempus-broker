@@ -138,7 +138,7 @@ describe('Application question', () => {
     it('Should map physical injuries', () => {
         const physicalInjuryData = {
             theme: 'injuries',
-            id: 'q-applicant-physical-injury',
+            id: 'q-applicant-physical-injuries',
             value: ['phyinj-001', 'phyinj-027', 'phinj-727']
         };
         const mappedQuestion = mapApplicationQuestion(physicalInjuryData);
