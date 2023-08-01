@@ -55,7 +55,7 @@ module.exports = Object.freeze({
         'q-rep-organisation-name': 'rep_organisation',
         'q-rep-title': 'rep_title',
         'q-rep-first-name': 'rep_first_name',
-        'q-rep-last-name': 'rep_last_time',
+        'q-rep-last-name': 'rep_name',
         'q-rep-building-and-street': 'address_line_1',
         'q-rep-building-and-street-2': 'address_line_2',
         'q-rep-building-and-street-3': 'address_line_3',

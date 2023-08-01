@@ -52,7 +52,6 @@ module.exports = Object.freeze({
         'q-mainapplicant-postcode': 'post_code'
     },
     RPA: {
-        'q-rep-organisation-name': 'name',
         'q-rep-building-and-street': 'address_line_1',
         'q-rep-building-and-street-2': 'address_line_2',
         'q-rep-building-and-street-3': 'address_line_3',
