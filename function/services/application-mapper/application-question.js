@@ -106,12 +106,12 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 columnValue = [data.value, 'Y', 'Y', 'Y'];
                 break;
             case data.id === 'q-rep-organisation-name':
+                // set org name in the rep address
                 addressType = 'RPA';
                 addressColumn = 'name';
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
-
             // Check if phyinj-149 (Other) should be added
             case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
                 columnValue = applicationForm?.injury_details_code
