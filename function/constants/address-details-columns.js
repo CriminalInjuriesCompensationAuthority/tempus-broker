@@ -8,7 +8,14 @@ module.exports = Object.freeze({
         'q-applicant-english-town-or-city': 'address_line_4',
         'q-applicant-english-location': 'address_details.address_line_1',
         'q-applicant-welsh-town-or-city': 'address_line_4',
-        'q-applicant-welsh-location': 'address_line_1'
+        'q-applicant-welsh-location': 'address_line_1',
+        'q-applicant-crime-location': [
+            'address_line_1',
+            'address_line_2',
+            'address_line_3',
+            'address_line_4',
+            'address_line_5'
+        ]
     },
     DOA: {
         'q-gp-organisation-name': 'name',
@@ -45,7 +52,6 @@ module.exports = Object.freeze({
         'q-mainapplicant-postcode': 'post_code'
     },
     RPA: {
-        'q-rep-organisation-name': 'name',
         'q-rep-building-and-street': 'address_line_1',
         'q-rep-building-and-street-2': 'address_line_2',
         'q-rep-building-and-street-3': 'address_line_3',

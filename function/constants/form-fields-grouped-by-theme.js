@@ -5,18 +5,14 @@ module.exports = Object.freeze({
         'q--was-the-crime-reported-to-police': 'incident_rep_police',
         'q-applicant-who-are-you-applying-for': 'is_injured_person',
         'q-applicant-british-citizen-or-eu-national': 'residency_02',
-        'q-applicant-claim-type': ['funeral_only', 'application_type']
+        'q-applicant-claim-type': ['fatality_flag', 'application_type']
     },
     'applicant-details': {
         'q-applicant-what-other-names-have-you-used': 'other_names',
         'q-applicant-enter-your-date-of-birth': 'date_of_birth',
         'q-applicant-enter-your-email-address': 'claimant_email_address',
         'q-applicant-enter-your-telephone-number': 'day_phone',
-        'q-applicant-select-reasons-for-the-delay-in-making-your-application':
-            'incident_delay_reason_code',
         'q-applicant-title': 'app_title',
-        'q-applicant-select-reasons-for-the-delay-in-reporting-the-crime-to-police':
-            'incident_report_delay',
         'q-applicant-first-name': 'first_name',
         'q-applicant-last-name': 'last_name',
         'q-applicant-building-and-street': 'address_line_1',
@@ -46,8 +42,16 @@ module.exports = Object.freeze({
         'q-mainapplicant-care-order-authority': 'care_order_details'
     },
     'rep-details': {
-        'q-rep-type': ['representative_type', 'has_representative', 'rep_correspond_direct'],
-        'q-rep-organisation-name': 'name',
+        'q-rep-type': [
+            'representative_type',
+            'has_representative',
+            'rep_correspond_direct',
+            'rep_claims_company'
+        ],
+        'q-rep-organisation-name': 'rep_organisation',
+        'q-rep-title': 'rep_rep_title',
+        'q-rep-first-name': 'rep_first_name',
+        'q-rep-last-name': 'rep_name',
         'q-rep-building-and-street': 'address_line_1',
         'q-rep-building-and-street-2': 'address_line_2',
         'q-rep-building-and-street-3': 'address_line_3',
@@ -64,6 +68,8 @@ module.exports = Object.freeze({
         'q-applicant-when-did-the-crime-start': 'date_time_of_incident',
         'q-applicant-when-did-the-crime-stop': 'date_time_of_incident_to',
         'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
+        'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_code',
+        'q-applicant-explain-reason-for-delay-reporting': 'incident_report_delay',
         'q-applicant-did-the-crime-happen-once-or-over-time': 'application_type',
         'q--whats-the-crime-reference-number': 'crime_ref_no',
         'q-applicant-where-did-the-crime-happen': 'incident_country',
@@ -73,6 +79,13 @@ module.exports = Object.freeze({
         'q-applicant-scottish-town-or-city': 'address_line_4',
         'q-applicant-english-town-or-city': 'address_line_4',
         'q-applicant-welsh-town-or-city': 'address_line_4',
+        'q-applicant-crime-location': [
+            'address_line_1',
+            'address_line_2',
+            'address_line_3',
+            'address_line_4',
+            'address_line_5'
+        ],
         'q-police-force-id': 'police_force_area',
         'q-applicant-incident-type': 'pi_type_cause',
         'q-applicant-incident-description': 'description_of_incident'
@@ -91,7 +104,7 @@ module.exports = Object.freeze({
     injuries: {
         'q-applicant-infections': 'infections',
         'q-applicant-are-you-claiming-for-physical-injuries': 'physical_injuries',
-        'q-applicant-physical-injury': 'injury_details_code',
+        'q-applicant-physical-injuries': 'injury_details_code',
         'q-applicant-physical-injuries-upper-head-other': 'injury_details_code',
         'q-applicant-physical-injuries-upper-face-other': 'injury_details_code',
         'q-applicant-physical-injuries-upper-neck-other': 'injury_details_code',

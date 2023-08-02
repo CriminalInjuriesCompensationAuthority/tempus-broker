@@ -58,7 +58,7 @@ exports.handler = async function(event, context) {
         await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
 
-        if (!process.env.NODE_ENV === 'local' && !process.env.NODE_ENV === 'test') {
+        if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
             logger.info('Deleting object from S3');
             await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
             logger.info('Call out to KTA SDK');

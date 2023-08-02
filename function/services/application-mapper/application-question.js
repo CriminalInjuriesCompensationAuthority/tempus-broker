@@ -50,7 +50,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
                 if (data.value === 'once') {
                     columnValue = '2';
-                } else if (data.value === 'over a period of time') {
+                } else if (data.value === 'over-a-period-of-time') {
                     columnValue = '3';
                 }
                 break;
@@ -63,7 +63,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
 
             // Adds the physical injury codes
-            case data.id === 'q-applicant-physical-injury':
+            case data.id === 'q-applicant-physical-injuries':
                 columnValue = '';
                 Object.values(data.value).forEach(option => {
                     columnValue = `${columnValue + option}:`;
@@ -103,15 +103,15 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // We need to map this value to multiple columns, so we return an array of values
             case data.id === 'q-rep-type':
-                columnValue = [data.valueLabel, 'Y', 'Y'];
+                columnValue = [data.value, 'Y', 'Y', 'Y'];
                 break;
             case data.id === 'q-rep-organisation-name':
+                // set org name in the rep address
                 addressType = 'RPA';
                 addressColumn = 'name';
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
-
             // Check if phyinj-149 (Other) should be added
             case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
                 columnValue = applicationForm?.injury_details_code
@@ -134,6 +134,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // Check if the applicant was estranged from the deceased
             case data.id === 'q-applicant-living-together':
             case data.id === 'q-applicant-living-apart':
+            case data.id === 'q-applicant-capable':
                 columnValue = data.value ? 'N' : 'Y';
                 break;
             case data.id === 'q-applicant-contact-with-deceased':
@@ -151,16 +152,53 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     applicationForm?.financially_dependent === 'Y' || data.value ? 'Y' : 'N';
                 break;
 
-            // TO-DO finalise business logic with team
+            // Split fatal/funeral applications
             case data.id === 'q-applicant-claim-type': {
-                columnValue =
-                    data.value === 'I want to claim funeral costs only' ? ['Y', 7] : ['N', 4];
+                columnValue = applicationForm?.split_funeral
+                    ? ['FuneralOnly', 7]
+                    : ['FatalityOnly', 4];
+                break;
+            }
+            // The Crime didnt happen in England, Scotland or Wales
+            // User is provided with a free text field to enter their address/location
+            case data.id === 'q-applicant-crime-location': {
+                let pointer = 0;
+                let i = 0;
+                addressType = 'ICA';
+                columnValue = [];
+
+                // The max input length for this field is 140 characters on CW so we don't need to worry about overflow or data loss
+                while (pointer < 128) {
+                    const originalPointer = pointer;
+                    // If there are 32 characters or more available
+                    if (data.value[pointer + 33]) {
+                        // If the split would occur mid word
+                        if (
+                            data.value[pointer + 32].match(/^[a-z0-9]+$/i) &&
+                            data.value[pointer + 33].match(/^[a-z0-9]+$/i)
+                        ) {
+                            // Then find the index of the previous whitespace and split there
+                            pointer = data.value.lastIndexOf(' ', originalPointer + 32);
+                            columnValue[i] = data.value.slice(originalPointer, pointer);
+                        } else {
+                            pointer += 32;
+                            columnValue[i] = data.value.slice(originalPointer, pointer);
+                        }
+                    } else {
+                        columnValue[i] = data.value.slice(pointer);
+                        pointer = 130;
+                    }
+                    i += 1;
+                }
                 break;
             }
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime
-                if (!DateTime.fromISO(data.value).invalidReason) {
+                if (
+                    data.format?.value === 'date-time' &&
+                    !DateTime.fromISO(data.value).invalidReason
+                ) {
                     columnValue = DateTime.fromISO(data.value)
                         .toFormat('dd-MMM-yy')
                         .toLocaleUpperCase();

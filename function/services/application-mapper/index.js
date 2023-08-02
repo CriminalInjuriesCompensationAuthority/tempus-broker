@@ -34,6 +34,9 @@ async function mapApplicationDataToOracleObject(data) {
                 .toFormat('dd-MMM-yy')
                 .toLocaleUpperCase();
         }
+        if (key === 'splitFuneral') {
+            applicationFormJson.split_funeral = true;
+        }
         if (key === 'id') {
             // If the key is an id then map the value to json and concatenate to the oracle object
             const applicationQuestion = mapApplicationQuestion(
@@ -58,8 +61,25 @@ async function mapApplicationDataToOracleObject(data) {
                             obj => obj.address_type === type
                         );
                         if (addressIndex > -1) {
-                            addressDetailsJson[addressIndex][applicationQuestion.columnName] =
-                                applicationQuestion.columnValue;
+                            if (Array.isArray(applicationQuestion.columnValue)) {
+                                applicationQuestion.columnValue.forEach((columnValue, i) => {
+                                    addressDetailsJson[addressIndex][
+                                        applicationQuestion.columnName[i]
+                                    ] = applicationQuestion.columnValue[i];
+                                });
+                            } else {
+                                addressDetailsJson[addressIndex][applicationQuestion.columnName] =
+                                    applicationQuestion.columnValue;
+                            }
+                        } else if (Array.isArray(applicationQuestion.columnValue)) {
+                            addressDetailsJson.push({
+                                address_type: type
+                            });
+                            applicationQuestion.columnValue.forEach((columnValue, i) => {
+                                addressDetailsJson[addressDetailsJson.length - 1][
+                                    applicationQuestion.columnName[i]
+                                ] = applicationQuestion.columnValue[i];
+                            });
                         } else {
                             addressDetailsJson.push({
                                 address_type: type,
