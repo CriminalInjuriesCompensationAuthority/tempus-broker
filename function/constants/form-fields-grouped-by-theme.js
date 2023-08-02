@@ -12,11 +12,7 @@ module.exports = Object.freeze({
         'q-applicant-enter-your-date-of-birth': 'date_of_birth',
         'q-applicant-enter-your-email-address': 'claimant_email_address',
         'q-applicant-enter-your-telephone-number': 'day_phone',
-        'q-applicant-select-reasons-for-the-delay-in-making-your-application':
-            'incident_delay_reason_code',
         'q-applicant-title': 'app_title',
-        'q-applicant-select-reasons-for-the-delay-in-reporting-the-crime-to-police':
-            'incident_report_delay',
         'q-applicant-first-name': 'first_name',
         'q-applicant-last-name': 'last_name',
         'q-applicant-building-and-street': 'address_line_1',
@@ -72,6 +68,8 @@ module.exports = Object.freeze({
         'q-applicant-when-did-the-crime-start': 'date_time_of_incident',
         'q-applicant-when-did-the-crime-stop': 'date_time_of_incident_to',
         'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
+        'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_code',
+        'q-applicant-explain-reason-for-delay-reporting': 'incident_report_delay',
         'q-applicant-did-the-crime-happen-once-or-over-time': 'application_type',
         'q--whats-the-crime-reference-number': 'crime_ref_no',
         'q-applicant-where-did-the-crime-happen': 'incident_country',
