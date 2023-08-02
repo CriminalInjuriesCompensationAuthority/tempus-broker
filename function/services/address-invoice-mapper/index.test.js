@@ -11,46 +11,46 @@ describe('Address invoice mapper', () => {
         addressDetailsJson = null;
     });
 
-    it('Should set inv code and inv type to VICT if address type is APA', async () => {
+    it('Should set inv code and inv type to VICT if address type is APA', () => {
         addressDetailsJson = [
             {
                 address_type: 'APA'
             }
         ];
-        const newAddressDetails = await mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
         expect(newAddressDetails[0].inv_code).toEqual('VICT');
         expect(newAddressDetails[0].inv_type).toEqual('VICT');
     });
 
-    it('Should set inv code and inv type to VICT if address type is DCA', async () => {
+    it('Should set inv code and inv type to VICT if address type is DCA', () => {
         addressDetailsJson = [
             {
                 address_type: 'DCA'
             }
         ];
-        const newAddressDetails = await mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
         expect(newAddressDetails[0].inv_code).toEqual('VICT');
         expect(newAddressDetails[0].inv_type).toEqual('VICT');
     });
 
-    it('Should set inv code to DENT and inv type to MED if address type is DEA', async () => {
+    it('Should set inv code to DENT and inv type to MED if address type is DEA', () => {
         addressDetailsJson = [
             {
                 address_type: 'DEA'
             }
         ];
-        const newAddressDetails = await mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
         expect(newAddressDetails[0].inv_code).toEqual('DENT');
         expect(newAddressDetails[0].inv_type).toEqual('MED');
     });
 
-    it('Should set inv code to GP, inv type to MED, and sub type to MPRA if address type is DOA', async () => {
+    it('Should set inv code to GP, inv type to MED, and sub type to MPRA if address type is DOA', () => {
         addressDetailsJson = [
             {
                 address_type: 'DOA'
             }
         ];
-        const newAddressDetails = await mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
         expect(newAddressDetails[0].inv_code).toEqual('GP');
         expect(newAddressDetails[0].inv_type).toEqual('MED');
         expect(newAddressDetails[0].sub_type).toEqual('MPRA');
