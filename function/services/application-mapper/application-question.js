@@ -195,7 +195,10 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime
-                if (!DateTime.fromISO(data.value).invalidReason) {
+                if (
+                    data.format?.value === 'date-time' &&
+                    !DateTime.fromISO(data.value).invalidReason
+                ) {
                     columnValue = DateTime.fromISO(data.value)
                         .toFormat('dd-MMM-yy')
                         .toLocaleUpperCase();

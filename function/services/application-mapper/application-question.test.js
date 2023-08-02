@@ -60,9 +60,16 @@ describe('Application question', () => {
 
     it('Should map a timestamp to a date format that is accepted by tariff', () => {
         const timestampQuestionData = {
-            theme: 'about-application',
-            id: 'q-applicant-british-citizen-or-eu-national',
-            value: '1970-01-01T00:00:00.000Z'
+            id: 'q-applicant-enter-your-date-of-birth',
+            type: 'simple',
+            label: 'Date of birth',
+            value: '1970-01-01T00:00:00.000Z',
+            sectionId: 'p-applicant-enter-your-date-of-birth',
+            theme: 'applicant-details',
+            format: {
+                value: 'date-time',
+                precision: 'YYYY-MM-DD'
+            }
         };
 
         const mappedQuestion = mapApplicationQuestion(timestampQuestionData);

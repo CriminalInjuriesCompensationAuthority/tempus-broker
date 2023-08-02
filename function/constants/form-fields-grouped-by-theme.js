@@ -53,7 +53,7 @@ module.exports = Object.freeze({
             'rep_claims_company'
         ],
         'q-rep-organisation-name': 'rep_organisation',
-        'q-rep-title': 'rep_title',
+        'q-rep-title': 'rep_rep_title',
         'q-rep-first-name': 'rep_first_name',
         'q-rep-last-name': 'rep_name',
         'q-rep-building-and-street': 'address_line_1',
