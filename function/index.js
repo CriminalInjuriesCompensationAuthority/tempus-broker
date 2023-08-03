@@ -8,6 +8,7 @@ const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
 const checkEligibility = require('./services/eligibility-checker/index');
 const createJob = require('./services/kta/index');
+const addressInvoiceMapper = require('./services/address-invoice-mapper');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
 
@@ -46,12 +47,16 @@ exports.handler = async function(event, context) {
 
         logger.info('Checking application eligibility');
         const applicationFormJsonChecked = checkEligibility(applicationFormJson);
+        const addressDetailsWithInvoices = addressInvoiceMapper(
+            addressDetailsJson,
+            applicationFormJson
+        );
         logger.info('Creating Database Pool');
         dbConn = await createDBPool();
 
         logger.info('Writing application data into Tariff');
         await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
-        await insertIntoTempus(addressDetailsJson, 'ADDRESS_DETAILS');
+        await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
 
         if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
             logger.info('Deleting object from S3');
