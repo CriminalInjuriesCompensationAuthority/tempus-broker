@@ -154,9 +154,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // Split fatal/funeral applications
             case data.id === 'q-applicant-claim-type': {
-                columnValue = applicationForm?.split_funeral
-                    ? ['FuneralOnly', 7]
-                    : ['FatalityOnly', 4];
+                if (applicationForm?.split_funeral) {
+                    columnValue = ['FuneralOnly', 7];
+                    // Not ideal, if we need to delete other fields from the form in future, then we should consider a better approach
+                    delete applicationForm?.split_funeral;
+                } else {
+                    columnValue = ['FatalityOnly', 4];
+                }
                 break;
             }
             // The Crime didnt happen in England, Scotland or Wales

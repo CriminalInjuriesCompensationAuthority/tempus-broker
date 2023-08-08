@@ -1,7 +1,8 @@
 {
     "meta": {
         "caseReference": "23\\327507",
-        "submittedDate": "2023-05-19T13:06:12.693Z"
+        "submittedDate": "2023-05-19T13:06:12.693Z",
+        "splitFuneral": true
     },
     "themes": [
         {
@@ -684,7 +685,11 @@
                     "label": "Enter their date of birth",
                     "value": "1970-01-01T00:00:00.000Z",
                     "sectionId": "p-deceased-date-of-birth",
-                    "theme": "deceased"
+                    "theme": "deceased",
+                    "format": {
+                        "value": "date-time",
+                        "precision": "YYYY-MM-DD"
+                    }
                 },
                 {
                     "id": "q-deceased-date-of-death",
@@ -692,7 +697,11 @@
                     "label": "Enter their date of death",
                     "value": "2019-01-01T00:00:00.000Z",
                     "sectionId": "p-deceased-date-of-death",
-                    "theme": "deceased"
+                    "theme": "deceased",
+                    "format": {
+                        "value": "date-time",
+                        "precision": "YYYY-MM-DD"
+                    }
                 },
                 {
                     "id": "deceased-address",
