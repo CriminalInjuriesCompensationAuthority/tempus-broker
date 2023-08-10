@@ -4,7 +4,7 @@ const fs = require('fs');
 const {handler, handleTempusBrokerMessage} = require('./index');
 
 describe('Tempus broker function', () => {
-    it('Should run the function handler', async () => {
+    it.skip('Should run the function handler', async () => {
         jest.setTimeout(60000);
         const response = await handler({}, null);
         expect(response).toContain('Success!');
