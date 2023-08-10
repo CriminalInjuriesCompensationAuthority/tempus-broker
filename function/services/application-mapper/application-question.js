@@ -206,6 +206,11 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     columnValue = DateTime.fromISO(data.value)
                         .toFormat('dd-MMM-yy')
                         .toLocaleUpperCase();
+                } else if (Array.isArray(columnName)) {
+                    columnValue = [];
+                    columnName.forEach((name, i) => {
+                        columnValue[i] = data.value;
+                    });
                 } else {
                     switch (data.value) {
                         case true:
