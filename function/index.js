@@ -47,7 +47,6 @@ exports.handler = async function(event, context) {
 
         logger.info('Checking application eligibility');
         const applicationFormJsonChecked = checkEligibility(applicationFormJson);
-        applicationFormJsonChecked.NEW_OAS = 'Y';
         const addressDetailsWithInvoices = addressInvoiceMapper(
             addressDetailsJson,
             applicationFormJson
