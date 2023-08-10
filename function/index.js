@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const oracledb = require('oracledb');
 const s3 = require('./services/s3/index');
 const createSqsService = require('./services/sqs/index');
