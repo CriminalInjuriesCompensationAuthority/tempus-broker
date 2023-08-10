@@ -11,6 +11,8 @@ start:
 
 create-bucket:
 	aws --endpoint-url=http://localhost:4566 s3 mb s3://tempus-broker-bucket
+
+upload-file:
 	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers-sample.json s3://tempus-broker-bucket
 	aws --endpoint-url=http://localhost:4566 s3 ls tempus-broker-bucket
 

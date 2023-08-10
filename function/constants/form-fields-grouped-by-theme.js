@@ -2,7 +2,7 @@
 
 module.exports = Object.freeze({
     'about-application': {
-        'q--was-the-crime-reported-to-police': 'incident_rep_police',
+        'q--was-the-crime-reported-to-police': ['incident_rep_police', 'incident_reported_to'],
         'q-applicant-who-are-you-applying-for': 'is_injured_person',
         'q-applicant-british-citizen-or-eu-national': 'residency_02',
         'q-applicant-claim-type': ['fatality_flag', 'application_type']
