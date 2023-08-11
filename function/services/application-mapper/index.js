@@ -10,7 +10,8 @@ const applicationFormJson = {
     section_ref: 'TEMP',
     is_eligible: 'Y',
     NEW_OAS: 'Y',
-    is_transgender: 'N'
+    is_transgender: 'N',
+    is_disabled: 'N'
 };
 const addressDetailsJson = [
     {
