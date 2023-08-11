@@ -11,7 +11,8 @@ const applicationFormJson = {
     is_eligible: 'Y',
     NEW_OAS: 'Y',
     is_transgender: 'N',
-    is_disabled: 'N'
+    is_disabled: 'N',
+    ethnicity: 'EG17'
 };
 const addressDetailsJson = [
     {
