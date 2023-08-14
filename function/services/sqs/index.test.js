@@ -1,29 +1,26 @@
 'use strict';
 
+const {mockClient} = require('aws-sdk-client-mock');
+const {ReceiveMessageCommand, SQSClient} = require('@aws-sdk/client-sqs');
 const fs = require('fs');
-const handleTempusBrokerMessage = require('./index');
+const createSQSService = require('./index');
 
 describe('SQS Service', () => {
-    it('Should successfully poll the tempus broker queue', () => {
-        const sqsMessage = fs.readFileSync(
-            'function/resources/testing/tempus-broker-application-message.json'
-        );
-        const response = handleTempusBrokerMessage(sqsMessage);
-        expect(Object.keys(response)).toContain('applicationJSONDocumentSummaryKey');
-        expect(Object.keys(response)).toContain('applicationPDFDocumentSummaryKey');
-    });
+    const sqsMock = mockClient(SQSClient);
 
-    it('Should throw an error if the file types are wrong', () => {
-        const sqsMessage = fs.readFileSync(
-            'function/resources/testing/tempus-broker-application-message-invalid.json'
-        );
-        expect(() => handleTempusBrokerMessage(sqsMessage)).toThrowError(
-            'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
-        );
-    });
+    it('Should receive a message from the queue', async () => {
+        // Arrange
+        const testMessage = fs.readFileSync('function/resources/testing/sqsMessage.json');
+        sqsMock.on(ReceiveMessageCommand).resolves(testMessage);
 
-    it('Should error if file is not valid json', () => {
-        const sqsMessage = fs.readFileSync('function/resources/testing/invalid-json.txt');
-        expect(() => handleTempusBrokerMessage(sqsMessage)).toThrowError(SyntaxError);
+        // Act
+        const sqsService = createSQSService();
+        const response = await sqsService.receiveSQS({
+            QueueUrl: 'Queue',
+            MaxNumberOfMessages: 1
+        });
+
+        // Assert
+        expect(Object.keys(JSON.parse(response))).toContain('Messages');
     });
 });
