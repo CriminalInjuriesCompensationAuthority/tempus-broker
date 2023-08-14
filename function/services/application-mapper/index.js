@@ -9,7 +9,10 @@ const applicationFormJson = {
     prefix: 'U',
     section_ref: 'TEMP',
     is_eligible: 'Y',
-    NEW_OAS: 'Y'
+    NEW_OAS: 'Y',
+    is_transgender: 'N',
+    is_disabled: 'N',
+    ethnicity: 'EG17'
 };
 const addressDetailsJson = [
     {
