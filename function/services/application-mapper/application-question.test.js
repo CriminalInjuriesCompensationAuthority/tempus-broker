@@ -364,4 +364,16 @@ describe('Application question', () => {
             expect(mappedQuestion.columnValue).toEqual(['10002424', '10002424']);
         });
     });
+
+    it('Should map who the crime was reported to', () => {
+        const questionData = {
+            theme: 'about-application',
+            id: 'q--was-the-crime-reported-to-police',
+            value: true
+        };
+
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue[0]).toBe('Y');
+        expect(mappedQuestion.columnValue[1]).toBe('Police');
+    });
 });
