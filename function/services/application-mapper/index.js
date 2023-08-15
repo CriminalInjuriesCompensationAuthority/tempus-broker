@@ -19,7 +19,8 @@ const applicationFormJson = {
     live_same_house: 'N',
     include_doc: 'N',
     cica_to_send_summary: 'N',
-    incident_present: 'N'
+    incident_present: 'N',
+    treatment_received: 'N'
 };
 const addressDetailsJson = [
     {
