@@ -62,6 +62,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
 
+            // Sets who the crime was reported to
+            case data.id === 'q--was-the-crime-reported-to-police': {
+                // eslint-disable-next-line no-unused-expressions
+                data.value ? (columnValue = ['Y', 'Police']) : (columnValue = ['N', null]);
+                break;
+            }
+
             // Adds the physical injury codes
             case data.id === 'q-applicant-physical-injuries':
                 columnValue = '';
