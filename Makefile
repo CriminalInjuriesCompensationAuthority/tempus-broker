@@ -26,4 +26,9 @@ create-parameters:
 	aws --endpoint-url=http://localhost:4566 ssm put-parameter --name "kta-bucket-name" --value "tempus-broker-bucket" --type String
 
 
+create-queue:
+	aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name tempus-queue
+
+send-message:
+	aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url "http://localhost:4566/000000000000/tempus-queue" --message-body "{\"applicationPDFDocumentSummaryKey\": \"sample.pdf\", \"applicationJSONDocumentSummaryKey\": \"check-your-answers-sample.json\"}"
 

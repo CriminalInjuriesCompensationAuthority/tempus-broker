@@ -349,6 +349,20 @@ describe('Application question', () => {
             expect(mappedQuestion.columnValue.length).toBe(2);
             expect(mappedQuestion.columnValue[0].length).toBe(32);
         });
+
+        it('Should map q-police-force-is to police_force and police_force_area', () => {
+            const questionData = {
+                theme: 'crime',
+                id: 'q-police-force-id',
+                value: '10002424'
+            };
+            const mappedQuestion = mapApplicationQuestion(
+                questionData,
+                applicationForm,
+                addressDetails
+            );
+            expect(mappedQuestion.columnValue).toEqual(['10002424', '10002424']);
+        });
     });
 
     it('Should map who the crime was reported to', () => {

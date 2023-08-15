@@ -8,7 +8,11 @@ const addressDetailsColumns = require('../../constants/address-details-columns')
 const applicationFormJson = {
     prefix: 'U',
     section_ref: 'TEMP',
-    is_eligible: 'Y'
+    is_eligible: 'Y',
+    NEW_OAS: 'Y',
+    is_transgender: 'N',
+    is_disabled: 'N',
+    ethnicity: 'EG17'
 };
 const addressDetailsJson = [
     {

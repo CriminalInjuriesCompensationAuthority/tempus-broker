@@ -1,26 +1,36 @@
 'use strict';
 
-const logger = require('../logging/logger');
+const AWSXRay = require('aws-xray-sdk');
+const {SQSClient, ReceiveMessageCommand} = require('@aws-sdk/client-sqs');
 
-// validate that the response contains JSON and PDF keys only
-function validateS3Keys(keys) {
-    Object.values(keys).forEach(value => {
-        if (value.endsWith('.json') || value.endsWith('.pdf')) {
-            logger.info(`S3 Key received from tempus broker queue: ${value}`);
-        } else {
-            throw new Error(
-                'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
-            );
-        }
+/** Returns SQS Service object with functions to send, delete and receive messages from a SQS queue */
+function createSqsService() {
+    AWSXRay.setContextMissingStrategy('IGNORE_ERROR');
+    const sqsClient = AWSXRay.captureAWSv3Client(
+        new SQSClient({
+            region: 'eu-west-2',
+            endpoint:
+                process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test'
+                    ? 'http://localhost:4566'
+                    : undefined,
+            forcePathStyle: !!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')
+        })
+    );
+
+    /**
+     * Receives the next message from a given queue
+     * @param {object} input - The details of the queue to receive from
+     * @returns Message received from the queue
+     */
+    async function receiveSQS(input) {
+        const command = new ReceiveMessageCommand(input);
+        const response = await sqsClient.send(command);
+        return response;
+    }
+
+    return Object.freeze({
+        receiveSQS
     });
 }
 
-// Parses the data from an event body which has been recieved from the tempus broker queue
-function handleTempusBrokerMessage(data) {
-    // convert message to JSON - Holds S3 object keys
-    const s3Keys = JSON.parse(data);
-    validateS3Keys(s3Keys);
-    return s3Keys;
-}
-
-module.exports = handleTempusBrokerMessage;
+module.exports = createSqsService;

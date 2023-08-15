@@ -86,7 +86,7 @@ module.exports = Object.freeze({
             'address_line_4',
             'address_line_5'
         ],
-        'q-police-force-id': 'police_force_area',
+        'q-police-force-id': ['police_force_area', 'police_force'],
         'q-applicant-incident-type': 'pi_type_cause',
         'q-applicant-incident-description': 'description_of_incident'
     },
