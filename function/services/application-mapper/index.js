@@ -16,7 +16,8 @@ const applicationFormJson = {
     has_representative: 'N',
     rep_correspond_direct: 'N',
     rep_claims_company: 'N',
-    live_same_house: 'N'
+    live_same_house: 'N',
+    include_doc: 'N'
 };
 const addressDetailsJson = [
     {
