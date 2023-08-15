@@ -17,7 +17,8 @@ const applicationFormJson = {
     rep_correspond_direct: 'N',
     rep_claims_company: 'N',
     live_same_house: 'N',
-    include_doc: 'N'
+    include_doc: 'N',
+    cica_to_send_summary: 'N'
 };
 const addressDetailsJson = [
     {
