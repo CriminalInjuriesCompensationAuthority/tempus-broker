@@ -27,7 +27,8 @@ const applicationFormJson = {
     cica_to_send_summary: 'N',
     incident_present: 'N',
     treatment_received: 'N',
-    uploaded_documents: 'N'
+    uploaded_documents: 'N',
+    seen_psych: 'N'
 };
 const addressDetailsJson = [
     {
