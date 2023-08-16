@@ -69,6 +69,12 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
             }
 
+            case data.id === 'q-applicant-dentist-visited': {
+                // eslint-disable-next-line no-unused-expressions
+                data.value ? (columnValue = ['Y', 'Y']) : (columnValue = ['N', 'N']);
+                break;
+            }
+
             // Adds the physical injury codes
             case data.id === 'q-applicant-physical-injuries':
                 columnValue = '';

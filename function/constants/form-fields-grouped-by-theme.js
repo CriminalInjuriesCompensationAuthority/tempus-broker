@@ -167,7 +167,7 @@ module.exports = Object.freeze({
         'q-gp-town-or-city': 'address_line_4',
         'q-gp-county': 'address_line_5',
         'q-gp-postcode': 'post_code',
-        'q-applicant-dentist-visited': 'dentist_visit',
+        'q-applicant-dentist-visited': ['dentist_visit', 'include_dent'],
         'q-applicant-dentist-organisation-name': 'name',
         'q-applicant-dentist-address-building-and-street': 'address_line_1',
         'q-applicant-dentist-address-building-and-street-2': 'address_line_2',
