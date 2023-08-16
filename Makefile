@@ -18,7 +18,7 @@ upload-file:
 
 #Makes a secret with oracle connection data. Get this data from confluence and replace
 create-secrets:
-	aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name tempus-broker-oracle-data --secret-string [REPLACE_ME]
+	aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name tempus-broker-oracle-data --secret-string "{\"username\":\"oas\",\"password\":\"oasuser\",\"engine\":\"oracle\",\"host\":\"192.168.160.106\",\"port\":\"1521\",\"dbname\":\"tariff\"}"
 
 tariffSecretArn=$(shell aws --endpoint-url=http://localhost:4566 secretsmanager describe-secret --secret-id tempus-broker-oracle-data --query ARN)
 create-parameters:
