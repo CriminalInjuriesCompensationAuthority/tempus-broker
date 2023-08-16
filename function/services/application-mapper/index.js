@@ -26,7 +26,8 @@ const applicationFormJson = {
     include_doc: 'N',
     cica_to_send_summary: 'N',
     incident_present: 'N',
-    treatment_received: 'N'
+    treatment_received: 'N',
+    uploaded_documents: 'N'
 };
 const addressDetailsJson = [
     {
