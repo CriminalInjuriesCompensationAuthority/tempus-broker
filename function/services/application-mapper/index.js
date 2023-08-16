@@ -21,7 +21,7 @@ const applicationFormJson = {
     victim_support: 'N',
     dec_convictions_abroad: 'N',
     appl_defer: 'N',
-    caused_inability_to_work: 'N'
+    caused_inability_to_work: 'N',
     live_same_house: 'N',
     include_doc: 'N',
     cica_to_send_summary: 'N',
