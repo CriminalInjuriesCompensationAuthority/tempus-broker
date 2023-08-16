@@ -28,7 +28,8 @@ const applicationFormJson = {
     incident_present: 'N',
     treatment_received: 'N',
     uploaded_documents: 'N',
-    seen_psych: 'N'
+    seen_psych: 'N',
+    opt_in_sa: 'Y'
 };
 const addressDetailsJson = [
     {
