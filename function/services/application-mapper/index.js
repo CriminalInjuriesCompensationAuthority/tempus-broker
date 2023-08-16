@@ -27,7 +27,7 @@ const applicationFormJson = {
     cica_to_send_summary: 'N',
     incident_present: 'N',
     treatment_received: 'N',
-    uploaded_documents: 'N',
+    uploaded_document: 'N',
     seen_psych: 'N',
     opt_in_sa: 'Y',
     opt_in_scarring: 'N',
