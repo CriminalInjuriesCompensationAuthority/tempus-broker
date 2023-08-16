@@ -15,7 +15,13 @@ const applicationFormJson = {
     ethnicity: 'EG17',
     has_representative: 'N',
     rep_correspond_direct: 'N',
-    rep_claims_company: 'N'
+    rep_claims_company: 'N',
+    injured_with_rep: 'N',
+    contact_by_email: 'N',
+    victim_support: 'N',
+    dec_convictions_abroad: 'N',
+    appl_defer: 'N',
+    caused_inability_to_work: 'N'
 };
 const addressDetailsJson = [
     {
