@@ -13,7 +13,7 @@ create-bucket:
 	aws --endpoint-url=http://localhost:4566 s3 mb s3://tempus-broker-bucket
 
 upload-file:
-	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers.json s3://tempus-broker-bucket
+	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers-sample.json s3://tempus-broker-bucket
 	aws --endpoint-url=http://localhost:4566 s3 ls tempus-broker-bucket
 
 #Makes a secret with oracle connection data. Get this data from confluence and replace
@@ -30,5 +30,5 @@ create-queue:
 	aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name tempus-queue
 
 send-message:
-	aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url "http://localhost:4566/000000000000/tempus-queue" --message-body "{\"applicationPDFDocumentSummaryKey\": \"sample.pdf\", \"applicationJSONDocumentSummaryKey\": \"delay.json\"}"
+	aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url "http://localhost:4566/000000000000/tempus-queue" --message-body "{\"applicationPDFDocumentSummaryKey\": \"sample.pdf\", \"applicationJSONDocumentSummaryKey\": \"check-your-answers-sample.json\"}"
 
