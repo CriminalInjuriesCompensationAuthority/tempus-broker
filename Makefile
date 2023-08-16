@@ -13,12 +13,12 @@ create-bucket:
 	aws --endpoint-url=http://localhost:4566 s3 mb s3://tempus-broker-bucket
 
 upload-file:
-	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers-sample.json s3://tempus-broker-bucket
+	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/delay.json s3://tempus-broker-bucket
 	aws --endpoint-url=http://localhost:4566 s3 ls tempus-broker-bucket
 
 #Makes a secret with oracle connection data. Get this data from confluence and replace
 create-secrets:
-	aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name tempus-broker-oracle-data --secret-string "{\"username\":\"oas\",\"password\":\"oasuser\",\"engine\":\"oracle\",\"host\":\"192.168.160.106\",\"port\":\"1521\",\"dbname\":\"tariff\"}"
+	aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name tempus-broker-oracle-data --secret-string [REPLACE_ME]
 
 tariffSecretArn=$(shell aws --endpoint-url=http://localhost:4566 secretsmanager describe-secret --secret-id tempus-broker-oracle-data --query ARN)
 create-parameters:
@@ -30,5 +30,5 @@ create-queue:
 	aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name tempus-queue
 
 send-message:
-	aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url "http://localhost:4566/000000000000/tempus-queue" --message-body "{\"applicationPDFDocumentSummaryKey\": \"sample.pdf\", \"applicationJSONDocumentSummaryKey\": \"check-your-answers-sample.json\"}"
+	aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url "http://localhost:4566/000000000000/tempus-queue" --message-body "{\"applicationPDFDocumentSummaryKey\": \"sample.pdf\", \"applicationJSONDocumentSummaryKey\": \"delay.json\"}"
 
