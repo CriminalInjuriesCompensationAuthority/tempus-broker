@@ -121,11 +121,13 @@ describe('Application question', () => {
             value: 'once'
         };
         let mappedQuestion = mapApplicationQuestion(questionData);
-        expect(mappedQuestion.columnValue).toBe('2');
+        expect(mappedQuestion.columnValue[0]).toBe('2');
+        expect(mappedQuestion.columnValue[1]).toBe('N');
 
         questionData.value = 'over-a-period-of-time';
         mappedQuestion = mapApplicationQuestion(questionData);
-        expect(mappedQuestion.columnValue).toBe('3');
+        expect(mappedQuestion.columnValue[0]).toBe('3');
+        expect(mappedQuestion.columnValue[1]).toBe('N');
     });
 
     it('Should map who the applicant is', () => {
