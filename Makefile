@@ -13,7 +13,7 @@ create-bucket:
 	aws --endpoint-url=http://localhost:4566 s3 mb s3://tempus-broker-bucket
 
 upload-file:
-	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/delay.json s3://tempus-broker-bucket
+	aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers.json s3://tempus-broker-bucket
 	aws --endpoint-url=http://localhost:4566 s3 ls tempus-broker-bucket
 
 #Makes a secret with oracle connection data. Get this data from confluence and replace
