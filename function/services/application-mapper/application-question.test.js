@@ -378,4 +378,19 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue[0]).toBe('Y');
         expect(mappedQuestion.columnValue[1]).toBe('Police');
     });
+
+    it('Should map if the mental injury lasted more than 6 weeks', () => {
+        const questionData = {
+            theme: 'mental-health',
+            id: 'q-applicant-mental-injury-duration',
+            value: true
+        };
+
+        let mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('Y');
+
+        questionData.value = false;
+        mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+    });
 });

@@ -203,6 +203,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
             }
+
+            // check if duration of mental injury was more than 6 weeks
+            case data.id === 'q-applicant-mental-injury-duration': {
+                columnValue = data.value ? 'Y' : 'N';
+                break;
+            }
+
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime
