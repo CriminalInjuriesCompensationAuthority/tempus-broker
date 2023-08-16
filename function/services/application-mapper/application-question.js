@@ -203,6 +203,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
             }
+
+            // Check if the applicants daily capacity was affected
+            case data.id === 'q-applicant-affected-daily-capacity': {
+                columnValue = data.value ? 'Y' : 'N';
+                break;
+            }
+
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime

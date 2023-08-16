@@ -378,4 +378,19 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue[0]).toBe('Y');
         expect(mappedQuestion.columnValue[1]).toBe('Police');
     });
+
+    it('Should map if their daily capacity has been affected', () => {
+        const questionData = {
+            theme: 'impact',
+            id: 'q-applicant-affected-daily-capacity',
+            value: true
+        };
+
+        let mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('Y');
+
+        questionData.value = false;
+        mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+    });
 });
