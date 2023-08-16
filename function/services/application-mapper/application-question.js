@@ -90,7 +90,11 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case data.id === 'q-applicant-last-name':
                 addressColumn = 'name';
                 addressType = 'APA';
-                columnValue = data.value;
+                if (data.id === 'q-applicant-first-name') {
+                    columnValue = [data.value, data.value[0].toUpperCase()];
+                } else {
+                    columnValue = data.value;
+                }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,

@@ -13,7 +13,7 @@ module.exports = Object.freeze({
         'q-applicant-enter-your-email-address': 'claimant_email_address',
         'q-applicant-enter-your-telephone-number': 'day_phone',
         'q-applicant-title': 'app_title',
-        'q-applicant-first-name': 'first_name',
+        'q-applicant-first-name': ['first_name', 'initials'],
         'q-applicant-last-name': 'last_name',
         'q-applicant-building-and-street': 'address_line_1',
         'q-applicant-building-and-street-2': 'address_line_2',
