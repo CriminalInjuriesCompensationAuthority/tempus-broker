@@ -29,7 +29,8 @@ const applicationFormJson = {
     treatment_received: 'N',
     uploaded_documents: 'N',
     seen_psych: 'N',
-    opt_in_sa: 'Y'
+    opt_in_sa: 'Y',
+    opt_in_scarring: 'N'
 };
 const addressDetailsJson = [
     {
