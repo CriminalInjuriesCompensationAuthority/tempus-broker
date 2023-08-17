@@ -28,7 +28,7 @@ The project source includes the following directories:
 - [Node.js 18.16.1 or later with npm](https://nodejs.org/en/download/releases/)
 - The Bash shell. For Linux and macOS, this is included by default. In Windows 10, you can install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to get a Windows-integrated version of Ubuntu and Bash.
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - Will need to follow step 2.3 onwards to set this up. Version 21_10 required.
+- [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - Will need to follow step 2.3 onwards to set this up. Select the latest version, at least Version 21_10 required. The function/db/dbPool.js and function/db/index.js files will need updating accordingly.
 
 Not mandatory but useful if using VSCode:
 - Prettier formatter extension
@@ -59,6 +59,7 @@ following confluence page:
 Once this is done, open this project directory in terminal and run:
  - `make init`
  - `make create-bucket`
+ - `make upload-file`
  - `make create-secrets`
  - `make create-parameters`
  - `make create-queue`
