@@ -69,6 +69,12 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
             }
 
+            case data.id === 'q-applicant-dentist-visited': {
+                // eslint-disable-next-line no-unused-expressions
+                data.value ? (columnValue = ['Y', 'Y']) : (columnValue = ['N', 'N']);
+                break;
+            }
+
             // Adds the physical injury codes
             case data.id === 'q-applicant-physical-injuries':
                 columnValue = '';
@@ -84,7 +90,11 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case data.id === 'q-applicant-last-name':
                 addressColumn = 'name';
                 addressType = 'APA';
-                columnValue = data.value;
+                if (data.id === 'q-applicant-first-name') {
+                    columnValue = [data.value, data.value[0].toUpperCase()];
+                } else {
+                    columnValue = data.value;
+                }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
