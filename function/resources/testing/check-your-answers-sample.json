@@ -354,30 +354,11 @@
                     "theme": "injuries"
                 },
                 {
-                    "id": "q-applicant-physical-injury",
+                    "id": "q-applicant-physical-injuries-legs-ankle-other",
                     "type": "simple",
-                    "label": "What was injured?",
-                    "value": ["arms", "legs"],
-                    "valueLabel": ["Arms or hands", "Legs or feet"],
-                    "sectionId": "p-applicant-physical-injury",
-                    "theme": "injuries"
-                },
-                {
-                    "id": "q-applicant-physical-injury-arms",
-                    "type": "simple",
-                    "label": "Arm injuries",
-                    "value": ["arm", "skin"],
-                    "valueLabel": ["Arm", "Skin"],
-                    "sectionId": "p-applicant-physical-injury-arms",
-                    "theme": "injuries"
-                },
-                {
-                    "id": "q-applicant-physical-injuries",
-                    "type": "simple",
-                    "label": "Arm injuries",
-                    "value": ["phyinj-099"],
-                    "valueLabel": ["Broken arm"],
-                    "sectionId": "p-applicant-physical-injury-arms-arm",
+                    "label": "Other leg injuries",
+                    "value": "Small cuts",
+                    "sectionId": "p-applicant-physical-injury-legs-leg",
                     "theme": "injuries"
                 },
                 {
@@ -390,38 +371,11 @@
                     "theme": "injuries"
                 },
                 {
-                    "id": "q-applicant-physical-injury-legs",
-                    "type": "simple",
-                    "label": "Leg injuries",
-                    "value": ["leg", "toes"],
-                    "valueLabel": ["Leg", "Toes"],
-                    "sectionId": "p-applicant-physical-injury-legs",
-                    "theme": "injuries"
-                },
-                {
-                    "id": "q-applicant-physical-injuries",
-                    "type": "simple",
-                    "label": "Leg injuries",
-                    "value": ["phyinj-149"],
-                    "valueLabel": ["Other"],
-                    "sectionId": "p-applicant-physical-injury-legs-leg",
-                    "theme": "injuries"
-                },
-                {
                     "id": "q-applicant-physical-injuries-legs-leg-other",
                     "type": "simple",
                     "label": "Other leg injuries",
                     "value": "Small cuts",
                     "sectionId": "p-applicant-physical-injury-legs-leg",
-                    "theme": "injuries"
-                },
-                {
-                    "id": "q-applicant-physical-injuries",
-                    "type": "simple",
-                    "label": "Toe injuries",
-                    "value": ["phyinj-130"],
-                    "valueLabel": ["Broken toe"],
-                    "sectionId": "p-applicant-physical-injury-legs-toes",
                     "theme": "injuries"
                 },
                 {

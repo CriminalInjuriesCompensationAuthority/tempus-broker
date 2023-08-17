@@ -77,7 +77,9 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // Adds the physical injury codes
             case data.id === 'q-applicant-physical-injuries':
-                columnValue = '';
+                columnValue = applicationForm?.injury_details_code
+                    ? `${applicationForm.injury_details_code}:`
+                    : '';
                 Object.values(data.value).forEach(option => {
                     columnValue = `${columnValue + option}:`;
                 });
@@ -131,13 +133,24 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
             // Check if phyinj-149 (Other) should be added
             case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
-                columnValue = applicationForm?.injury_details_code
-                    ? applicationForm.injury_details_code
-                    : 'phyinj-149';
-                if (!columnValue.endsWith('phyinj-149')) {
-                    columnValue += ':phyinj-149';
+                // If phyinj-149 already contained within the injury codes, don't modify the column
+                if (
+                    applicationForm?.injury_details_code
+                        ?.split(':')
+                        ?.find(injuryCode => injuryCode === 'phyinj-149')
+                ) {
+                    columnValue = applicationForm?.injury_details_code;
+                    break;
+                } else {
+                    // Otherwise, we need to concatenate phyinj-149
+                    columnValue = applicationForm?.injury_details_code
+                        ? applicationForm.injury_details_code
+                        : 'phyinj-149';
+                    if (!columnValue.endsWith('phyinj-149')) {
+                        columnValue += ':phyinj-149';
+                    }
+                    break;
                 }
-                break;
 
             // Check if the applicant is eligible for special expenses
             case data.theme === 'special-expenses':
