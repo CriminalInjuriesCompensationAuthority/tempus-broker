@@ -35,6 +35,7 @@ const applicationFormJson = {
     ae_visited: 'N',
     treatment_other_prov: 'N',
     print_summary: 'N'
+    legal_responsibility: 'N'
 };
 const addressDetailsJson = [
     {
