@@ -27,6 +27,10 @@ const applicationFormJson = {
     cica_to_send_summary: 'N',
     incident_present: 'N',
     treatment_received: 'N',
+    legal_responsibility: 'N',
+    curr_state_type: '20',
+    mult_appl: 'N',
+    u18_or_inc_correspond_direct: 'N',
     uploaded_document: 'N',
     seen_psych: 'N',
     opt_in_sa: 'Y',
@@ -34,8 +38,7 @@ const applicationFormJson = {
     found_injuries: 'N',
     ae_visited: 'N',
     treatment_other_prov: 'N',
-    print_summary: 'N',
-    legal_responsibility: 'N'
+    print_summary: 'N'
 };
 const addressDetailsJson = [
     {

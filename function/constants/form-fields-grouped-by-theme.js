@@ -21,7 +21,8 @@ module.exports = Object.freeze({
         'q-applicant-town-or-city': 'address_line_4',
         'q-applicant-county': 'address_line_5',
         'q-applicant-postcode': 'post_code',
-        'q-applicant-capable': 'under_18_or_incapable'
+        'q-applicant-capable': 'under_18_or_incapable',
+        'q-applicant-confirmation-method': 'claimant-contact-preference'
     },
     'main-applicant-details': {
         'q-mainapplicant-title': 'U18_OR_INC_TITLE',
@@ -39,7 +40,8 @@ module.exports = Object.freeze({
         'q-mainapplicant-shared-responsibility': 'shared_parental_respon',
         'q-mainapplicant-shared-responsibility-name': 'shared_parental_respon_name',
         'q-mainapplicant-care-order': 'care_order',
-        'q-mainapplicant-care-order-authority': 'care_order_details'
+        'q-mainapplicant-care-order-authority': 'care_order_details',
+        'q-mainapplicant-confirmation-method': 'claimant_contact_preference'
     },
     'rep-details': {
         'q-rep-type': [
