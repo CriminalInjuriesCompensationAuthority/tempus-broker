@@ -28,7 +28,7 @@ const applicationFormJson = {
     incident_present: 'N',
     treatment_received: 'N',
     legal_responsibility: 'N',
-    curr_state_type: '20',
+    curr_stat_type: '20',
     mult_appl: 'N',
     u18_or_inc_correspond_direct: 'N',
     uploaded_document: 'N',
@@ -38,7 +38,17 @@ const applicationFormJson = {
     found_injuries: 'N',
     ae_visited: 'N',
     treatment_other_prov: 'N',
-    print_summary: 'N'
+    print_summary: 'N',
+    hospital_visit: 'N',
+    future_treatment: 'N',
+    scarring: 'N',
+    case_gone_to_court: 'N',
+    case_going_to_court: 'N',
+    relationship_date_ok: 'N',
+    has_made_other_claim: 'N',
+    financially_dependent: 'N',
+    other_claimants: 'N',
+    present_at_incident: 'N'
 };
 const addressDetailsJson = [
     {

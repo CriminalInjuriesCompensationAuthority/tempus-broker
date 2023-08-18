@@ -22,7 +22,7 @@ module.exports = Object.freeze({
         'q-applicant-county': 'address_line_5',
         'q-applicant-postcode': 'post_code',
         'q-applicant-capable': 'under_18_or_incapable',
-        'q-applicant-confirmation-method': 'claimant-contact-preference'
+        'q-applicant-confirmation-method': 'claimant_contact_preference'
     },
     'main-applicant-details': {
         'q-mainapplicant-title': 'U18_OR_INC_TITLE',
