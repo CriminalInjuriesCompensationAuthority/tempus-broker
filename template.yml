@@ -32,7 +32,7 @@ Mappings:
       VpcId: vpc-0254c4e3ea99b07d1
       SubnetIdA: subnet-0fd3a560d90368fdc
       SubnetIdB: subnet-078b2047045b77bb0
-      TariffSGId: sg-0ebad8b7f67749a6e
+      TariffSGId: sg-04998e82221c5e57c
     stag:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-staging-claim-criminal-injuries-tempus-queue
       TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-staging-claim-criminal-injuries-tempus-queue
