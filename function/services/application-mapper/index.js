@@ -27,7 +27,10 @@ const applicationFormJson = {
     cica_to_send_summary: 'N',
     incident_present: 'N',
     treatment_received: 'N',
-    legal_responsibility: 'N'
+    legal_responsibility: 'N',
+    curr_state_type: '20',
+    mult_appl: 'N',
+    u18_or_inc_correspond_direct: 'N'
 };
 const addressDetailsJson = [
     {

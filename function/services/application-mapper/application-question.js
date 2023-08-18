@@ -120,6 +120,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 );
                 break;
 
+            case data.id === 'q-mainapplicant-confirmation-method':
+            case data.id === 'q-applicant-confirmation-method':
+                if (data.value === 'email' || data.value === 'text') {
+                    columnValue = data.value[0].toUpperCase();
+                }
+                break;
+
             // We need to map this value to multiple columns, so we return an array of values
             case data.id === 'q-rep-type':
                 columnValue = [data.valueLabel, 'Y', 'Y', 'Y'];
