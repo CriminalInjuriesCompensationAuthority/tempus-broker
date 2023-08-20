@@ -29,7 +29,29 @@ const applicationFormJson = {
     treatment_received: 'N',
     caused_cost_for_treatment: 'N',
     contact_by_phone: 'N',
-    channel: 'W'
+    channel: 'W',
+    legal_responsibility: 'N',
+    curr_stat_type: '20',
+    mult_appl: 'N',
+    u18_or_inc_correspond_direct: 'N',
+    uploaded_document: 'N',
+    seen_psych: 'N',
+    opt_in_sa: 'Y',
+    opt_in_scarring: 'N',
+    found_injuries: 'N',
+    ae_visited: 'N',
+    treatment_other_prov: 'N',
+    print_summary: 'N',
+    hospital_visit: 'N',
+    future_treatment: 'N',
+    scarring: 'N',
+    case_gone_to_court: 'N',
+    case_going_to_court: 'N',
+    relationship_date_ok: 'N',
+    has_made_other_claim: 'N',
+    financially_dependent: 'N',
+    other_claimants: 'N',
+    present_at_incident: 'N'
 };
 const addressDetailsJson = [
     {

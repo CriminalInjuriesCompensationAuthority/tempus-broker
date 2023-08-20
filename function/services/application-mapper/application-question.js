@@ -69,9 +69,17 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
             }
 
+            case data.id === 'q-applicant-dentist-visited': {
+                // eslint-disable-next-line no-unused-expressions
+                data.value ? (columnValue = ['Y', 'Y']) : (columnValue = ['N', 'N']);
+                break;
+            }
+
             // Adds the physical injury codes
             case data.id === 'q-applicant-physical-injuries':
-                columnValue = '';
+                columnValue = applicationForm?.injury_details_code
+                    ? `${applicationForm.injury_details_code}:`
+                    : '';
                 Object.values(data.value).forEach(option => {
                     columnValue = `${columnValue + option}:`;
                 });
@@ -84,7 +92,11 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case data.id === 'q-applicant-last-name':
                 addressColumn = 'name';
                 addressType = 'APA';
-                columnValue = data.value;
+                if (data.id === 'q-applicant-first-name') {
+                    columnValue = [data.value, data.value[0].toUpperCase()];
+                } else {
+                    columnValue = data.value;
+                }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
@@ -108,6 +120,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 );
                 break;
 
+            case data.id === 'q-mainapplicant-confirmation-method':
+            case data.id === 'q-applicant-confirmation-method':
+                if (data.value === 'email' || data.value === 'text') {
+                    columnValue = data.value[0].toUpperCase();
+                }
+                break;
+
             // We need to map this value to multiple columns, so we return an array of values
             case data.id === 'q-rep-type':
                 columnValue = [data.valueLabel, 'Y', 'Y', 'Y'];
@@ -121,13 +140,24 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
             // Check if phyinj-149 (Other) should be added
             case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
-                columnValue = applicationForm?.injury_details_code
-                    ? applicationForm.injury_details_code
-                    : 'phyinj-149';
-                if (!columnValue.endsWith('phyinj-149')) {
-                    columnValue += ':phyinj-149';
+                // If phyinj-149 already contained within the injury codes, don't modify the column
+                if (
+                    applicationForm?.injury_details_code
+                        ?.split(':')
+                        ?.find(injuryCode => injuryCode === 'phyinj-149')
+                ) {
+                    columnValue = applicationForm?.injury_details_code;
+                    break;
+                } else {
+                    // Otherwise, we need to concatenate phyinj-149
+                    columnValue = applicationForm?.injury_details_code
+                        ? applicationForm.injury_details_code
+                        : 'phyinj-149';
+                    if (!columnValue.endsWith('phyinj-149')) {
+                        columnValue += ':phyinj-149';
+                    }
+                    break;
                 }
-                break;
 
             // Check if the applicant is eligible for special expenses
             case data.theme === 'special-expenses':
