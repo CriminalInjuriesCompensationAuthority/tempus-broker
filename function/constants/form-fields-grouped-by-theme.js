@@ -162,7 +162,7 @@ module.exports = Object.freeze({
     treatment: {
         'q-applicant-are-you-registered-with-gp': 'registered_with_gp',
         'q-applicant-have-you-seen-a-gp': 'registered_gp_attended',
-        'q-gp-organisation-name': 'name',
+        'q-gp-organisation-name': 'gp_name',
         'q-gp-building-and-street': 'address_line_1',
         'q-gp-building-and-street-2': 'address_line_2',
         'q-gp-building-and-street-3': 'address_line_3',

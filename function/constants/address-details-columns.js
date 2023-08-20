@@ -18,7 +18,6 @@ module.exports = Object.freeze({
         ]
     },
     DOA: {
-        'q-gp-organisation-name': 'name',
         'q-gp-building-and-street': 'address_line_1',
         'q-gp-building-and-street-2': 'address_line_2',
         'q-gp-building-and-street-3': 'address_line_3',

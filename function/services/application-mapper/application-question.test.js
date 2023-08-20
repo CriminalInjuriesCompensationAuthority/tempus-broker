@@ -114,6 +114,18 @@ describe('Application question', () => {
         expect(mappedQuestion.addressValue).toBe('kfc');
     });
 
+    it('Should return a gp address value and column', () => {
+        const addressQuestionData = {
+            theme: 'treatment',
+            id: 'q-gp-organisation-name',
+            value: 'GP Surgery'
+        };
+
+        const mappedQuestion = mapApplicationQuestion(addressQuestionData);
+        expect(mappedQuestion.columnValue).toBe('GP Surgery');
+        expect(mappedQuestion.addressValue).toBe('GP Surgery');
+    });
+
     it('Should map the application type', () => {
         const questionData = {
             theme: 'crime',
