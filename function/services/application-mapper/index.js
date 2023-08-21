@@ -49,7 +49,8 @@ const applicationFormJson = {
     financially_dependent: 'N',
     other_claimants: 'N',
     present_at_incident: 'N',
-    able_to_obtain: 'N'
+    able_to_obtain: 'N',
+    able_to_pay: 'N'
 };
 const addressDetailsJson = [
     {
