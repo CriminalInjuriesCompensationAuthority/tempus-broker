@@ -53,7 +53,8 @@ const applicationFormJson = {
     able_to_pay: 'N',
     opt_in_diversity: 'N',
     living_together: 'N',
-    convictions_abroad: 'N'
+    convictions_abroad: 'N',
+    loaded_to_spp: 'N'
 };
 const addressDetailsJson = [
     {
