@@ -50,7 +50,8 @@ const applicationFormJson = {
     other_claimants: 'N',
     present_at_incident: 'N',
     able_to_obtain: 'N',
-    able_to_pay: 'N'
+    able_to_pay: 'N',
+    opt_in_diversity: 'N'
 };
 const addressDetailsJson = [
     {
