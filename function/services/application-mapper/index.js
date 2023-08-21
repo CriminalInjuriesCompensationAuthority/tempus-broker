@@ -48,7 +48,8 @@ const applicationFormJson = {
     has_made_other_claim: 'N',
     financially_dependent: 'N',
     other_claimants: 'N',
-    present_at_incident: 'N'
+    present_at_incident: 'N',
+    able_to_obtain: 'N'
 };
 const addressDetailsJson = [
     {
