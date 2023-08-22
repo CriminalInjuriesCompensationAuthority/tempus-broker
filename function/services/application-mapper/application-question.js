@@ -253,7 +253,16 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 } else if (Array.isArray(columnName)) {
                     columnValue = [];
                     columnName.forEach((name, i) => {
-                        columnValue[i] = data.value;
+                        switch (data.value) {
+                            case true:
+                                columnValue[i] = 'Y';
+                                break;
+                            case false:
+                                columnValue[i] = 'N';
+                                break;
+                            default:
+                                columnValue[i] = data.value;
+                        }
                     });
                 } else {
                     switch (data.value) {
