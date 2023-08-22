@@ -148,7 +148,10 @@ module.exports = Object.freeze({
         'q-offender-enter-offenders-name': 'name_of_perpetrator'
     },
     'other-compensation': {
-        'q-applicant-have-you-applied-to-us-before': 'previous_application_submitted',
+        'q-applicant-have-you-applied-to-us-before': [
+            'previous_application_submitted',
+            'prev_app_for_ci_comp'
+        ],
         'q-enter-your-previous-reference-number': 'prev_case_ref_num_01',
         'q-applicant-have-you-applied-for-or-received-any-other-compensation':
             'claimed_other_compensation',
