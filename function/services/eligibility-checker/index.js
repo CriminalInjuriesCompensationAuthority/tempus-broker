@@ -22,7 +22,7 @@ function checkEligibility(applicationFormJson) {
     const reportedToPolice = applicationFormJson?.incident_rep_police === 'N';
     // 2. The applicant is not a victim of human trafficking and not seeking asylum
     const traffickedAndSeekingAsylum =
-        applicationFormJson?.residency_9 === 'N' && applicationFormJson?.residency_10 === 'N';
+        applicationFormJson?.residency_09 === 'N' && applicationFormJson?.residency_10 === 'N';
     // 3. The crime was reported 48 hours after the crime happened or started
     const reportedOnTime =
         dateTimePolFirstTold &&
@@ -39,8 +39,13 @@ function checkEligibility(applicationFormJson) {
     // 6. The crime did not happen in England, Scotland or Wales
     const ineligibleLocation = applicationFormJson?.incident_country === 'somewhere-else';
     // 7. The applicant is ineligible if only claiming for certain injuries
-    let ineligibleDueToInjuries = true;
-    if (applicationFormJson?.injury_details_code) {
+    // We skip this check if the claim is a fatality
+    let ineligibleDueToInjuries = false;
+    if (
+        (applicationFormJson?.injury_details_code && applicationFormJson?.application_type === 2) ||
+        applicationFormJson?.application_type === 3
+    ) {
+        ineligibleDueToInjuries = true;
         const injuryCodes = applicationFormJson.injury_details_code.split(':');
         injuryCodes.forEach(code => {
             if (!invalidInjuryCodes.includes(code)) {
