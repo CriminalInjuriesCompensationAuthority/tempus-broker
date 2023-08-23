@@ -42,8 +42,8 @@ function checkEligibility(applicationFormJson) {
     // We skip this check if the claim is a fatality
     let ineligibleDueToInjuries = false;
     if (
-        (applicationFormJson?.injury_details_code && applicationFormJson?.application_type === 2) ||
-        applicationFormJson?.application_type === 3
+        applicationFormJson?.injury_details_code &&
+        (applicationFormJson?.application_type === 2 || applicationFormJson?.application_type === 3)
     ) {
         ineligibleDueToInjuries = true;
         const injuryCodes = applicationFormJson.injury_details_code.split(':');
