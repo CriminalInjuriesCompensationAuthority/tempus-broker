@@ -6,16 +6,36 @@ describe('Eligibility checker', () => {
     it('Should be eligible when all checks pass', () => {
         const applicationObject = {
             case_reference_number: '027906',
+            application_type: 2,
             created_date: '02-JAN-22',
             is_eligible: 'Y',
             incident_rep_police: 'Y',
-            residency_9: 'Y',
+            residency_09: 'Y',
             residency_10: 'N',
             date_time_of_incident: '15-FEB-22',
             date_time_pol_first_told: '16-FEB-22',
             date_time_of_incident_to: '10-JAN-23',
             incident_country: 'england',
             injury_details_code: 'phyinj-048:phyinj-001:phyinj-149'
+        };
+        const checkedApplicationObject = checkEligibility(applicationObject);
+        expect(checkedApplicationObject.is_eligible).toBe('Y');
+    });
+
+    it('Should skip injury checking when claim is a fatality', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 4,
+            created_date: '02-JAN-22',
+            is_eligible: 'Y',
+            incident_rep_police: 'Y',
+            residency_09: 'Y',
+            residency_10: 'N',
+            date_time_of_incident: '15-FEB-22',
+            date_time_pol_first_told: '16-FEB-22',
+            date_time_of_incident_to: '10-JAN-23',
+            incident_country: 'england',
+            injury_details_code: 'phyinj-149'
         };
         const checkedApplicationObject = checkEligibility(applicationObject);
         expect(checkedApplicationObject.is_eligible).toBe('Y');
@@ -37,7 +57,7 @@ describe('Eligibility checker', () => {
             case_reference_number: '027906',
             created_date: '02-JAN-23',
             is_eligible: 'Y',
-            residency_9: 'N',
+            residency_09: 'N',
             residency_10: 'N'
         };
         const checkedApplicationObject = checkEligibility(applicationObject);
@@ -92,6 +112,7 @@ describe('Eligibility checker', () => {
     it('Should be ineligible if all the injury codes are ineligible', () => {
         const applicationObject = {
             case_reference_number: '027906',
+            application_type: 2,
             created_date: '02-JAN-22',
             is_eligible: 'Y',
             injury_details_code: 'phyinj-149:phyinj-044:phyinj-048'
