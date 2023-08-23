@@ -84,8 +84,16 @@ async function handler(event, context) {
         dbConn = await createDBPool();
 
         logger.info('Writing application data into Tariff');
-        await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
-        await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
+        try {
+            await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
+            await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
+        } catch (err) {
+            if (err?.code === 'ORA-00001') {
+                logger.error(`Application was already inserted into tariff: ${err}`);
+            } else {
+                throw err;
+            }
+        }
 
         if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
             logger.info('Deleting object from S3');
