@@ -138,6 +138,13 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
+            case data.id === 'q-gp-organisation-name':
+                // set gp name in the gp address
+                addressType = 'DOA';
+                addressColumn = 'name';
+                addressValue = data.value;
+                columnValue = data.value;
+                break;
             // Check if phyinj-149 (Other) should be added
             case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
                 // If phyinj-149 already contained within the injury codes, don't modify the column
@@ -246,7 +253,16 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 } else if (Array.isArray(columnName)) {
                     columnValue = [];
                     columnName.forEach((name, i) => {
-                        columnValue[i] = data.value;
+                        switch (data.value) {
+                            case true:
+                                columnValue[i] = 'Y';
+                                break;
+                            case false:
+                                columnValue[i] = 'N';
+                                break;
+                            default:
+                                columnValue[i] = data.value;
+                        }
                     });
                 } else {
                     switch (data.value) {

@@ -88,8 +88,6 @@ async function handler(event, context) {
         await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
 
         if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
-            logger.info('Deleting object from S3');
-            await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
             logger.info('Call out to KTA SDK');
             const sessionId = await getParameter('kta-session-id');
             const inputVars = [
@@ -99,6 +97,11 @@ async function handler(event, context) {
             logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
             await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
+
+            if (!process.env.RETAIN_JSON) {
+                logger.info('Deleting object from S3');
+                await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
+            }
         }
     } catch (error) {
         logger.error(error);

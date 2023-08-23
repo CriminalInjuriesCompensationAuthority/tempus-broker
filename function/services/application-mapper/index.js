@@ -27,6 +27,9 @@ const applicationFormJson = {
     cica_to_send_summary: 'N',
     incident_present: 'N',
     treatment_received: 'N',
+    caused_cost_for_treatment: 'N',
+    contact_by_phone: 'N',
+    channel: 'W',
     legal_responsibility: 'N',
     curr_stat_type: '20',
     mult_appl: 'N',
@@ -48,7 +51,13 @@ const applicationFormJson = {
     has_made_other_claim: 'N',
     financially_dependent: 'N',
     other_claimants: 'N',
-    present_at_incident: 'N'
+    present_at_incident: 'N',
+    able_to_obtain: 'N',
+    able_to_pay: 'N',
+    opt_in_diversity: 'N',
+    living_together: 'N',
+    convictions_abroad: 'N',
+    loaded_to_spp: 'N'
 };
 const addressDetailsJson = [
     {

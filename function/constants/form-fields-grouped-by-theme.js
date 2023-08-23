@@ -11,7 +11,7 @@ module.exports = Object.freeze({
         'q-applicant-what-other-names-have-you-used': 'other_names',
         'q-applicant-enter-your-date-of-birth': 'date_of_birth',
         'q-applicant-enter-your-email-address': 'claimant_email_address',
-        'q-applicant-enter-your-telephone-number': 'day_phone',
+        'q-applicant-enter-your-telephone-number': ['day_phone', 'claim_pref_number'],
         'q-applicant-title': 'app_title',
         'q-applicant-first-name': ['first_name', 'initials'],
         'q-applicant-last-name': 'last_name',
@@ -35,7 +35,7 @@ module.exports = Object.freeze({
         'q-mainapplicant-town-or-city': 'address_line_4',
         'q-mainapplicant-county': 'address_line_5',
         'q-mainapplicant-postcode': 'post_code',
-        'q-mainapplicant-enter-your-telephone-number': 'day_phone',
+        'q-mainapplicant-enter-your-telephone-number': ['day_phone', 'claim_pref_number'],
         'q-mainapplicant-relationship': 'u18_or_inc_relationship',
         'q-mainapplicant-shared-responsibility': 'shared_parental_respon',
         'q-mainapplicant-shared-responsibility-name': 'shared_parental_respon_name',
@@ -148,7 +148,10 @@ module.exports = Object.freeze({
         'q-offender-enter-offenders-name': 'name_of_perpetrator'
     },
     'other-compensation': {
-        'q-applicant-have-you-applied-to-us-before': 'previous_application_submitted',
+        'q-applicant-have-you-applied-to-us-before': [
+            'previous_application_submitted',
+            'prev_app_for_ci_comp'
+        ],
         'q-enter-your-previous-reference-number': 'prev_case_ref_num_01',
         'q-applicant-have-you-applied-for-or-received-any-other-compensation':
             'claimed_other_compensation',
@@ -162,7 +165,7 @@ module.exports = Object.freeze({
     treatment: {
         'q-applicant-are-you-registered-with-gp': 'registered_with_gp',
         'q-applicant-have-you-seen-a-gp': 'registered_gp_attended',
-        'q-gp-organisation-name': 'name',
+        'q-gp-organisation-name': 'gp_name',
         'q-gp-building-and-street': 'address_line_1',
         'q-gp-building-and-street-2': 'address_line_2',
         'q-gp-building-and-street-3': 'address_line_3',
