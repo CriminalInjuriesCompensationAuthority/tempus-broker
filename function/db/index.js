@@ -37,7 +37,7 @@ async function insertIntoTempus(jsonData, table) {
                     });
                 } catch (err) {
                     if (err?.code === 'ORA-00001') {
-                        logger.error(`Application form was already inserted into tariff: ${err}`);
+                        logger.error(`Address details were already inserted into tariff: ${err}`);
                     } else {
                         throw err;
                     }
@@ -50,7 +50,7 @@ async function insertIntoTempus(jsonData, table) {
                 await connection.execute(insertStatement, jsonData, {autoCommit: true});
             } catch (err) {
                 if (err?.code === 'ORA-00001') {
-                    logger.error(`Address details were already inserted into tariff: ${err}`);
+                    logger.error(`Application form was already inserted into tariff: ${err}`);
                 } else {
                     throw err;
                 }
