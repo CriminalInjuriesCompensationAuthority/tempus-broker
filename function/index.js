@@ -55,13 +55,21 @@ async function handler(event, context) {
     };
     const response = await sqsService.receiveSQS(receiveInput);
 
-    logger.info('Message received from SQS queue: ', response);
+    // Return early if there are no messages to consume.
+    if (!response.Messages) {
+        logger.info('No messages received');
+        return 'Nothing to process';
+    }
+
+    const message = response.Messages[0];
+    logger.info('Message received from SQS queue: ', message);
+
     let dbConn;
 
     try {
         logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
-        const s3Keys = handleTempusBrokerMessage(response.Messages[0].Body);
+        const s3Keys = handleTempusBrokerMessage(message.Body);
         const s3ApplicationData = await s3.retrieveObjectFromBucket(
             bucketName,
             Object.values(s3Keys)[1]
@@ -103,6 +111,13 @@ async function handler(event, context) {
                 await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
             }
         }
+
+        // Finally delete the consumed message from the Tempus Queue
+        const deleteInput = {
+            QueueUrl: process.env.TEMPUS_QUEUE,
+            ReceiptHandle: message.ReceiptHandle
+        };
+        sqsService.deleteSQS(deleteInput);
     } catch (error) {
         logger.error(error);
         throw error;
