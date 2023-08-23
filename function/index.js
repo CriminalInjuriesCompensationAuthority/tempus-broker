@@ -92,6 +92,7 @@ async function handler(event, context) {
         dbConn = await createDBPool();
 
         logger.info('Writing application data into Tariff');
+
         await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
 

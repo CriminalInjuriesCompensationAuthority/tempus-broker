@@ -31,12 +31,30 @@ async function insertIntoTempus(jsonData, table) {
             jsonData.forEach(async addressDetailEntry => {
                 const insertStatement = generateInsertStatement(addressDetailEntry, table);
                 logger.info(insertStatement);
-                await connection.execute(insertStatement, addressDetailEntry, {autoCommit: true});
+                try {
+                    await connection.execute(insertStatement, addressDetailEntry, {
+                        autoCommit: true
+                    });
+                } catch (err) {
+                    if (err?.code === 'ORA-00001') {
+                        logger.error(`Application form was already inserted into tariff: ${err}`);
+                    } else {
+                        throw err;
+                    }
+                }
             });
         } else {
             const insertStatement = generateInsertStatement(jsonData, table);
             logger.info(insertStatement);
-            await connection.execute(insertStatement, jsonData, {autoCommit: true});
+            try {
+                await connection.execute(insertStatement, jsonData, {autoCommit: true});
+            } catch (err) {
+                if (err?.code === 'ORA-00001') {
+                    logger.error(`Address details were already inserted into tariff: ${err}`);
+                } else {
+                    throw err;
+                }
+            }
         }
     } catch (error) {
         logger.error(error);
