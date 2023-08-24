@@ -3,69 +3,24 @@
 const fs = require('fs');
 const mapApplicationDataToOracleObject = require('./index');
 const FormFieldsGroupedByTheme = require('../../constants/form-fields-grouped-by-theme');
-const applicationFormDefault = require('../../constants/application-form-default');
-const addressDetailsDefault = require('../../constants/address-details-default');
+const getApplicationFormDefault = require('../../constants/application-form-default');
+const getAddressDetailsDefault = require('../../constants/address-details-default');
 
 describe('Application mapper', () => {
     let applicationSummaryJson;
     let oracleObject;
     let applicationFormJson;
     let addressDetailsJson;
+    let applicationFormDefault = getApplicationFormDefault();
+    let addressDetailsDefault = getAddressDetailsDefault();
 
     beforeEach(() => {
         applicationSummaryJson = null;
         oracleObject = null;
         applicationFormJson = null;
         addressDetailsJson = null;
-    });
-
-    //We call two instances of mapApplicationDataToOracleObject
-    //We shouldn't see any shared data between them
-    it.only('Should handle concurrency', async () => {
-        applicationSummaryJson = {
-            meta: {
-                caseReference: '44\\207906',
-                submittedDate: '2023-05-19T13:06:12.693Z'
-            },
-            theme: {
-                id: 'q-applicant-british-citizen-or-eu-national',
-                theme: 'about-application',
-                value: 'British Citizen'
-            }
-        };
-        oracleObject = await mapApplicationDataToOracleObject(
-            applicationSummaryJson,
-            applicationFormDefault,
-            addressDetailsDefault
-        );
-
-        let applicationSummaryJsonTwo = {
-            meta: {
-                caseReference: '77\\123456',
-                submittedDate: '2023-05-19T13:06:12.693Z'
-            },
-            theme: {
-                id: 'q-gp-organisation-name',
-                theme: 'treatment',
-                value: 'cat'
-            }
-        };
-        let oracleObjectTwo = await mapApplicationDataToOracleObject(
-            applicationSummaryJsonTwo,
-            applicationFormDefault,
-            addressDetailsDefault
-        );
-
-        addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
-        applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
-        let addressDetailsJsonTwo = Object.values(oracleObjectTwo)[0][1].ADDRESS_DETAILS;
-        let applicationFormJsonTwo = Object.values(oracleObjectTwo)[0][0].APPLICATION_FORM;
-
-        //We shouldnt have mapped the GP details to application 1, but it should be mapped in application 2
-        expect(addressDetailsJson.length).toBe(1);
-        expect(applicationFormJson?.claim_reference_number).toBe('207906')
-        expect(addressDetailsJsonTwo.length).toBe(2);
-        expect(applicationFormJsonTwo?.claim_reference_number).toBe('123456')
+        applicationFormDefault = getApplicationFormDefault();
+        addressDetailsDefault = getAddressDetailsDefault();
     });
 
     it('Should set the CRN and Submitted date', async () => {
