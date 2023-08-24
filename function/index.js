@@ -1,9 +1,8 @@
 'use strict';
 
-require('dotenv').config();
 const oracledb = require('oracledb');
 const s3 = require('./services/s3/index');
-const createSqsService = require('./services/sqs/index');
+const handleTempusBrokerMessage = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
@@ -21,55 +20,19 @@ function extractTariffReference(applicationJson) {
     return applicationJson.meta.caseReference.split('\\')[1];
 }
 
-// validate that the response contains JSON and PDF keys only
-function validateS3Keys(keys) {
-    Object.values(keys).forEach(value => {
-        if (value.endsWith('.json') || value.endsWith('.pdf')) {
-            logger.info(`S3 Key received from tempus broker queue: ${value}`);
-        } else {
-            throw new Error(
-                'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
-            );
-        }
-    });
-}
-
-// Parses the data from an event body which has been recieved from the tempus broker queue
-function handleTempusBrokerMessage(data) {
-    // convert message to JSON - Holds S3 object keys
-    const s3Keys = JSON.parse(data);
-    validateS3Keys(s3Keys);
-    return s3Keys;
-}
-
-async function handler(event, context) {
+exports.handler = async function(event, context) {
     logger.info(`## CONTEXT: ${serialize(context)}`);
     logger.info(`## EVENT: ${serialize(event)}`);
 
-    const sqsService = createSqsService();
-
     // Currently the tempus broker is setup to handle one event at a time
-    const receiveInput = {
-        QueueUrl: process.env.TEMPUS_QUEUE,
-        MaxNumberOfMessages: 1
-    };
-    const response = await sqsService.receiveSQS(receiveInput);
-
-    // Return early if there are no messages to consume.
-    if (!response.Messages) {
-        logger.info('No messages received');
-        return 'Nothing to process';
-    }
-
-    const message = response.Messages[0];
-    logger.info('Message received from SQS queue: ', message);
-
+    const record = event.Records[0];
+    logger.info('Tempus broker message recieved: ', record.body);
     let dbConn;
 
     try {
         logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
-        const s3Keys = handleTempusBrokerMessage(message.Body);
+        const s3Keys = await handleTempusBrokerMessage(record.body);
         const s3ApplicationData = await s3.retrieveObjectFromBucket(
             bucketName,
             Object.values(s3Keys)[1]
@@ -113,12 +76,12 @@ async function handler(event, context) {
             }
         }
 
-        // Finally delete the consumed message from the Tempus Queue
-        const deleteInput = {
-            QueueUrl: process.env.TEMPUS_QUEUE,
-            ReceiptHandle: message.ReceiptHandle
-        };
-        sqsService.deleteSQS(deleteInput);
+        // // Finally delete the consumed message from the Tempus Queue
+        // const deleteInput = {
+        //     QueueUrl: process.env.TEMPUS_QUEUE,
+        //     ReceiptHandle: message.ReceiptHandle
+        // };
+        // sqsService.deleteSQS(deleteInput);
     } catch (error) {
         logger.error(error);
         throw error;
@@ -129,6 +92,4 @@ async function handler(event, context) {
     }
 
     return 'Success!';
-}
-
-module.exports = {handler, handleTempusBrokerMessage};
+};

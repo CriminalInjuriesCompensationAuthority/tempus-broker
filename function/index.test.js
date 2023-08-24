@@ -1,19 +1,32 @@
 'use strict';
 
 const fs = require('fs');
-const {handler, handleTempusBrokerMessage} = require('./index');
+const {mockClient} = require('aws-sdk-client-mock');
+const {SSMClient, GetParameterCommand} = require('@aws-sdk/client-ssm');
+const index = require('./index');
 
 describe('Tempus broker function', () => {
     it.skip('Should run the function handler', async () => {
-        jest.setTimeout(60000);
-        const response = await handler({}, null);
+        const eventFile = fs.readFileSync('function/resources/testing/event.json');
+        const event = JSON.parse(eventFile);
+        const response = await index.handler(event, null);
         expect(response).toContain('Success!');
     });
 
     it('Should error if event body contains files with invalid types', async () => {
-        const sqsMessage = fs.readFileSync('function/resources/testing/sqsMessage.json');
-        const response = handleTempusBrokerMessage(JSON.parse(sqsMessage).Messages[0].Body);
-        expect(Object.keys(response)).toContain('applicationJSONDocumentSummaryKey');
-        expect(Object.keys(response)).toContain('applicationPDFDocumentSummaryKey');
+        const mockSSMClient = mockClient(SSMClient);
+        const eventFile = fs.readFileSync(
+            'function/resources/testing/event-with-invalid-files.json'
+        );
+        const event = JSON.parse(eventFile);
+
+        mockSSMClient.on(GetParameterCommand).resolves({
+            Parameter: {
+                value: 'test'
+            }
+        });
+        await expect(async () => index.handler(event, null)).rejects.toThrowError(
+            'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
+        );
     });
 });
