@@ -12,6 +12,8 @@ const createJob = require('./services/kta/index');
 const addressInvoiceMapper = require('./services/address-invoice-mapper');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
+const getApplicationFormDefault = require('./constants/application-form-default');
+const getAddressDetailsDefault = require('./constants/address-details-default');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
@@ -43,6 +45,8 @@ function handleTempusBrokerMessage(data) {
 }
 
 async function handler(event, context) {
+    const applicationFormDefault = getApplicationFormDefault();
+    const addressDetailsDefault = getAddressDetailsDefault();
     logger.info(`## CONTEXT: ${serialize(context)}`);
     logger.info(`## EVENT: ${serialize(event)}`);
 
@@ -76,7 +80,11 @@ async function handler(event, context) {
         );
 
         logger.info('Mapping application data to Oracle object.');
-        const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
+        const applicationOracleObject = await mapApplicationDataToOracleObject(
+            s3ApplicationData,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
 
         logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
