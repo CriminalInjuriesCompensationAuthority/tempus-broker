@@ -1,44 +1,41 @@
 'use strict';
 
+const {mockClient} = require('aws-sdk-client-mock');
+const {ReceiveMessageCommand, DeleteMessageCommand, SQSClient} = require('@aws-sdk/client-sqs');
 const fs = require('fs');
-const handleTempusBrokerMessage = require('./index');
+const createSQSService = require('./index');
 
 describe('SQS Service', () => {
-    it('Should successfully poll the tempus broker queue', () => {
-        const sqsMessage = fs.readFileSync(
-            'function/resources/testing/tempus-broker-application-message.json'
-        );
-        const response = handleTempusBrokerMessage(sqsMessage);
-        expect(Object.keys(response)).toContain('applicationJSONDocumentSummaryKey');
-        expect(Object.keys(response)).toContain('applicationPDFDocumentSummaryKey');
+    const sqsMock = mockClient(SQSClient);
+
+    it('Should receive a message from the queue', async () => {
+        // Arrange
+        const testMessage = fs.readFileSync('function/resources/testing/sqsMessage.json');
+        sqsMock.on(ReceiveMessageCommand).resolves(testMessage);
+
+        // Act
+        const sqsService = createSQSService();
+        const response = await sqsService.receiveSQS({
+            QueueUrl: 'Queue',
+            MaxNumberOfMessages: 1
+        });
+
+        // Assert
+        expect(Object.keys(JSON.parse(response))).toContain('Messages');
     });
 
-    it('Should throw an error if the file types are wrong', () => {
-        const sqsMessage = fs.readFileSync(
-            'function/resources/testing/tempus-broker-application-message-invalid.json'
-        );
-        expect(() => handleTempusBrokerMessage(sqsMessage)).toThrowError(
-            'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
-        );
+    it('Should delete a message from the queue', async () => {
+        // Arrange
+        sqsMock.on(DeleteMessageCommand).resolves('Message Deleted');
+
+        // Act
+        const sqsService = createSQSService();
+        const response = await sqsService.deleteSQS({
+            QueueUrl: 'Queue',
+            ReceiptHandle: 'Receipt Handle'
+        });
+
+        // Assert
+        expect(response).toBe('Message Deleted');
     });
-
-    it('Should error if file is not valid json', () => {
-        const sqsMessage = fs.readFileSync('function/resources/testing/invalid-json.txt');
-        expect(() => handleTempusBrokerMessage(sqsMessage)).toThrowError(SyntaxError);
-    });
-
-    // it('Should delete a message from the queue', async () => {
-    //     // Arrange
-    //     sqsMock.on(DeleteMessageCommand).resolves('Message Deleted');
-
-    //     // Act
-    //     const sqsService = createSQSService();
-    //     const response = await sqsService.deleteSQS({
-    //         QueueUrl: 'Queue',
-    //         ReceiptHandle: 'Receipt Handle'
-    //     });
-
-    //     // Assert
-    //     expect(response).toBe('Message Deleted');
-    // });
 });

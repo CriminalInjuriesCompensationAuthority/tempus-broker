@@ -21,6 +21,7 @@ Mappings:
   EnvironmentMap:
     dev:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-dev-claim-criminal-injuries-tempus-queue
+      TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-dev-team-dev-claim-criminal-injuries-tempus-queue
       VpcId: vpc-0e42a25379fa895ec
       SubnetIdA: subnet-02f7ae7f6b1db987f
       SubnetIdB: subnet-0a5e7b48efcb931ba
@@ -34,12 +35,14 @@ Mappings:
       TariffSGId: sg-04998e82221c5e57c
     stag:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-staging-claim-criminal-injuries-tempus-queue
+      TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-staging-claim-criminal-injuries-tempus-queue
       VpcId: vpc-0e42a25379fa895ec
       SubnetIdA: subnet-02f7ae7f6b1db987f
       SubnetIdB: subnet-0a5e7b48efcb931ba
       TariffSGId: sg-0ebad8b7f67749a6e
     prod:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
+      TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-dev-team-prod-claim-criminal-injuries-tempus-queue
       VpcId: vpc-0e42a25379fa895ec # needs updating
       SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
       SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
@@ -50,15 +53,18 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs18.x
+      Environment:
+        Variables:
+          TEMPUS_QUEUE: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueUrl]
       CodeUri: function/.
       Description: Call the AWS Lambda API
       Timeout: 30
       # Trigger
       Events:
-        SqsEvent:
-          Type: SQS
+        Trigger:
+          Type: Schedule
           Properties:
-            Queue: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueArn]
+            Schedule: 'rate(1 minute)'
       # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
