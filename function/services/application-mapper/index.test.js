@@ -3,6 +3,8 @@
 const fs = require('fs');
 const mapApplicationDataToOracleObject = require('./index');
 const FormFieldsGroupedByTheme = require('../../constants/form-fields-grouped-by-theme');
+const applicationFormDefault = require('../../constants/application-form-default');
+const addressDetailsDefault = require('../../constants/address-details-default');
 
 describe('Application mapper', () => {
     let applicationSummaryJson;
@@ -17,11 +19,64 @@ describe('Application mapper', () => {
         addressDetailsJson = null;
     });
 
+    //We call two instances of mapApplicationDataToOracleObject
+    //We shouldn't see any shared data between them
+    it.only('Should handle concurrency', async () => {
+        applicationSummaryJson = {
+            meta: {
+                caseReference: '44\\207906',
+                submittedDate: '2023-05-19T13:06:12.693Z'
+            },
+            theme: {
+                id: 'q-applicant-british-citizen-or-eu-national',
+                theme: 'about-application',
+                value: 'British Citizen'
+            }
+        };
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
+
+        let applicationSummaryJsonTwo = {
+            meta: {
+                caseReference: '77\\123456',
+                submittedDate: '2023-05-19T13:06:12.693Z'
+            },
+            theme: {
+                id: 'q-gp-organisation-name',
+                theme: 'treatment',
+                value: 'cat'
+            }
+        };
+        let oracleObjectTwo = await mapApplicationDataToOracleObject(
+            applicationSummaryJsonTwo,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
+
+        addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
+        applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+        let addressDetailsJsonTwo = Object.values(oracleObjectTwo)[0][1].ADDRESS_DETAILS;
+        let applicationFormJsonTwo = Object.values(oracleObjectTwo)[0][0].APPLICATION_FORM;
+
+        //We shouldnt have mapped the GP details to application 1, but it should be mapped in application 2
+        expect(addressDetailsJson.length).toBe(1);
+        expect(applicationFormJson?.claim_reference_number).toBe('207906')
+        expect(addressDetailsJsonTwo.length).toBe(2);
+        expect(applicationFormJsonTwo?.claim_reference_number).toBe('123456')
+    });
+
     it('Should set the CRN and Submitted date', async () => {
         applicationSummaryJson = fs.readFileSync(
             'function/resources/testing/application-meta.json'
         );
-        oracleObject = await mapApplicationDataToOracleObject(JSON.parse(applicationSummaryJson));
+        oracleObject = await mapApplicationDataToOracleObject(
+            JSON.parse(applicationSummaryJson),
+            applicationFormDefault,
+            addressDetailsDefault
+        );
         applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
 
         expect(applicationFormJson.claim_reference_number).toEqual('207906');
@@ -37,7 +92,11 @@ describe('Application mapper', () => {
             value: 'British Citizen'
         };
 
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
         const formField =
             FormFieldsGroupedByTheme[applicationSummaryJson.theme]?.[applicationSummaryJson.id];
         applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
@@ -52,7 +111,11 @@ describe('Application mapper', () => {
             value: 'Manchester'
         };
 
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
         const formField =
             FormFieldsGroupedByTheme[applicationSummaryJson.theme]?.[applicationSummaryJson.id];
 
@@ -68,7 +131,11 @@ describe('Application mapper', () => {
             value: 'Manchester'
         };
 
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
         addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
         expect(addressDetailsJson.length).toBe(1);
 
@@ -77,24 +144,46 @@ describe('Application mapper', () => {
             theme: 'treatment',
             value: 'cat'
         };
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsJson
+        );
         expect(addressDetailsJson.length).toBe(2);
     });
 
     it('Should add the crn and ref year for each entry in address_details', async () => {
         applicationSummaryJson = {
-            id: 'q-applicant-english-town-or-city',
-            theme: 'crime',
-            value: 'Manchester'
+            meta: {
+                caseReference: '44\\207906',
+                submittedDate: '2023-05-19T13:06:12.693Z'
+            },
+            values: [
+                {
+                    id: 'q-applicant-english-town-or-city',
+                    theme: 'crime',
+                    value: 'Manchester'
+                },
+                {
+                    id: 'q-gp-organisation-name',
+                    theme: 'treatment',
+                    value: 'cat'
+                }
+            ]
         };
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
-
-        applicationSummaryJson = {
-            id: 'q-gp-organisation-name',
-            theme: 'treatment',
-            value: 'cat'
-        };
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
+        // applicationFormJson = Object.values(oracleObject)[0][1].APPLICATION_FORM;
+        // addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
+        // applicationSummaryJson = {
+        //     id: 'q-gp-organisation-name',
+        //     theme: 'treatment',
+        //     value: 'cat'
+        // };
+        // oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson, applicationFormJson, addressDetailsJson);
 
         addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
         addressDetailsJson.forEach(entry => {
@@ -109,7 +198,11 @@ describe('Application mapper', () => {
             theme: 'main-applicant-details',
             value: 'mister'
         };
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
         const formField =
             FormFieldsGroupedByTheme[applicationSummaryJson.theme]?.[applicationSummaryJson.id];
         applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
@@ -129,7 +222,11 @@ describe('Application mapper', () => {
             value: 'Should map an array of address details to an array of columns'
         };
 
-        oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson);
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
         const formField =
             FormFieldsGroupedByTheme[applicationSummaryJson.theme]?.[applicationSummaryJson.id];
         expect(Array.isArray(formField)).toBeTruthy();

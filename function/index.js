@@ -13,6 +13,7 @@ const addressInvoiceMapper = require('./services/address-invoice-mapper');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
 
+
 function serialize(object) {
     return JSON.stringify(object, null, 2);
 }
@@ -43,6 +44,9 @@ function handleTempusBrokerMessage(data) {
 }
 
 async function handler(event, context) {
+    const applicationFormDefault = require('./constants/application-form-default')
+    const addressDetailsDefault = require('./constants/address-details-default')
+    
     logger.info(`## CONTEXT: ${serialize(context)}`);
     logger.info(`## EVENT: ${serialize(event)}`);
 
@@ -76,7 +80,7 @@ async function handler(event, context) {
         );
 
         logger.info('Mapping application data to Oracle object.');
-        const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData);
+        const applicationOracleObject = await mapApplicationDataToOracleObject(s3ApplicationData, applicationFormDefault, addressDetailsDefault);
 
         logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
