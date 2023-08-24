@@ -131,14 +131,6 @@ describe('Application mapper', () => {
             applicationFormDefault,
             addressDetailsDefault
         );
-        // applicationFormJson = Object.values(oracleObject)[0][1].APPLICATION_FORM;
-        // addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
-        // applicationSummaryJson = {
-        //     id: 'q-gp-organisation-name',
-        //     theme: 'treatment',
-        //     value: 'cat'
-        // };
-        // oracleObject = await mapApplicationDataToOracleObject(applicationSummaryJson, applicationFormJson, addressDetailsJson);
 
         addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
         addressDetailsJson.forEach(entry => {
