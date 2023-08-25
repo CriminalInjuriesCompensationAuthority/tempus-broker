@@ -53,7 +53,11 @@ function getDefaultApplicationForm() {
         opt_in_diversity: 'N',
         living_together: 'N',
         convictions_abroad: 'N',
-        loaded_to_spp: 'N'
+        loaded_to_spp: 'N',
+        care_order: 'N',
+        estranged_from_deceased: 'N',
+        relat_to_deceased_cohab: 'N',
+        funeral_only: 'N'
     };
 }
 

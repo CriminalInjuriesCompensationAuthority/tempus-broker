@@ -56,86 +56,80 @@ describe('Address invoice mapper', () => {
         expect(newAddressDetails[0].sub_type).toEqual('MPRA');
     });
 
-    describe('PAB address details', () => {
+    it('Should set inv code to MAIN and inv type to APPL if address type is PAB', () => {
+        addressDetailsJson = [
+            {
+                address_type: 'PAB'
+            }
+        ];
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        expect(newAddressDetails[0].inv_code).toEqual('MAIN');
+        expect(newAddressDetails[0].inv_type).toEqual('APPL');
+    });
+
+    describe('RPA address details', () => {
         beforeEach(() => {
             addressDetailsJson = [
                 {
-                    address_type: 'PAB'
+                    address_type: 'RPA'
                 }
             ];
         });
 
         it('Should set inv code to CMCO and inv type to MED if representative type is claims management company', () => {
-            applicationFormJson = [
-                {
-                    representative_type: 'claims management company'
-                }
-            ];
+            applicationFormJson = {
+                representative_type: 'claims management company'
+            };
+
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('CMCO');
             expect(newAddressDetails[0].inv_type).toEqual('MED');
         });
 
         it('Should set inv code to FC and inv type to REP if representative type is foster carer', () => {
-            applicationFormJson = [
-                {
-                    representative_type: 'foster carer'
-                }
-            ];
+            applicationFormJson = {
+                representative_type: 'foster carer'
+            };
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('FC');
             expect(newAddressDetails[0].inv_type).toEqual('REP');
         });
 
         it('Should set inv code to FRFA and inv type to REP if representative type is friend or relative', () => {
-            applicationFormJson = [
-                {
-                    representative_type: 'friend or relative'
-                }
-            ];
+            applicationFormJson = {
+                representative_type: 'friend or relative'
+            };
+
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('FRFA');
             expect(newAddressDetails[0].inv_type).toEqual('REP');
         });
 
         it('Should set inv code to SSER and inv type to REP if representative type is social services', () => {
-            applicationFormJson = [
-                {
-                    representative_type: 'social services'
-                }
-            ];
+            applicationFormJson = {
+                representative_type: 'social services'
+            };
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('SSER');
             expect(newAddressDetails[0].inv_type).toEqual('REP');
         });
 
         it('Should set inv code to SUPP and inv type to REP if representative type is support organisation', () => {
-            applicationFormJson = [
-                {
-                    representative_type: 'support organisation'
-                }
-            ];
+            applicationFormJson = {
+                representative_type: 'support organisation'
+            };
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('SUPP');
             expect(newAddressDetails[0].inv_type).toEqual('REP');
         });
 
         it('Should set inv code to SOLS and inv type to REP if representative type is solicitor', () => {
-            applicationFormJson = [
-                {
-                    representative_type: 'solicitor'
-                }
-            ];
+            applicationFormJson = {
+                representative_type: 'solicitor'
+            };
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('SOLS');
             expect(newAddressDetails[0].inv_type).toEqual('REP');
-        });
-
-        it('Should set inv code to MAIN and inv type to APPL if representative type is not any of the ones listed above', () => {
-            applicationFormJson = [{}];
-            const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
-            expect(newAddressDetails[0].inv_code).toEqual('MAIN');
-            expect(newAddressDetails[0].inv_type).toEqual('APPL');
         });
     });
 });
