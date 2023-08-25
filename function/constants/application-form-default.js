@@ -9,8 +9,6 @@ function getDefaultApplicationForm() {
         is_transgender: 'N',
         is_disabled: 'N',
         ethnicity: 'EG17',
-        has_representative: 'N',
-        rep_correspond_direct: 'N',
         rep_claims_company: 'N',
         injured_with_rep: 'N',
         contact_by_email: 'N',
