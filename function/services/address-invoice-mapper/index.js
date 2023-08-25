@@ -28,7 +28,11 @@ function mapAddressInvoices(addressDetailsJson, applicationFormJson) {
                         invAddedAddressDetailsJson[index].sub_type = 'MPRA';
                         break;
                     case 'PAB':
-                        switch (applicationFormJson[0]?.representative_type?.toLowerCase()) {
+                        invAddedAddressDetailsJson[index].inv_code = 'MAIN';
+                        invAddedAddressDetailsJson[index].inv_type = 'APPL';
+                        break;
+                    case 'RPA':
+                        switch (applicationFormJson?.representative_type?.toLowerCase()) {
                             case 'claims management company':
                                 invAddedAddressDetailsJson[index].inv_code = 'CMCO';
                                 invAddedAddressDetailsJson[index].inv_type = 'MED';
@@ -54,8 +58,6 @@ function mapAddressInvoices(addressDetailsJson, applicationFormJson) {
                                 invAddedAddressDetailsJson[index].inv_type = 'REP';
                                 break;
                             default:
-                                invAddedAddressDetailsJson[index].inv_code = 'MAIN';
-                                invAddedAddressDetailsJson[index].inv_type = 'APPL';
                                 break;
                         }
                         break;

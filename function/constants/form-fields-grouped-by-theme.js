@@ -221,10 +221,7 @@ module.exports = Object.freeze({
         'q-applicant-funeral-costs-paid': 'funeral_claim',
         'q-applicant-funeral-costs-total': 'funeral_total_cost'
     },
-
-    // Note: Theme may be incorrect due to not having test data
-    // Question IDs should be correct though
-    'residency-statements': {
+    'residency-and-nationality': {
         'q-applicant-ordinarily-resident': 'residency_01',
         'q-applicant-british-citizen': 'residency_02',
         'q-applicant-british-citizen-relative': 'residency_03',
