@@ -12,9 +12,6 @@ function checkEligibility(applicationFormJson) {
     const dateTimeOfIncident = applicationFormJson?.date_time_of_incident
         ? DateTime.fromFormat(applicationFormJson?.date_time_of_incident, 'dd-MMM-yy')
         : null;
-    const dateTimeOfIncidentTo = applicationFormJson?.date_time_of_incident_to
-        ? DateTime.fromFormat(applicationFormJson?.date_time_of_incident_to, 'dd-MMM-yy')
-        : null;
     const submittedDate = DateTime.fromFormat(applicationFormJson?.created_date, 'dd-MMM-yy');
 
     // ------------- Business rules -------------
@@ -28,17 +25,13 @@ function checkEligibility(applicationFormJson) {
         dateTimePolFirstTold &&
         dateTimeOfIncident &&
         dateTimePolFirstTold.diff(dateTimeOfIncident, 'minutes').toObject().minutes > 2880;
-    // 4. The crime happened 2 years before the user is submitting
-    const reportedWithinTwoYearsPI =
+    // 4. The crime happened (if PI) or started (if POA) 2 years before the user is submitting
+    const reportedWithinTwoYears =
         dateTimeOfIncident &&
         dateTimeOfIncident.diff(submittedDate, 'minutes').toObject().minutes > 1051899;
-    // 5. The crime stopped occuring 2 years before the user is submitting
-    const reportedWithinTwoYearsPOA =
-        dateTimeOfIncidentTo &&
-        dateTimeOfIncidentTo.diff(submittedDate, 'minutes').toObject().minutes > 1051899;
-    // 6. The crime did not happen in England, Scotland or Wales
+    // 5. The crime did not happen in England, Scotland or Wales
     const ineligibleLocation = applicationFormJson?.incident_country === 'somewhere-else';
-    // 7. The applicant is ineligible if only claiming for certain injuries
+    // 6. The applicant is ineligible if only claiming for certain injuries
     // We skip this check if the claim is a fatality
     let ineligibleDueToInjuries = false;
     if (
@@ -57,8 +50,7 @@ function checkEligibility(applicationFormJson) {
         reportedToPolice ||
         traffickedAndSeekingAsylum ||
         reportedOnTime ||
-        reportedWithinTwoYearsPI ||
-        reportedWithinTwoYearsPOA ||
+        reportedWithinTwoYears ||
         ineligibleLocation ||
         ineligibleDueToInjuries
     ) {

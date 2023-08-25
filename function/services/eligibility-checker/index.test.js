@@ -87,17 +87,6 @@ describe('Eligibility checker', () => {
         expect(checkedApplicationObject.is_eligible).toBe('N');
     });
 
-    it('Should be ineligible when the crime stopped 2 years after the submitted date', () => {
-        const applicationObject = {
-            case_reference_number: '027906',
-            created_date: '02-JAN-22',
-            is_eligible: 'Y',
-            date_time_of_incident_to: '03-JAN-24'
-        };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
-    });
-
     it('Should be ineligible if the crime did not happen in Scotland, England or Wales', () => {
         const applicationObject = {
             case_reference_number: '027906',
