@@ -56,11 +56,22 @@ describe('Address invoice mapper', () => {
         expect(newAddressDetails[0].sub_type).toEqual('MPRA');
     });
 
-    describe('PAB address details', () => {
+    it('Should set inv code to MAIN and inv type to APPL if address type is PAB', () => {
+        addressDetailsJson = [
+            {
+                address_type: 'PAB'
+            }
+        ];
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        expect(newAddressDetails[0].inv_code).toEqual('MAIN');
+        expect(newAddressDetails[0].inv_type).toEqual('APPL');
+    });
+
+    describe('RPA address details', () => {
         beforeEach(() => {
             addressDetailsJson = [
                 {
-                    address_type: 'PAB'
+                    address_type: 'RPA'
                 }
             ];
         });
@@ -129,13 +140,6 @@ describe('Address invoice mapper', () => {
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('SOLS');
             expect(newAddressDetails[0].inv_type).toEqual('REP');
-        });
-
-        it('Should set inv code to MAIN and inv type to APPL if representative type is not any of the ones listed above', () => {
-            applicationFormJson = [{}];
-            const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
-            expect(newAddressDetails[0].inv_code).toEqual('MAIN');
-            expect(newAddressDetails[0].inv_type).toEqual('APPL');
         });
     });
 });
