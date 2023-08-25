@@ -58,7 +58,8 @@ function getDefaultApplicationForm() {
         estranged_from_deceased: 'N',
         relat_to_deceased_cohab: 'N',
         funeral_only: 'N',
-        treatment_still_received: 'N'
+        treatment_still_received: 'N',
+        victim_made_statement: 'N'
     };
 }
 
