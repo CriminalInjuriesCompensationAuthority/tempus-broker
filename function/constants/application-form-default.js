@@ -60,6 +60,16 @@ function getDefaultApplicationForm() {
         funeral_only: 'N',
         treatment_still_received: 'N',
         victim_made_statement: 'N',
+        residency_01: 'N',
+        residency_02: 'N',
+        residency_03: 'N',
+        residency_04: 'N',
+        residency_05: 'N',
+        residency_06: 'N',
+        residency_07: 'N',
+        residency_08: 'N',
+        residency_09: 'N',
+        residency_10: 'N',
         earn_lost_gt_28_weeks: 'N'
     };
 }
