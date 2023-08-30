@@ -54,6 +54,10 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     columnValue = 'I,';
                 }
                 break;
+            // Sets if future work will be affected to full string
+            case data.id === 'q-applicant-future-work':
+                columnValue = data.value;
+                break;
 
             // Sets application to PI or POA
             case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
