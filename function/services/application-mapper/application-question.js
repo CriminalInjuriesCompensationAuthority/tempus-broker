@@ -55,6 +55,10 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     columnValue = 'I,';
                 }
                 break;
+            // Sets if future work will be affected to full string
+            case data.id === 'q-applicant-future-work':
+                columnValue = data.value;
+                break;
 
             // Sets application to PI or POA
             case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
@@ -237,16 +241,23 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
 
-            // Check if the applicant was estranged from the deceased
+            // Inverse true/false logic
             case data.id === 'q-applicant-living-together':
-            case data.id === 'q-applicant-living-apart':
             case data.id === 'q-applicant-capable':
                 columnValue = data.value ? 'N' : 'Y';
                 break;
             case data.id === 'q-applicant-contact-with-deceased':
-                if (data.value === 'We were out of touch with each other') {
+                if (data.value === 'never') {
                     columnValue = 'Y';
                 } else {
+                    columnValue = 'N';
+                }
+                break;
+
+            // Check if applicant lived with deceased for more than two years
+            // For other eligibility rules see eligibility checker
+            case data.id === 'q-applicant-living-together-duration':
+                if (!data.value) {
                     columnValue = 'N';
                 }
                 break;
