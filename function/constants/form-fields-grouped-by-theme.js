@@ -72,7 +72,11 @@ module.exports = Object.freeze({
         'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
         'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_code',
         'q-applicant-explain-reason-for-delay-reporting': 'incident_report_delay',
-        'q-applicant-did-the-crime-happen-once-or-over-time': ['application_type', 'funeral_claim'],
+        'q-applicant-did-the-crime-happen-once-or-over-time': [
+            'application_type',
+            'funeral_claim',
+            'oas_userid'
+        ],
         'q--whats-the-crime-reference-number': 'crime_ref_no',
         'q-applicant-where-did-the-crime-happen': 'incident_country',
         'q-applicant-scottish-location': 'address_line_1',

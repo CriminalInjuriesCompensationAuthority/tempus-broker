@@ -63,9 +63,9 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // Sets application to PI or POA
             case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
                 if (data.value === 'once') {
-                    columnValue = ['2', 'N'];
+                    columnValue = ['2', 'N', '1'];
                 } else if (data.value === 'over-a-period-of-time') {
-                    columnValue = ['3', 'N'];
+                    columnValue = ['3', 'N', '0'];
                 }
                 break;
             case data.id === 'q-applicant-who-are-you-applying-for':
