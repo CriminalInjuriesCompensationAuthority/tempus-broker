@@ -94,9 +94,19 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
             if (applicationQuestion.addressColumn) {
                 addressDetailsJson.forEach((obj, i) => {
                     if (obj.address_type === applicationQuestion.addressType) {
-                        addressDetailsJson[i][applicationQuestion.addressColumn] =
-                            applicationQuestion.addressValue;
-                    } else if (i === addressDetailsJson.length - 1) {
+                        if (Array.isArray(applicationQuestion.addressValue)) {
+                            applicationQuestion.addressValue.forEach((addressValue, j) => {
+                                addressDetailsJson[i][applicationQuestion.addressColumn[j]] =
+                                    applicationQuestion.addressValue[j];
+                            });
+                        } else {
+                            addressDetailsJson[i][applicationQuestion.addressColumn] =
+                                applicationQuestion.addressValue;
+                        }
+                    }
+                    // We dont handle applicationQuestion.addressValue is an array and its a new entry
+                    // It will error if we try and do this currently
+                    else if (i === addressDetailsJson.length - 1) {
                         addressDetailsJson.push({
                             address_type: applicationQuestion.addressType,
                             [applicationQuestion.addressColumn]: applicationQuestion.addressValue

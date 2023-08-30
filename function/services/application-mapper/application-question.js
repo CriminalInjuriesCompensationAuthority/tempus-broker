@@ -33,6 +33,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
     let addressColumn = null;
     let addressValue = null;
     let addressType = null;
+    let value = null;
 
     // Check to see if id needs custom mapping
     // Mapping methods sourced from the data dictionary
@@ -99,58 +100,84 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 columnValue = columnValue.slice(0, -1);
                 break;
 
+            // TO-DO Theres a lot of repeated code for the name mapping, we should move it to a single method
             // Concatenate all these values to the name column under APA address type
             case data.id === 'q-applicant-title':
             case data.id === 'q-applicant-first-name':
             case data.id === 'q-applicant-last-name':
+                value = data.value;
                 addressColumn = 'name';
                 addressType = 'APA';
+                columnValue = data.value;
+                // Convert first name to just initial
                 if (data.id === 'q-applicant-first-name') {
-                    columnValue = [data.value, data.value[0].toUpperCase()];
-                } else {
-                    columnValue = data.value;
+                    value = value[0].toUpperCase();
                 }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value,
+                    value,
                     false
                 );
+
+                if (data.id === 'q-applicant-first-name') {
+                    addressValue = [addressValue, value];
+                    addressColumn = [addressColumn, 'initials'];
+                }
                 break;
 
             // Concatenate all these values to the name column under RPA address type
             case data.id === 'q-rep-title':
             case data.id === 'q-rep-first-name':
             case data.id === 'q-rep-last-name':
+                value = data.value;
                 addressColumn = 'name';
                 addressType = 'RPA';
-
                 columnValue = data.value;
-
+                // Convert first name to just initial
+                if (data.id === 'q-rep-first-name') {
+                    value = value[0].toUpperCase();
+                }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value,
+                    value,
                     false
                 );
+
+                // Map to both name and initials
+                if (data.id === 'q-rep-first-name') {
+                    addressValue = [addressValue, value];
+                    addressColumn = [addressColumn, 'initials'];
+                }
                 break;
 
             // Concatenate all these values to the name column under PAB address type
             case data.id === 'q-mainapplicant-title':
             case data.id === 'q-mainapplicant-first-name':
             case data.id === 'q-mainapplicant-last-name':
+                value = data.value;
                 addressColumn = 'name';
                 addressType = 'PAB';
                 columnValue = data.value;
+                // Convert first name to just initial
+                if (data.id === 'q-mainapplicant-first-name') {
+                    value = value[0].toUpperCase();
+                }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value,
+                    value,
                     false
                 );
+
+                if (data.id === 'q-mainapplicant-first-name') {
+                    addressValue = [addressValue, value];
+                    addressColumn = [addressColumn, 'initials'];
+                }
                 break;
 
             case data.id === 'q-mainapplicant-confirmation-method':
