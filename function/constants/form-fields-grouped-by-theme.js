@@ -209,6 +209,7 @@ module.exports = Object.freeze({
         'q-applicant-relationship-to-deceased': 'relationship_to_deceased',
         'q-applicant-relationship-other': 'other_relationship_to_deceased',
         'q-applicant-living-together': 'estranged_from_deceased',
+        'q-applicant-living-together-duration': 'is_eligible',
         'q-applicant-living-apart': 'estranged_from_deceased',
         'q-applicant-contact-with-deceased': 'estranged_from_deceased',
         'q-applicant-financial-help': 'financially_dependent',
