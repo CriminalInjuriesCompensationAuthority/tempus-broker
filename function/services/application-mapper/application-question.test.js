@@ -104,8 +104,8 @@ describe('Application question', () => {
 
     it('Should return an address value and column for certain questions', () => {
         const addressQuestionData = {
-            theme: 'rep-details',
-            id: 'q-rep-organisation-name',
+            theme: 'treatment',
+            id: 'q-gp-organisation-name',
             value: 'kfc'
         };
 
