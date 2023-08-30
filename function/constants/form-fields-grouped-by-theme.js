@@ -72,7 +72,11 @@ module.exports = Object.freeze({
         'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
         'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_code',
         'q-applicant-explain-reason-for-delay-reporting': 'incident_report_delay',
-        'q-applicant-did-the-crime-happen-once-or-over-time': ['application_type', 'funeral_claim'],
+        'q-applicant-did-the-crime-happen-once-or-over-time': [
+            'application_type',
+            'funeral_claim',
+            'oas_userid'
+        ],
         'q--whats-the-crime-reference-number': 'crime_ref_no',
         'q-applicant-where-did-the-crime-happen': 'incident_country',
         'q-applicant-scottish-location': 'address_line_1',
@@ -209,6 +213,7 @@ module.exports = Object.freeze({
         'q-applicant-relationship-to-deceased': 'relationship_to_deceased',
         'q-applicant-relationship-other': 'other_relationship_to_deceased',
         'q-applicant-living-together': 'estranged_from_deceased',
+        'q-applicant-living-together-duration': 'is_eligible',
         'q-applicant-living-apart': 'estranged_from_deceased',
         'q-applicant-contact-with-deceased': 'estranged_from_deceased',
         'q-applicant-financial-help': 'financially_dependent',

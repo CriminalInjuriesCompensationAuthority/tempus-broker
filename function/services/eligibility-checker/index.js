@@ -61,13 +61,17 @@ function checkEligibility(applicationFormJson) {
             }
         });
     }
+    // 7. The applicant is ineligible if they were not in contact with the deceased
+    const estrangedFromDeceased = applicationFormJson?.estranged_from_deceased === 'Y';
+
     if (
         notReportedToPolice ||
         traffickedAndSeekingAsylum ||
         reportedTooLate ||
         reportedAfterTwoYears ||
         ineligibleLocation ||
-        ineligibleDueToInjuries
+        ineligibleDueToInjuries ||
+        estrangedFromDeceased
     ) {
         checkedApplicationFormJson.is_eligible = 'N';
     }
