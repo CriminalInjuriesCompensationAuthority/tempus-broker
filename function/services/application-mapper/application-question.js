@@ -175,16 +175,23 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
 
-            // Check if the applicant was estranged from the deceased
+            // Inverse true/false logic
             case data.id === 'q-applicant-living-together':
-            case data.id === 'q-applicant-living-apart':
             case data.id === 'q-applicant-capable':
                 columnValue = data.value ? 'N' : 'Y';
                 break;
             case data.id === 'q-applicant-contact-with-deceased':
-                if (data.value === 'We were out of touch with each other') {
+                if (data.value === 'never') {
                     columnValue = 'Y';
                 } else {
+                    columnValue = 'N';
+                }
+                break;
+
+            // Check if applicant lived with deceased for more than two years
+            // For other eligibility rules see eligibility checker
+            case data.id === 'q-applicant-living-together-duration':
+                if (data.value === false) {
                     columnValue = 'N';
                 }
                 break;

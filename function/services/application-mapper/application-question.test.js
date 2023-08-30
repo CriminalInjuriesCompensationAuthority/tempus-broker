@@ -254,11 +254,21 @@ describe('Application question', () => {
         };
 
         let mappedQuestion = mapApplicationQuestion(questionData);
-        expect(mappedQuestion.columnValue).toBe('N');
+        expect(mappedQuestion.columnValue).toBe('Y');
 
         questionData.id = 'q-applicant-contact-with-deceased';
         questionData.value = 'test';
         mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('N');
+    });
+
+    it('Should map if the reporter was living with the deceased less than 2 years', () => {
+        const questionData = {
+            theme: 'relationship-to-deceased',
+            id: 'q-applicant-living-together-duration',
+            value: false
+        };
+        const mappedQuestion = mapApplicationQuestion(questionData);
         expect(mappedQuestion.columnValue).toBe('N');
     });
 
