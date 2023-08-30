@@ -68,8 +68,6 @@ function getDefaultApplicationForm() {
         residency_06: 'N',
         residency_07: 'N',
         residency_08: 'N',
-        residency_09: 'N',
-        residency_10: 'N',
         earn_lost_gt_28_weeks: 'N'
     };
 }

@@ -16,7 +16,8 @@ describe('Eligibility checker', () => {
             date_time_pol_first_told: '16-FEB-22',
             date_time_of_incident_to: '10-JAN-23',
             incident_country: 'england',
-            injury_details_code: 'phyinj-048:phyinj-001:phyinj-149'
+            injury_details_code: 'phyinj-048:phyinj-001:phyinj-149',
+            estranged_from_deceased: 'N'
         };
         const checkedApplicationObject = checkEligibility(applicationObject);
         expect(checkedApplicationObject.is_eligible).toBe('Y');
@@ -105,6 +106,17 @@ describe('Eligibility checker', () => {
             created_date: '02-JAN-22',
             is_eligible: 'Y',
             injury_details_code: 'phyinj-149:phyinj-044:phyinj-048'
+        };
+        const checkedApplicationObject = checkEligibility(applicationObject);
+        expect(checkedApplicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be ineligible if the applicant and deceased were estranged', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            created_date: '02-JAN-22',
+            is_eligible: 'Y',
+            estranged_from_deceased: 'Y'
         };
         const checkedApplicationObject = checkEligibility(applicationObject);
         expect(checkedApplicationObject.is_eligible).toBe('N');

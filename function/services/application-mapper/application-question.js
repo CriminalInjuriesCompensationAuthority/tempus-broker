@@ -3,7 +3,13 @@
 const {DateTime} = require('luxon');
 const FormFieldsGroupedByTheme = require('../../constants/form-fields-grouped-by-theme');
 
-function concatenateToExistingAddressColumn(addressDetails, addressType, addressColumn, dataValue) {
+function concatenateToExistingAddressColumn(
+    addressDetails,
+    addressType,
+    addressColumn,
+    dataValue,
+    appendToPrefix
+) {
     let exists;
     let index;
     addressDetails.forEach(value => {
@@ -12,8 +18,11 @@ function concatenateToExistingAddressColumn(addressDetails, addressType, address
             index = addressDetails.findIndex(found => found === value);
         }
     });
-    if (exists) {
+    if (exists && !appendToPrefix) {
         return `${addressDetails[index][addressColumn]} ${dataValue}`;
+    }
+    if (exists && appendToPrefix) {
+        return `${dataValue} ${addressDetails[index][addressColumn]} `;
     }
     return dataValue;
 }
@@ -24,6 +33,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
     let addressColumn = null;
     let addressValue = null;
     let addressType = null;
+    let value = null;
 
     // Check to see if id needs custom mapping
     // Mapping methods sourced from the data dictionary
@@ -45,13 +55,17 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     columnValue = 'I,';
                 }
                 break;
+            // Sets if future work will be affected to full string
+            case data.id === 'q-applicant-future-work':
+                columnValue = data.value;
+                break;
 
             // Sets application to PI or POA
             case data.id === 'q-applicant-did-the-crime-happen-once-or-over-time':
                 if (data.value === 'once') {
-                    columnValue = ['2', 'N'];
+                    columnValue = ['2', 'N', '1'];
                 } else if (data.value === 'over-a-period-of-time') {
-                    columnValue = ['3', 'N'];
+                    columnValue = ['3', 'N', '0'];
                 }
                 break;
             case data.id === 'q-applicant-who-are-you-applying-for':
@@ -86,38 +100,84 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 columnValue = columnValue.slice(0, -1);
                 break;
 
+            // TO-DO Theres a lot of repeated code for the name mapping, we should move it to a single method
             // Concatenate all these values to the name column under APA address type
             case data.id === 'q-applicant-title':
             case data.id === 'q-applicant-first-name':
             case data.id === 'q-applicant-last-name':
+                value = data.value;
                 addressColumn = 'name';
                 addressType = 'APA';
+                columnValue = data.value;
+                // Convert first name to just initial
                 if (data.id === 'q-applicant-first-name') {
-                    columnValue = [data.value, data.value[0].toUpperCase()];
-                } else {
-                    columnValue = data.value;
+                    value = value[0].toUpperCase();
                 }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value
+                    value,
+                    false
                 );
+
+                if (data.id === 'q-applicant-first-name') {
+                    addressValue = [addressValue, value];
+                    addressColumn = [addressColumn, 'initials'];
+                }
+                break;
+
+            // Concatenate all these values to the name column under RPA address type
+            case data.id === 'q-rep-title':
+            case data.id === 'q-rep-first-name':
+            case data.id === 'q-rep-last-name':
+                value = data.value;
+                addressColumn = 'name';
+                addressType = 'RPA';
+                columnValue = data.value;
+                // Convert first name to just initial
+                if (data.id === 'q-rep-first-name') {
+                    value = value[0].toUpperCase();
+                }
+                addressValue = concatenateToExistingAddressColumn(
+                    addressDetails,
+                    addressType,
+                    addressColumn,
+                    value,
+                    false
+                );
+
+                // Map to both name and initials
+                if (data.id === 'q-rep-first-name') {
+                    addressValue = [addressValue, value];
+                    addressColumn = [addressColumn, 'initials'];
+                }
                 break;
 
             // Concatenate all these values to the name column under PAB address type
             case data.id === 'q-mainapplicant-title':
             case data.id === 'q-mainapplicant-first-name':
             case data.id === 'q-mainapplicant-last-name':
+                value = data.value;
                 addressColumn = 'name';
                 addressType = 'PAB';
                 columnValue = data.value;
+                // Convert first name to just initial
+                if (data.id === 'q-mainapplicant-first-name') {
+                    value = value[0].toUpperCase();
+                }
                 addressValue = concatenateToExistingAddressColumn(
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value
+                    value,
+                    false
                 );
+
+                if (data.id === 'q-mainapplicant-first-name') {
+                    addressValue = [addressValue, value];
+                    addressColumn = [addressColumn, 'initials'];
+                }
                 break;
 
             case data.id === 'q-mainapplicant-confirmation-method':
@@ -135,8 +195,14 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 // set org name in the rep address
                 addressType = 'RPA';
                 addressColumn = 'name';
-                addressValue = data.value;
                 columnValue = data.value;
+                addressValue = concatenateToExistingAddressColumn(
+                    addressDetails,
+                    addressType,
+                    addressColumn,
+                    `${data.value},`,
+                    true
+                );
                 break;
             case data.id === 'q-gp-organisation-name':
                 // set gp name in the gp address
@@ -175,16 +241,23 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
 
-            // Check if the applicant was estranged from the deceased
+            // Inverse true/false logic
             case data.id === 'q-applicant-living-together':
-            case data.id === 'q-applicant-living-apart':
             case data.id === 'q-applicant-capable':
                 columnValue = data.value ? 'N' : 'Y';
                 break;
             case data.id === 'q-applicant-contact-with-deceased':
-                if (data.value === 'We were out of touch with each other') {
+                if (data.value === 'never') {
                     columnValue = 'Y';
                 } else {
+                    columnValue = 'N';
+                }
+                break;
+
+            // Check if applicant lived with deceased for more than two years
+            // For other eligibility rules see eligibility checker
+            case data.id === 'q-applicant-living-together-duration':
+                if (!data.value) {
                     columnValue = 'N';
                 }
                 break;
