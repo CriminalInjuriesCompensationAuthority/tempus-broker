@@ -191,7 +191,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // Check if applicant lived with deceased for more than two years
             // For other eligibility rules see eligibility checker
             case data.id === 'q-applicant-living-together-duration':
-                if (data.value === false) {
+                if (!data.value) {
                     columnValue = 'N';
                 }
                 break;
