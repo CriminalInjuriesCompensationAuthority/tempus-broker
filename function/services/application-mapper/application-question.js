@@ -3,7 +3,13 @@
 const {DateTime} = require('luxon');
 const FormFieldsGroupedByTheme = require('../../constants/form-fields-grouped-by-theme');
 
-function concatenateToExistingAddressColumn(addressDetails, addressType, addressColumn, dataValue) {
+function concatenateToExistingAddressColumn(
+    addressDetails,
+    addressType,
+    addressColumn,
+    dataValue,
+    appendToPrefix
+) {
     let exists;
     let index;
     addressDetails.forEach(value => {
@@ -12,8 +18,11 @@ function concatenateToExistingAddressColumn(addressDetails, addressType, address
             index = addressDetails.findIndex(found => found === value);
         }
     });
-    if (exists) {
+    if (exists && !appendToPrefix) {
         return `${addressDetails[index][addressColumn]} ${dataValue}`;
+    }
+    if (exists && appendToPrefix) {
+        return `${dataValue} ${addressDetails[index][addressColumn]} `;
     }
     return dataValue;
 }
@@ -101,7 +110,26 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value
+                    data.value,
+                    false
+                );
+                break;
+
+            // Concatenate all these values to the name column under RPA address type
+            case data.id === 'q-rep-title':
+            case data.id === 'q-rep-first-name':
+            case data.id === 'q-rep-last-name':
+                addressColumn = 'name';
+                addressType = 'RPA';
+
+                columnValue = data.value;
+
+                addressValue = concatenateToExistingAddressColumn(
+                    addressDetails,
+                    addressType,
+                    addressColumn,
+                    data.value,
+                    false
                 );
                 break;
 
@@ -116,7 +144,8 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     addressDetails,
                     addressType,
                     addressColumn,
-                    data.value
+                    data.value,
+                    false
                 );
                 break;
 
@@ -135,8 +164,14 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 // set org name in the rep address
                 addressType = 'RPA';
                 addressColumn = 'name';
-                addressValue = data.value;
                 columnValue = data.value;
+                addressValue = concatenateToExistingAddressColumn(
+                    addressDetails,
+                    addressType,
+                    addressColumn,
+                    `${data.value},`,
+                    true
+                );
                 break;
             case data.id === 'q-gp-organisation-name':
                 // set gp name in the gp address
