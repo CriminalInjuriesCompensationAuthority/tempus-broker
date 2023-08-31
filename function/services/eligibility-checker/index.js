@@ -39,10 +39,9 @@ function checkEligibility(applicationFormJson) {
             dateTimePolFirstTold.diff(dateTimeOfIncident, 'minutes').toObject().minutes > 2880;
     }
 
-    // 4. The crime happened (if PI) or stopped (if POA) 2 years before the user is submitting
+    // 4. The crime happened (if PI/Fatality) or stopped (if POA) 2 years before the user is submitting
     const reportedAfterTwoYears =
-        dateTimeOfIncident &&
-        dateTimeOfIncident.diff(submittedDate, 'minutes').toObject().minutes > 1051899;
+        dateTimeOfIncident && submittedDate.diff(dateTimeOfIncident, 'days').toObject().days > 730;
 
     // 5. The crime did not happen in England, Scotland or Wales
     const ineligibleLocation = applicationFormJson?.incident_country === 'somewhere-else';
