@@ -139,6 +139,47 @@ describe('Application mapper', () => {
         });
     });
 
+    it('Should populate application_form.rep_organisation with the address name if type is RPA', async () => {
+        applicationSummaryJson = {
+            values: [
+                {
+                    id: 'q-rep-organisation-name',
+                    theme: 'rep-details',
+                    value: 'Cat'
+                },
+                {
+                    id: 'q-rep-title',
+                    theme: 'rep-details',
+                    value: 'Mr'
+                },
+                {
+                    id: 'q-rep-first-name',
+                    theme: 'rep-details',
+                    value: 'Neko'
+                },
+                {
+                    id: 'q-rep-last-name',
+                    theme: 'rep-details',
+                    value: 'Noches'
+                }
+            ]
+        };
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
+
+        addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
+        applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+        addressDetailsJson.forEach(entry => {
+            if (entry?.address_type === 'RPA') {
+                expect(entry?.name).toBe('Cat, Mr N Noches');
+            }
+        });
+        expect(applicationFormJson?.rep_organisation).toBe('Cat, Mr N Noches');
+    });
+
     it('Should add an entry to both address_details and application_form for some ids', async () => {
         applicationSummaryJson = {
             id: 'q-mainapplicant-title',
