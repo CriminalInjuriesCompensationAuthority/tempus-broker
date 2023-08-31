@@ -30,19 +30,12 @@ function concatenateToExistingAddressColumn(
 function mapApplicationQuestion(data, applicationForm, addressDetails) {
     const columnName = FormFieldsGroupedByTheme[data.theme]?.[data.id];
     let columnValue = '';
-    let addressName = null;
     let addressColumn = null;
     let addressValue = null;
     let addressType = null;
     let value = null;
 
-    function parseAddressName(
-        addressData,
-        addressNameColumn,
-        addressNameType,
-        firstNameId,
-        prepend
-    ) {
+    function parseAddressName(addressData, addressNameColumn, addressName, firstNameId, prepend) {
         value = addressData.value;
         columnValue = addressData.value;
         // Convert first name to just initial
@@ -51,7 +44,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
         }
         addressValue = concatenateToExistingAddressColumn(
             addressDetails,
-            addressNameType,
+            addressName,
             addressNameColumn,
             value,
             prepend
@@ -60,9 +53,10 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
         if (addressData.id === firstNameId) {
             addressValue = [addressValue, value];
             addressColumn = [addressNameColumn, 'initials'];
+            return [addressColumn, addressValue, columnValue];
         }
 
-        return [addressColumn, addressValue, columnValue];
+        return [addressNameColumn, addressValue, columnValue];
     }
     // Check to see if id needs custom mapping
     // Mapping methods sourced from the data dictionary
@@ -134,55 +128,55 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             case data.id === 'q-applicant-title':
             case data.id === 'q-applicant-first-name':
             case data.id === 'q-applicant-last-name':
-                addressName = parseAddressName(
+                addressType = 'APA';
+                [addressColumn, addressValue, columnValue] = parseAddressName(
                     data,
                     'name',
-                    'APA',
+                    addressType,
                     'q-applicant-first-name',
                     false
                 );
-                addressColumn = addressName[0];
-                addressValue = addressName[1];
-                columnValue = addressName[2];
-                addressType = 'APA';
                 break;
 
             // Concatenate all these values to the name column under RPA address type
             case data.id === 'q-rep-title':
             case data.id === 'q-rep-first-name':
             case data.id === 'q-rep-last-name':
-                addressName = parseAddressName(data, 'name', 'RPA', 'q-rep-first-name', false);
-                addressColumn = addressName[0];
-                addressValue = addressName[1];
-                columnValue = addressName[2];
                 addressType = 'RPA';
+                [addressColumn, addressValue, columnValue] = parseAddressName(
+                    data,
+                    'name',
+                    addressType,
+                    'q-rep-first-name',
+                    false
+                );
                 break;
 
             // Concatenate all these values to the name column under PAB address type
             case data.id === 'q-mainapplicant-title':
             case data.id === 'q-mainapplicant-first-name':
             case data.id === 'q-mainapplicant-last-name':
-                addressName = parseAddressName(
+                addressType = 'PAB';
+                [addressColumn, addressValue, columnValue] = parseAddressName(
                     data,
                     'name',
-                    'PAB',
+                    addressType,
                     'q-mainapplicant-first-name',
                     false
                 );
-                addressColumn = addressName[0];
-                addressValue = addressName[1];
-                columnValue = addressName[2];
-                addressType = 'PAB';
                 break;
 
             case data.id === 'q-deceased-title':
             case data.id === 'q-deceased-first-name':
             case data.id === 'q-deceased-last-name':
-                addressName = parseAddressName(data, 'name', 'DCA', 'q-deceased-first-name', false);
-                addressColumn = addressName[0];
-                addressValue = addressName[1];
-                columnValue = addressName[2];
                 addressType = 'DCA';
+                [addressColumn, addressValue, columnValue] = parseAddressName(
+                    data,
+                    'name',
+                    addressType,
+                    'q-deceased-first-name',
+                    false
+                );
                 break;
 
             case data.id === 'q-mainapplicant-confirmation-method':
