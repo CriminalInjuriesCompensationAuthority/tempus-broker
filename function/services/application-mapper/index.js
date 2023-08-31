@@ -126,6 +126,10 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
     Object.values(addressDetailsJson).forEach((values, i) => {
         addressDetailsJson[i].claim_reference_number = crn;
         addressDetailsJson[i].ref_year = refYear;
+        // Copy the RPA address.name into application_form.rep_organisation
+        if (values?.address_type === 'RPA') {
+            applicationFormJson.rep_organisation = addressDetailsJson[i]?.name;
+        }
     });
     return {
         tables: [
