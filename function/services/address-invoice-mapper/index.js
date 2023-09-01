@@ -35,7 +35,7 @@ function mapAddressInvoices(addressDetailsJson, applicationFormJson) {
                         switch (applicationFormJson?.representative_type?.toLowerCase()) {
                             case 'claims management company':
                                 invAddedAddressDetailsJson[index].inv_code = 'CMCO';
-                                invAddedAddressDetailsJson[index].inv_type = 'MED';
+                                invAddedAddressDetailsJson[index].inv_type = 'REP';
                                 break;
                             case 'foster carer':
                                 invAddedAddressDetailsJson[index].inv_code = 'FC';
