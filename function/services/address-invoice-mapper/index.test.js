@@ -76,14 +76,14 @@ describe('Address invoice mapper', () => {
             ];
         });
 
-        it('Should set inv code to CMCO and inv type to MED if representative type is claims management company', () => {
+        it('Should set inv code to CMCO and inv type to REP if representative type is claims management company', () => {
             applicationFormJson = {
                 representative_type: 'claims management company'
             };
 
             const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
             expect(newAddressDetails[0].inv_code).toEqual('CMCO');
-            expect(newAddressDetails[0].inv_type).toEqual('MED');
+            expect(newAddressDetails[0].inv_type).toEqual('REP');
         });
 
         it('Should set inv code to FC and inv type to REP if representative type is foster carer', () => {
