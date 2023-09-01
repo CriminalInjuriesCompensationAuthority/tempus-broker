@@ -123,7 +123,6 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 columnValue = columnValue.slice(0, -1);
                 break;
 
-            // TO-DO Theres a lot of repeated code for the name mapping, we should move it to a single method
             // Concatenate all these values to the name column under APA address type
             case data.id === 'q-applicant-title':
             case data.id === 'q-applicant-first-name':
@@ -136,6 +135,10 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     'q-applicant-first-name',
                     false
                 );
+                if (data.id === 'q-applicant-first-name') {
+                    // We also need to map to application_form.initials
+                    columnValue = [columnValue, columnValue[0].toUpperCase()];
+                }
                 break;
 
             // Concatenate all these values to the name column under RPA address type
@@ -188,7 +191,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // We need to map this value to multiple columns, so we return an array of values
             case data.id === 'q-rep-type':
-                columnValue = [data.valueLabel, 'Y', 'Y', 'Y'];
+                columnValue = [data.valueLabel, 'Y', 'Y', 'N'];
                 break;
             case data.id === 'q-rep-organisation-name':
                 // set org name in the rep address
