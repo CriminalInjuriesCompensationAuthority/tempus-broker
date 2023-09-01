@@ -199,6 +199,21 @@ describe('Application question', () => {
         expect(mappedQuestion.addressValue).toBe('Miss Sabina');
     });
 
+    it('Applicant first name should map to name and initials', () => {
+        const questionData = {
+            theme: 'applicant-details',
+            id: 'q-applicant-first-name',
+            value: 'Gary'
+        };
+        const mappedQuestion = mapApplicationQuestion(
+            questionData,
+            applicationForm,
+            addressDetails
+        );
+        expect(mappedQuestion.columnValue[0]).toBe('Gary');
+        expect(mappedQuestion.columnValue[1]).toBe('G');
+    });
+
     it('Should create an array of selected options for work details', () => {
         const questionData = {
             theme: 'impact',
