@@ -135,11 +135,13 @@ describe('Application question', () => {
         let mappedQuestion = mapApplicationQuestion(questionData);
         expect(mappedQuestion.columnValue[0]).toBe('2');
         expect(mappedQuestion.columnValue[1]).toBe('N');
+        expect(mappedQuestion.columnValue[2]).toBe('0');
 
         questionData.value = 'over-a-period-of-time';
         mappedQuestion = mapApplicationQuestion(questionData);
         expect(mappedQuestion.columnValue[0]).toBe('3');
         expect(mappedQuestion.columnValue[1]).toBe('N');
+        expect(mappedQuestion.columnValue[2]).toBe('0');
     });
 
     it('Should map who the applicant is', () => {
@@ -297,6 +299,7 @@ describe('Application question', () => {
         );
         expect(mappedQuestion.columnValue).toContainEqual('FatalityOnly');
         expect(mappedQuestion.columnValue).toContainEqual(4);
+        expect(mappedQuestion.columnValue).toContainEqual('0');
     });
 
     it('Should map if the claim is funeral only', () => {
@@ -315,6 +318,7 @@ describe('Application question', () => {
         );
         expect(mappedQuestion.columnValue).toContainEqual('FuneralOnly');
         expect(mappedQuestion.columnValue).toContainEqual(7);
+        expect(mappedQuestion.columnValue).toContainEqual('0');
     });
 
     it('Should map if the victim is capable correctly', () => {
