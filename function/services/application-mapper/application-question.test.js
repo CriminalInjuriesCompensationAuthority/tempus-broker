@@ -315,6 +315,7 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue).toContainEqual('FatalityOnly');
         expect(mappedQuestion.columnValue).toContainEqual(4);
         expect(mappedQuestion.columnValue).toContainEqual('0');
+        expect(mappedQuestion.columnValue).toContainEqual('N');
     });
 
     it('Should map if the claim is funeral only', () => {
