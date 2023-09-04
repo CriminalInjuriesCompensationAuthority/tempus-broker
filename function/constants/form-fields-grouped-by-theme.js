@@ -5,7 +5,12 @@ module.exports = Object.freeze({
         'q--was-the-crime-reported-to-police': ['incident_rep_police', 'incident_reported_to'],
         'q-applicant-who-are-you-applying-for': 'is_injured_person',
         'q-applicant-british-citizen-or-eu-national': 'residency_02',
-        'q-applicant-claim-type': ['fatality_flag', 'application_type', 'oas_userid', 'is_injured_person']
+        'q-applicant-claim-type': [
+            'fatality_flag',
+            'application_type',
+            'oas_userid',
+            'is_injured_person'
+        ]
     },
     'applicant-details': {
         'q-applicant-what-other-names-have-you-used': 'other_names',
@@ -70,10 +75,8 @@ module.exports = Object.freeze({
         'q-applicant-when-did-the-crime-start': 'date_time_of_incident',
         'q-applicant-when-did-the-crime-stop': 'date_time_of_incident_to',
         'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
-
-        // TO-DO - Unsure if we need to map the options to the code
-        // 'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_code',
         'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_other',
+        'q-explain-reason-for-delay-reporting': 'incident_report_delay',
         'q-applicant-did-the-crime-happen-once-or-over-time': [
             'application_type',
             'funeral_claim',
