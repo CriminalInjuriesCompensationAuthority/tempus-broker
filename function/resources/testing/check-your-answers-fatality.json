@@ -1,0 +1,597 @@
+{
+    "meta": {
+        "caseReference": "23\\850538",
+        "submittedDate": "2023-09-04T08:50:35.902Z"
+    },
+    "themes": [
+        {
+            "type": "theme",
+            "id": "about-application",
+            "title": "About your application",
+            "values": [
+                {
+                    "id": "q--new-or-existing-application",
+                    "type": "simple",
+                    "label": "What would you like to do?",
+                    "value": "new",
+                    "valueLabel": "Start a new application",
+                    "sectionId": "p--new-or-existing-application",
+                    "theme": "about-application",
+                    "meta": {
+                        "integration": {
+                            "hideOnSummary": true
+                        }
+                    }
+                },
+                {
+                    "id": "q-applicant-who-are-you-applying-for",
+                    "type": "simple",
+                    "label": "Who are you applying for?",
+                    "value": "myself",
+                    "valueLabel": "Myself",
+                    "sectionId": "p-applicant-who-are-you-applying-for",
+                    "theme": "about-application",
+                    "meta": {
+                        "integration": {
+                            "hideOnSummary": true
+                        }
+                    }
+                },
+                {
+                    "id": "q-applicant-are-you-18-or-over",
+                    "type": "simple",
+                    "label": "Are you 18 or over?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-are-you-18-or-over",
+                    "theme": "about-application",
+                    "meta": {
+                        "integration": {
+                            "hideOnSummary": true
+                        }
+                    }
+                },
+                {
+                    "id": "q--was-the-crime-reported-to-police",
+                    "type": "simple",
+                    "label": "Was the crime reported to the police?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p--was-the-crime-reported-to-police",
+                    "theme": "about-application"
+                },
+                {
+                    "id": "q-applicant-has-crime-reference-number",
+                    "type": "simple",
+                    "label": "Do you have a crime reference number?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-has-crime-reference-number",
+                    "theme": "about-application",
+                    "meta": {
+                        "integration": {
+                            "hideOnSummary": true
+                        }
+                    }
+                },
+                {
+                    "id": "q-applicant-fatal-claim",
+                    "type": "simple",
+                    "label": "Select why you are applying",
+                    "value": true,
+                    "valueLabel": "I am applying because someone died due to a violent crime",
+                    "sectionId": "p-applicant-fatal-claim",
+                    "theme": "about-application",
+                    "meta": {
+                        "integration": {
+                            "hideOnSummary": true
+                        }
+                    }
+                },
+                {
+                    "id": "q-applicant-claim-type",
+                    "type": "simple",
+                    "label": "What do you want to claim?",
+                    "value": false,
+                    "valueLabel": "I want to make a full claim",
+                    "sectionId": "p-applicant-claim-type",
+                    "theme": "about-application"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "applicant-details",
+            "title": "Your details",
+            "values": [
+                {
+                    "id": "q-applicant-confirmation-method",
+                    "type": "simple",
+                    "label": "Confirmation method",
+                    "value": "email",
+                    "valueLabel": "Email",
+                    "sectionId": "p-applicant-confirmation-method",
+                    "theme": "applicant-details"
+                },
+                {
+                    "id": "q-applicant-enter-your-email-address",
+                    "type": "simple",
+                    "label": "Email address",
+                    "value": "michael.senkiw@informed.com",
+                    "sectionId": "p-applicant-confirmation-method",
+                    "theme": "applicant-details",
+                    "format": {
+                        "value": "email"
+                    }
+                },
+                {
+                    "id": "applicant-name",
+                    "type": "composite",
+                    "label": "Your name",
+                    "values": [
+                        {
+                            "id": "q-applicant-title",
+                            "type": "simple",
+                            "label": "Title",
+                            "value": "Miss",
+                            "sectionId": "p-applicant-enter-your-name",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-first-name",
+                            "type": "simple",
+                            "label": "First name",
+                            "value": "Test",
+                            "sectionId": "p-applicant-enter-your-name",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-last-name",
+                            "type": "simple",
+                            "label": "Last name",
+                            "value": "Testcase",
+                            "sectionId": "p-applicant-enter-your-name",
+                            "theme": "applicant-details"
+                        }
+                    ],
+                    "sectionId": "p-applicant-enter-your-name",
+                    "theme": "applicant-details"
+                },
+                {
+                    "id": "q-applicant-have-you-been-known-by-any-other-names",
+                    "type": "simple",
+                    "label": "Have you been known by another name?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-have-you-been-known-by-any-other-names",
+                    "theme": "applicant-details"
+                },
+                {
+                    "id": "q-applicant-enter-your-date-of-birth",
+                    "type": "simple",
+                    "label": "Date of birth",
+                    "value": "1990-03-31T00:00:00.000Z",
+                    "sectionId": "p-applicant-enter-your-date-of-birth",
+                    "theme": "applicant-details",
+                    "format": {
+                        "value": "date-time",
+                        "precision": "YYYY-MM-DD"
+                    }
+                },
+                {
+                    "id": "applicant-address",
+                    "type": "composite",
+                    "label": "Your address",
+                    "values": [
+                        {
+                            "id": "q-applicant-building-and-street",
+                            "type": "simple",
+                            "label": "Building and street",
+                            "value": "10 Bank St",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-building-and-street-2",
+                            "type": "simple",
+                            "label": "Building and street line 2",
+                            "value": "pudding lane",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-building-and-street-3",
+                            "type": "simple",
+                            "label": "Building and street line 3",
+                            "value": "shepherd's bush",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-town-or-city",
+                            "type": "simple",
+                            "label": "Town or city",
+                            "value": "Glasgow",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-postcode",
+                            "type": "simple",
+                            "label": "Postcode",
+                            "value": "MA1",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        }
+                    ],
+                    "sectionId": "p-applicant-enter-your-address",
+                    "theme": "applicant-details"
+                },
+                {
+                    "id": "q-applicant-enter-your-telephone-number",
+                    "type": "simple",
+                    "label": "Telephone number",
+                    "value": "07712312344",
+                    "sectionId": "p-applicant-enter-your-telephone-number",
+                    "theme": "applicant-details"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "residency-and-nationality",
+            "title": "About your residency and nationality",
+            "values": [
+                {
+                    "id": "q-applicant-british-citizen",
+                    "type": "simple",
+                    "label": "Were you a British citizen when the crime happened?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-british-citizen",
+                    "theme": "residency-and-nationality"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "relationship-to-deceased",
+            "title": "Relationship to deceased",
+            "values": [
+                {
+                    "id": "q-applicant-relationship-to-deceased",
+                    "type": "simple",
+                    "label": "What is your relationship to the person who died?",
+                    "value": "parent",
+                    "valueLabel": "Parent",
+                    "sectionId": "p-applicant-relationship-to-deceased",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-living-together",
+                    "type": "simple",
+                    "label": "Were you living with them when they died?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-living-together",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-financial-help",
+                    "type": "simple",
+                    "label": "Were you reliant on the person who died for regular financial help?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-financial-help",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-applicant-physical-help",
+                    "type": "simple",
+                    "label": "Were you reliant on the person who died for regular physical help?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-physical-help",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-other-claimants",
+                    "type": "simple",
+                    "label": "Do you know if anyone else might apply?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-other-claimants",
+                    "theme": "relationship-to-deceased"
+                },
+                {
+                    "id": "q-other-claimants-details",
+                    "type": "simple",
+                    "label": "Tell us more about who else might apply",
+                    "value": "No one",
+                    "sectionId": "p-other-claimants-details",
+                    "theme": "relationship-to-deceased"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "deceased",
+            "title": "About the deceased",
+            "values": [
+                {
+                    "id": "deceased-name",
+                    "type": "composite",
+                    "label": "Their name",
+                    "values": [
+                        {
+                            "id": "q-deceased-title",
+                            "type": "simple",
+                            "label": "Title",
+                            "value": "Miss",
+                            "sectionId": "p-deceased-name",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-first-name",
+                            "type": "simple",
+                            "label": "First name",
+                            "value": "Deceased",
+                            "sectionId": "p-deceased-name",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-last-name",
+                            "type": "simple",
+                            "label": "Last name",
+                            "value": "Person",
+                            "sectionId": "p-deceased-name",
+                            "theme": "deceased"
+                        }
+                    ],
+                    "sectionId": "p-deceased-name",
+                    "theme": "deceased"
+                },
+                {
+                    "id": "q-deceased-date-of-birth",
+                    "type": "simple",
+                    "label": "Date of Birth",
+                    "value": "1990-12-31T00:00:00.000Z",
+                    "sectionId": "p-deceased-date-of-birth",
+                    "theme": "deceased",
+                    "format": {
+                        "value": "date-time",
+                        "precision": "YYYY-MM-DD"
+                    }
+                },
+                {
+                    "id": "q-deceased-date-of-death",
+                    "type": "simple",
+                    "label": "Date of death",
+                    "value": "2022-03-31T00:00:00.000Z",
+                    "sectionId": "p-deceased-date-of-death",
+                    "theme": "deceased",
+                    "format": {
+                        "value": "date-time",
+                        "precision": "YYYY-MM-DD"
+                    }
+                },
+                {
+                    "id": "deceased-address",
+                    "type": "composite",
+                    "label": "Their address",
+                    "values": [
+                        {
+                            "id": "q-deceased-building-and-street",
+                            "type": "simple",
+                            "label": "Building and street",
+                            "value": "DC Building and street 1",
+                            "sectionId": "p-deceased-address",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-building-and-street-2",
+                            "type": "simple",
+                            "label": "Building and street line 2",
+                            "value": "DC Building and street 2",
+                            "sectionId": "p-deceased-address",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-building-and-street-3",
+                            "type": "simple",
+                            "label": "Building and street line 3",
+                            "value": "DC Building and street 3",
+                            "sectionId": "p-deceased-address",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-town-or-city",
+                            "type": "simple",
+                            "label": "Town or city",
+                            "value": "DC town",
+                            "sectionId": "p-deceased-address",
+                            "theme": "deceased"
+                        },
+                        {
+                            "id": "q-deceased-postcode",
+                            "type": "simple",
+                            "label": "Postcode",
+                            "value": "MA1",
+                            "sectionId": "p-deceased-address",
+                            "theme": "deceased"
+                        }
+                    ],
+                    "sectionId": "p-deceased-address",
+                    "theme": "deceased"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "funeral-costs",
+            "title": "Funeral costs",
+            "values": [
+                {
+                    "id": "q-applicant-funeral-costs-paid",
+                    "type": "simple",
+                    "label": "Are you paying for any of the funeral costs?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-funeral-costs-paid",
+                    "theme": "funeral-costs"
+                },
+                {
+                    "id": "q-applicant-funeral-costs-other-contributor",
+                    "type": "simple",
+                    "label": "Is anyone else contributing to the funeral costs?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-funeral-costs-other-contributor",
+                    "theme": "funeral-costs"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "crime",
+            "title": "About the crime",
+            "values": [
+                {
+                    "id": "q-applicant-when-did-the-crime-happen",
+                    "type": "simple",
+                    "label": "When did the crime happen?",
+                    "value": "2022-04-28T00:00:00.000Z",
+                    "sectionId": "p-applicant-when-did-the-crime-happen",
+                    "theme": "crime",
+                    "format": {
+                        "value": "date-time",
+                        "precision": "YYYY-MM-DD"
+                    }
+                },
+                {
+                    "id": "q-applicant-where-did-the-crime-happen",
+                    "type": "simple",
+                    "label": "Where did the crime happen?",
+                    "value": "scotland",
+                    "valueLabel": "Scotland",
+                    "sectionId": "p-applicant-where-did-the-crime-happen",
+                    "theme": "crime"
+                },
+                {
+                    "id": "crime-location-scotland",
+                    "type": "composite",
+                    "label": "Where in Scotland did it happen?",
+                    "values": [
+                        {
+                            "id": "q-applicant-scottish-town-or-city",
+                            "type": "simple",
+                            "label": "Town or city",
+                            "value": "Glasgow",
+                            "sectionId": "p-applicant-where-in-scotland-did-it-happen",
+                            "theme": "crime"
+                        },
+                        {
+                            "id": "q-applicant-scottish-location",
+                            "type": "simple",
+                            "label": "Location",
+                            "value": "Central",
+                            "sectionId": "p-applicant-where-in-scotland-did-it-happen",
+                            "theme": "crime"
+                        }
+                    ],
+                    "sectionId": "p-applicant-where-in-scotland-did-it-happen",
+                    "theme": "crime"
+                },
+                {
+                    "id": "q-police-force-id",
+                    "type": "simple",
+                    "label": "Which police force is investigating the crime?",
+                    "value": 10000140,
+                    "valueLabel": "Greater Manchester Police",
+                    "sectionId": "p--which-police-force-is-investigating-the-crime",
+                    "theme": "crime"
+                },
+                {
+                    "id": "q--whats-the-crime-reference-number",
+                    "type": "simple",
+                    "label": "What's the crime reference number?",
+                    "value": "CR123456",
+                    "sectionId": "p--whats-the-crime-reference-number",
+                    "theme": "crime"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "offender",
+            "title": "About the offender",
+            "values": [
+                {
+                    "id": "q-offender-do-you-know-the-name-of-the-offender",
+                    "type": "simple",
+                    "label": "Do you know the offender's name?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-offender-do-you-know-the-name-of-the-offender",
+                    "theme": "offender"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "other-compensation",
+            "title": "Other compensation",
+            "values": [
+                {
+                    "id": "q-applicant-have-you-applied-to-us-before",
+                    "type": "simple",
+                    "label": "Have you applied to us before?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-have-you-applied-to-us-before",
+                    "theme": "other-compensation"
+                },
+                {
+                    "id": "q-applicant-have-you-applied-for-or-received-any-other-compensation",
+                    "type": "simple",
+                    "label": "Have you applied for or received any other form of compensation?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-have-you-applied-for-or-received-any-other-compensation",
+                    "theme": "other-compensation"
+                },
+                {
+                    "id": "q-applicant-applied-for-other-compensation-briefly-explain-why-not",
+                    "type": "simple",
+                    "label": "Tell us why you have not applied for or received any other compensation or damages",
+                    "value": "Did not apply for other forms of compensation",
+                    "sectionId": "p-applicant-applied-for-other-compensation-briefly-explain-why-not",
+                    "theme": "other-compensation"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "additional-info",
+            "title": "Additional information",
+            "values": [
+                {
+                    "id": "q-applicant-provide-additional-information",
+                    "type": "simple",
+                    "label": "Would you like to add any information?",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-provide-additional-information",
+                    "theme": "additional-info"
+                }
+            ]
+        }
+    ],
+    "declaration": {
+        "type": "simple",
+        "id": "p-applicant-declaration-deceased",
+        "label": "<div id=\"declaration\"> <p class=\"govuk-body\"> You have told us that you are Miss Test Testcase and you are applying on behalf of yourself.</p> <p class=\"govuk-body\">By submitting this application, you confirm that you understand the following:</p> <ul class=\"govuk-list govuk-list--bullet\"> <li>the information given in this application for compensation is true</li> <li>Criminal Injuries Compensation Authority (CICA) may share and receive information with the following parties for the purposes of processing this application for compensation or verifying information provided:</li> <ul> <li>police, prosecutors and ACRO Criminal Records Office, including for the purposes of obtaining a report of the crime and a record of any criminal convictions you or the person who died may have</li> <li>any other individuals or organisations where necessary to process this application</li> <li>any representative appointed to act for you in the course of this application</li> </ul> <li>CICA must be notified immediately of any change in circumstances relevant to this application, including any change of address and information about any other claim or proceedings which may give rise to a separate award or payment in relation to the incident</li> </ul> <h2 class=\"govuk-heading-m\">Providing wrong or misleading information</h2> <p class=\"govuk-body\">If untrue or misleading information is deliberately provided, compensation may be refused and the person(s) responsible may be prosecuted.</p> <p class=\"govuk-body\">Read our privacy notice to see <a href=\"https://www.gov.uk/guidance/cica-privacy-notice\" class=\"govuk-link\" target=\"_blank\">how we use your data (opens in new tab)</a>. </p> <h2 class=\"govuk-heading-m\">Information about appointing a legal or another representative</h2> <p class=\"govuk-body\">It is not necessary to appoint a legal or other representative to act on a claimant’s behalf. If a representative is appointed at any stage, please be aware that:</p> <ul class=\"govuk-list govuk-list--bullet\"> <li>CICA cannot meet their costs </li> <li>we will only communicate directly with any appointed representative</li> </ul> <p class=\"govuk-body\">If we make an award, we will pay it only to the claimant or their legal representative. This is unless the application has been made on behalf of:</p> <ul class=\"govuk-list govuk-list--bullet\"> <li>an adult who cannot manage their own financial affairs</li> <li>a child who is under 18 years of age</li> </ul> <p class=\"govuk-body\"> It is our general policy to put an award for a child in an interest-earning deposit account until they reach the age of 18.</p> <p class=\"govuk-body\"> If a monetary award is to be made and there is a dispute about outstanding legal fees, it is our policy to retain the disputed amount until the dispute has been resolved.</p> <p class=\"govuk-body\"> If it is decided that a representative’s services are no longer required, CICA must be notified in writing as soon as possible.</p> </div>",
+        "value": "i-agree",
+        "valueLabel": "I have read and understood the declaration"
+    }
+}
