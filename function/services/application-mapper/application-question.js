@@ -113,16 +113,19 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             }
 
             // Adds the physical injury codes
-            case data.id === 'q-applicant-physical-injuries':
+            case data.id === 'q-applicant-physical-injuries': {
+                const uniqueCodes = data.value.filter(
+                    (injuryCode, index, array) => array.indexOf(injuryCode) === index
+                );
                 columnValue = applicationForm?.injury_details_code
                     ? `${applicationForm.injury_details_code}:`
                     : '';
-                Object.values(data.value).forEach(option => {
+                Object.values(uniqueCodes).forEach(option => {
                     columnValue = `${columnValue + option}:`;
                 });
                 columnValue = columnValue.slice(0, -1);
                 break;
-
+            }
             // Concatenate all these values to the name column under APA address type
             case data.id === 'q-applicant-title':
             case data.id === 'q-applicant-first-name':
@@ -213,6 +216,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 addressValue = data.value;
                 columnValue = data.value;
                 break;
+            // TO-DO - Dont think we need this anymore because the 149 code is included in the main injury list
             // Check if phyinj-149 (Other) should be added
             case data.id.startsWith('q-applicant-physical-injuries-') && data.id.endsWith('-other'):
                 // If phyinj-149 already contained within the injury codes, don't modify the column
@@ -276,11 +280,11 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
             // Split fatal/funeral applications
             case data.id === 'q-applicant-claim-type': {
                 if (data.value || applicationForm?.split_funeral) {
-                    columnValue = ['FuneralOnly', 7, '0'];
+                    columnValue = ['FuneralOnly', 7, '0', 'N'];
                     // Not ideal, if we need to delete other fields from the form in future, then we should consider a better approach
                     delete applicationForm?.split_funeral;
                 } else {
-                    columnValue = ['FatalityOnly', 4, '0'];
+                    columnValue = ['FatalityOnly', 4, '0', 'N'];
                 }
                 break;
             }
