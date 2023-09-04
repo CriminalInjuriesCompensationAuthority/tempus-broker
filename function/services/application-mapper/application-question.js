@@ -275,7 +275,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
 
             // Split fatal/funeral applications
             case data.id === 'q-applicant-claim-type': {
-                if (applicationForm?.split_funeral) {
+                if (data.value || applicationForm?.split_funeral) {
                     columnValue = ['FuneralOnly', 7, '0'];
                     // Not ideal, if we need to delete other fields from the form in future, then we should consider a better approach
                     delete applicationForm?.split_funeral;
@@ -284,6 +284,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
             }
+
             // The Crime didnt happen in England, Scotland or Wales
             // User is provided with a free text field to enter their address/location
             case data.id === 'q-applicant-crime-location': {

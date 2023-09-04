@@ -304,7 +304,7 @@ describe('Application question', () => {
         const questionData = {
             theme: 'about-application',
             id: 'q-applicant-claim-type',
-            value: 'I want to claim funeral costs only'
+            value: false
         };
 
         const mappedQuestion = mapApplicationQuestion(
@@ -321,7 +321,7 @@ describe('Application question', () => {
         const questionData = {
             theme: 'about-application',
             id: 'q-applicant-claim-type',
-            value: 'I want to claim funeral costs only'
+            value: true
         };
 
         applicationForm.split_funeral = true;
