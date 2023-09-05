@@ -75,8 +75,8 @@ module.exports = Object.freeze({
         'q-applicant-when-did-the-crime-start': 'date_time_of_incident',
         'q-applicant-when-did-the-crime-stop': 'date_time_of_incident_to',
         'q--when-was-the-crime-reported-to-police': 'date_time_pol_first_told',
-        'q-applicant-explain-reason-for-delay-application': 'incident_delay_reason_other',
-        'q-explain-reason-for-delay-reporting': 'incident_report_delay',
+        'q-applicant-explain-reason-for-delay-application': 'incident_report_delay',
+        'q-applicant-explain-reason-for-delay-reporting': 'incident_delay_reason_other',
         'q-applicant-did-the-crime-happen-once-or-over-time': [
             'application_type',
             'funeral_claim',
