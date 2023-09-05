@@ -30,6 +30,13 @@ function mapAddressInvoices(addressDetailsJson, applicationFormJson) {
                     case 'PAB':
                         invAddedAddressDetailsJson[index].inv_code = 'MAIN';
                         invAddedAddressDetailsJson[index].inv_type = 'APPL';
+                        if (
+                            (applicationFormJson?.under_18_or_incapable === 'Y' &&
+                                applicationFormJson?.application_type === 7) ||
+                            applicationFormJson?.application_type === 4
+                        ) {
+                            invAddedAddressDetailsJson[index].address_type = 'INA';
+                        }
                         break;
                     case 'RPA':
                         switch (applicationFormJson?.representative_type?.toLowerCase()) {

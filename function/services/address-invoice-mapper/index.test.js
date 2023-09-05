@@ -67,6 +67,22 @@ describe('Address invoice mapper', () => {
         expect(newAddressDetails[0].inv_type).toEqual('APPL');
     });
 
+    it('Should set address_type to INA if the applicant is incapable and a fatality', () => {
+        addressDetailsJson = [
+            {
+                address_type: 'PAB'
+            }
+        ];
+        applicationFormJson = {
+            application_type: 7,
+            under_18_or_incapable: 'Y'
+        };
+        const newAddressDetails = mapAddressInvoices(addressDetailsJson, applicationFormJson);
+        expect(newAddressDetails[0].inv_code).toEqual('MAIN');
+        expect(newAddressDetails[0].inv_type).toEqual('APPL');
+        expect(newAddressDetails[0].address_type).toEqual('INA');
+    });
+
     describe('RPA address details', () => {
         beforeEach(() => {
             addressDetailsJson = [
