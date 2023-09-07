@@ -43,10 +43,10 @@ Mappings:
     prod:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
       TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-dev-team-prod-claim-criminal-injuries-tempus-queue
-      VpcId: vpc-0e42a25379fa895ec # needs updating
-      SubnetIdA: subnet-02f7ae7f6b1db987f # needs updating
-      SubnetIdB: subnet-02f7ae7f6b1db987f # needs updating
-      TariffSGId: sg-0ebad8b7f67749a6e
+      VpcId: vpc-010157aa3b29e0752
+      SubnetIdA: subnet-0d1fcbfc03a28f433
+      SubnetIdB: subnet-08c81bc6ffb13be3d
+      TariffSGId: sg-03345c1ce948c936f
 Resources:
   function:
     Type: AWS::Serverless::Function
