@@ -149,7 +149,7 @@ describe('Eligibility checker', () => {
     it('Should be ineligible if the applicant had no injuries', () => {
         const applicationObject = {
             case_reference_number: '027906',
-            application_type: '2',
+            application_type: 2,
             created_date: '02-JAN-22',
             is_eligible: 'Y',
             pi_type_cause: 'ASST',
