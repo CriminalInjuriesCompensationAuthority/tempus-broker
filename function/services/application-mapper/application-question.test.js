@@ -133,13 +133,13 @@ describe('Application question', () => {
             value: 'once'
         };
         let mappedQuestion = mapApplicationQuestion(questionData);
-        expect(mappedQuestion.columnValue[0]).toBe('2');
+        expect(mappedQuestion.columnValue[0]).toBe(2);
         expect(mappedQuestion.columnValue[1]).toBe('N');
         expect(mappedQuestion.columnValue[2]).toBe('1');
 
         questionData.value = 'over-a-period-of-time';
         mappedQuestion = mapApplicationQuestion(questionData);
-        expect(mappedQuestion.columnValue[0]).toBe('3');
+        expect(mappedQuestion.columnValue[0]).toBe(3);
         expect(mappedQuestion.columnValue[1]).toBe('N');
         expect(mappedQuestion.columnValue[2]).toBe('0');
     });

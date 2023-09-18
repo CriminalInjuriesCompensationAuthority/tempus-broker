@@ -25,7 +25,7 @@ function checkEligibility(applicationFormJson) {
     const traffickedAndSeekingAsylum =
         applicationFormJson?.residency_09 === 'N' && applicationFormJson?.residency_10 === 'N';
     let reportedTooLate;
-    if (applicationType === '3') {
+    if (applicationType === 3) {
         // 3. The crime was reported 48 hours after the crime happened or stopped
         reportedTooLate =
             dateTimePolFirstTold &&
@@ -63,6 +63,18 @@ function checkEligibility(applicationFormJson) {
     // 7. The applicant is ineligible if they were not in contact with the deceased
     const estrangedFromDeceased = applicationFormJson?.estranged_from_deceased === 'Y';
 
+    // 8. The applicant is ineligible if they didn't have any injuries
+    // We skip this check if the claim is a fatality
+    let noInjuries = false;
+    if (applicationType === 2 || applicationType === 3) {
+        noInjuries =
+            applicationFormJson?.pi_type_cause !== 'SEX' &&
+            applicationFormJson?.physical_injuries === 'N' &&
+            applicationFormJson?.loss_of_foetus === 'N' &&
+            applicationFormJson?.infections === 'N' &&
+            applicationFormJson?.dmi === 'N';
+    }
+
     if (
         notReportedToPolice ||
         traffickedAndSeekingAsylum ||
@@ -70,7 +82,8 @@ function checkEligibility(applicationFormJson) {
         reportedAfterTwoYears ||
         ineligibleLocation ||
         ineligibleDueToInjuries ||
-        estrangedFromDeceased
+        estrangedFromDeceased ||
+        noInjuries
     ) {
         checkedApplicationFormJson.is_eligible = 'N';
     }
