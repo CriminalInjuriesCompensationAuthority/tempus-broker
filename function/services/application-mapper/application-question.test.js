@@ -73,7 +73,7 @@ describe('Application question', () => {
         };
 
         const mappedQuestion = mapApplicationQuestion(timestampQuestionData);
-        expect(mappedQuestion.columnValue).toEqual('01-JAN-70');
+        expect(mappedQuestion.columnValue).toEqual('01-JAN-1970');
     });
 
     it('Should keep the value of applicant_expenses as true if its already populated as true', () => {
