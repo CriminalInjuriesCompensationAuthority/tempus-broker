@@ -19,7 +19,7 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
         }
         if (key === 'submittedDate') {
             applicationFormJson.created_date = DateTime.fromISO(value)
-                .toFormat('dd-MMM-yy')
+                .toFormat('dd-MMM-yyyy')
                 .toLocaleUpperCase();
         }
         if (key === 'splitFuneral') {
