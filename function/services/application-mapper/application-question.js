@@ -330,7 +330,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                     !DateTime.fromISO(data.value).invalidReason
                 ) {
                     columnValue = DateTime.fromISO(data.value)
-                        .toFormat('dd-MMM-yy')
+                        .toFormat('dd-MMM-yyyy')
                         .toLocaleUpperCase();
                 } else if (Array.isArray(columnName)) {
                     columnValue = [];

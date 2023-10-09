@@ -7,15 +7,15 @@ const invalidInjuryCodes = require('../../constants/ineligible-injury-codes');
 function checkEligibility(applicationFormJson) {
     const checkedApplicationFormJson = applicationFormJson;
     const dateTimePolFirstTold = applicationFormJson?.date_time_pol_first_told
-        ? DateTime.fromFormat(applicationFormJson?.date_time_pol_first_told, 'dd-MMM-yy')
+        ? DateTime.fromFormat(applicationFormJson?.date_time_pol_first_told, 'dd-MMM-yyyy')
         : null;
     const dateTimeOfIncident = applicationFormJson?.date_time_of_incident
-        ? DateTime.fromFormat(applicationFormJson?.date_time_of_incident, 'dd-MMM-yy')
+        ? DateTime.fromFormat(applicationFormJson?.date_time_of_incident, 'dd-MMM-yyyy')
         : null;
     const dateTimeOfIncidentTo = applicationFormJson?.date_time_of_incident_to
-        ? DateTime.fromFormat(applicationFormJson?.date_time_of_incident_to, 'dd-MMM-yy')
+        ? DateTime.fromFormat(applicationFormJson?.date_time_of_incident_to, 'dd-MMM-yyyy')
         : null;
-    const submittedDate = DateTime.fromFormat(applicationFormJson?.created_date, 'dd-MMM-yy');
+    const submittedDate = DateTime.fromFormat(applicationFormJson?.created_date, 'dd-MMM-yyyy');
     const applicationType = applicationFormJson?.application_type;
 
     // ------------- Business rules -------------

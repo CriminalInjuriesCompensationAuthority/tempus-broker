@@ -36,7 +36,7 @@ describe('Application mapper', () => {
 
         expect(applicationFormJson.claim_reference_number).toEqual('207906');
         expect(applicationFormJson.ref_year).toEqual('44');
-        expect(applicationFormJson.created_date).toEqual('19-MAY-23');
+        expect(applicationFormJson.created_date).toEqual('19-MAY-2023');
         expect(applicationFormJson.split_funeral).toBeTruthy();
     });
 
