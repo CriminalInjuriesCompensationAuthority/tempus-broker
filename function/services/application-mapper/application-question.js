@@ -22,7 +22,7 @@ function concatenateToExistingAddressColumn(
         return `${addressDetails[index][addressColumn]} ${dataValue}`;
     }
     if (exists && appendToPrefix) {
-        return `${dataValue} ${addressDetails[index][addressColumn]} `;
+        return `${dataValue} ${addressDetails[index][addressColumn]}`;
     }
     return dataValue;
 }
