@@ -180,6 +180,52 @@ describe('Application mapper', () => {
         expect(applicationFormJson?.rep_organisation).toBe('Cat, Mr N Noches');
     });
 
+    it('Should trim characters after 70 for concatenated values', async () => {
+        applicationSummaryJson = {
+            values: [
+                {
+                    id: 'q-rep-organisation-name',
+                    theme: 'rep-details',
+                    value: 'The super long representative organisation of crime and other things'
+                },
+                {
+                    id: 'q-rep-title',
+                    theme: 'rep-details',
+                    value: 'Mr'
+                },
+                {
+                    id: 'q-rep-first-name',
+                    theme: 'rep-details',
+                    value: 'Neko'
+                },
+                {
+                    id: 'q-rep-last-name',
+                    theme: 'rep-details',
+                    value: 'Ihavealongsurname'
+                }
+            ]
+        };
+        oracleObject = await mapApplicationDataToOracleObject(
+            applicationSummaryJson,
+            applicationFormDefault,
+            addressDetailsDefault
+        );
+
+        addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
+        applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+        const trimmedConcat =
+            'The super long representative organisation of crime and other things, ';
+
+        addressDetailsJson.forEach(entry => {
+            if (entry?.address_type === 'RPA') {
+                expect(entry?.name).toBe(trimmedConcat);
+            }
+        });
+
+        expect(applicationFormJson?.rep_organisation).toBe(trimmedConcat);
+    });
+
     it('Should add an entry to both address_details and application_form for some ids', async () => {
         applicationSummaryJson = {
             id: 'q-mainapplicant-title',

@@ -128,6 +128,8 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
         addressDetailsJson[i].ref_year = refYear;
         // Copy the RPA address.name into application_form.rep_organisation
         if (values?.address_type === 'RPA') {
+            // Trim to Oracle's column limit of 70 chars
+            addressDetailsJson[i].name = addressDetailsJson[i].name.substring(0, 70);
             applicationFormJson.rep_organisation = addressDetailsJson[i]?.name;
         }
     });
