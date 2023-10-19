@@ -217,6 +217,12 @@ describe('Application mapper', () => {
         const trimmedConcat =
             'The super long representative organisation of crime and other things, ';
 
+        addressDetailsJson.forEach(entry => {
+            if (entry?.address_type === 'RPA') {
+                expect(entry?.name).toBe(trimmedConcat);
+            }
+        });
+
         expect(applicationFormJson?.rep_organisation).toBe(trimmedConcat);
     });
 
