@@ -115,7 +115,7 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
                 });
             }
         }
-        if (typeof value === 'object') {
+        if (typeof value === 'object' && value) {
             mapApplicationDataToOracleObject(value, applicationFormJson, addressDetailsJson);
         }
     });
