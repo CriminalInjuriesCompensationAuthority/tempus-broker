@@ -2,6 +2,7 @@
 
 const {DateTime} = require('luxon');
 const mapApplicationQuestion = require('./application-question');
+const logger = require('../logging/logger');
 const addressDetailsColumns = require('../../constants/address-details-columns');
 
 async function mapApplicationDataToOracleObject(data, applicationFormJson, addressDetailsJson) {
@@ -117,6 +118,8 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
         }
         if (typeof value === 'object' && value) {
             mapApplicationDataToOracleObject(value, applicationFormJson, addressDetailsJson);
+        } else if (typeof value === 'object' && !value) {
+            logger.info(`Null value parsed in ${key}`);
         }
     });
 
