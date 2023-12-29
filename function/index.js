@@ -114,11 +114,6 @@ async function handler(event, context) {
             logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
             await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
-
-            if (!process.env.RETAIN_JSON) {
-                logger.info('Deleting object from S3');
-                await s3.deleteObjectFromBucket(bucketName, Object.values(s3Keys)[1]);
-            }
         }
 
         // Finally delete the consumed message from the Tempus Queue
