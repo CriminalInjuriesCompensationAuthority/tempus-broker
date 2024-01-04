@@ -25,9 +25,9 @@ function extractTariffReference(applicationJson) {
 
 // validate that the response contains JSON and PDF keys only
 function validateS3Keys(keys) {
-    Object.entries(keys).forEach(([key, value]) => {
-        if (key === 'applicationCRN' || value.endsWith('.json') || value.endsWith('.pdf')) {
-            logger.info(`Value received from tempus broker queue: ${value}`);
+    Object.values(keys).forEach(value => {
+        if (value.endsWith('.json') || value.endsWith('.pdf')) {
+            logger.info(`S3 Key received from tempus broker queue: ${value}`);
         } else {
             throw new Error(
                 'Tempus broker queue message held an invalid file type, only .pdf and .json are supported'
@@ -72,10 +72,12 @@ async function handler(event, context) {
 
     try {
         logger.info('Retrieving data from bucket.');
-        // const bucketName = await getParameter('kta-bucket-name');
+        const bucketName = await getParameter('kta-bucket-name');
         const s3Keys = handleTempusBrokerMessage(message.Body);
-        const [objectName, bucketName] = [Object.values(s3Keys)[1], Object.values(s3Keys)[2]];
-        const s3ApplicationData = await s3.retrieveObjectFromBucket(bucketName, objectName);
+        const s3ApplicationData = await s3.retrieveObjectFromBucket(
+            bucketName,
+            Object.values(s3Keys)[1]
+        );
 
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(
