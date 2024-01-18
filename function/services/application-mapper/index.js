@@ -26,6 +26,9 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
         if (key === 'splitFuneral') {
             applicationFormJson.split_funeral = true;
         }
+        if (key === 'channel') {
+            applicationFormJson.channel = value === 'telephone' ? 'T' : "W";
+        }
         if (key === 'id') {
             // If the key is an id then map the value to json and concatenate to the oracle object
             const applicationQuestion = mapApplicationQuestion(
