@@ -5,6 +5,9 @@ const mapApplicationDataToOracleObject = require('./index');
 const FormFieldsGroupedByTheme = require('../../constants/form-fields-grouped-by-theme');
 const getApplicationFormDefault = require('../../constants/application-form-default');
 const getAddressDetailsDefault = require('../../constants/address-details-default');
+const applicationSummary = require('../../resources/testing/application-meta');
+const applicationSummaryWithTelephoneOrigin = require('../../resources/testing/application-meta-telephone-app');
+const applicationSummaryWithWebOrigin = require('../../resources/testing/application-meta-web-app');
 
 describe('Application mapper', () => {
     let applicationSummaryJson;
@@ -38,6 +41,41 @@ describe('Application mapper', () => {
         expect(applicationFormJson.ref_year).toEqual('44');
         expect(applicationFormJson.created_date).toEqual('19-MAY-2023');
         expect(applicationFormJson.split_funeral).toBeTruthy();
+    });
+
+    describe('Set the channel column with the application source', () => {
+        it('Should default channel column to "W" if not value is provided', async () =>{
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummary,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.channel).toEqual('W');
+        });
+
+        it('Should set channel column to "W" if ownerOrigin is not a telephone application', async () =>{
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryWithWebOrigin,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.channel).toEqual('W');
+        });
+
+        it('Should set channel column to "T" if ownerOrigin is a telephone application', async () =>{
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryWithTelephoneOrigin,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.channel).toEqual('T');
+        });
     });
 
     it('Should map an application question to application_form', async () => {
