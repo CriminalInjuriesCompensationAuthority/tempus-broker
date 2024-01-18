@@ -1,6 +1,7 @@
 'use strict';
 
 const oracledb = require('oracledb');
+// TODO: Deprecate the use of "thick" mode
 // Toggle between thin and thick mode for dev and deployment
 // oracledb.initOracleClient({libDir: '/opt/oracle/instantclient_21_10'});
 const getParameter = require('../services/ssm/index');
