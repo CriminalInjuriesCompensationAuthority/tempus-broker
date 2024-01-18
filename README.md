@@ -26,9 +26,9 @@ The project source includes the following directories:
 
 # Requirements
 - [Node.js 18.16.1 or later with npm](https://nodejs.org/en/download/releases/)
-- The Bash shell. For Linux and macOS, this is included by default. In Windows 10, you can install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to get a Windows-integrated version of Ubuntu and Bash.
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - Will need to follow step 2.3 onwards to set this up. Select the latest version, at least Version 21_10 required. The function/db/dbPool.js and function/db/index.js files will need updating accordingly.
+- [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - **(This step is only required if connecting to Oracle < 12.1, which is not supported in [thin mode](https://node-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html))** Will need to follow step 2.3 onwards to set this up. Select the latest version, at least Version 21_10 required. The function/db/dbPool.js and function/db/index.js files will need updating accordingly.
+- An Oracle DB instance e.g. https://www.oracle.com/uk/database/free/. An instance is available as part of our local development environment.
 
 Not mandatory but useful if using VSCode:
 - Prettier formatter extension
@@ -46,32 +46,30 @@ Add an .env file containing:
 
 Configure local code:
 - In `function/index.test.js` unskip the `'Should run the function handler'` test
-- In `db/index.js` and `db/dbPool.js` uncomment the lines starting with `oracledb.init`
+- **(This step is only required if connecting to Oracle < 12.1, which is not supported in [thin mode](https://node-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html))** In `db/index.js` and `db/dbPool.js` uncomment the lines starting with `oracledb.init`. 
 
 Configure local AWS environment:
 
 The tempus broker uses localstack for easy setup of AWS services and resources. The setup can be found in the Makefile of this directory.
 
-In the Makefile `create-secrets` job, you will need to replace the seciton marked as `[REPLACE ME]` with the connection string found on the
-following confluence page:
-'CICA-CIR -> Secrets - CICA -> Secrets - Tempus -> MRCORCL01 Tariff connection string'
+In the Makefile.mjs `create-secrets` job, you will need update the connection details as required. The defaults will work with the DB instance provided by the local development environment.
 
 Once this is done, open this project directory in terminal and run:
- - `make init`
- - `make create-bucket`
- - `make upload-file`
- - `make create-secrets`
- - `make create-parameters`
- - `make create-queue`
+ - `node Makefile.mjs init`
+ - `node Makefile.mjs start`
+ - `node Makefile.mjs create-bucket`
+ - `node Makefile.mjs upload-file`
+ - `node Makefile.mjs create-secrets`
+ - `node Makefile.mjs create-parameters`
+ - `node Makefile.mjs create-queue`
 
 To check the localstack container is running, you can run `docker ps`
 
 Use `npm run test` to run the function handler locally.
 
-The lambda function polls the queue that was created, so in order for it to pick up anything to process, ensure it contains a valid message. A message can be sent using `make send-message` once the queue has been created.
+The lambda function polls the queue that was created, so in order for it to pick up anything to process, ensure it contains a valid message. A message can be sent using `node Makefile.mjs send-message` once the queue has been created.
 
 # Test
-
 To run all tests with test coverage, use:
 `npx --no-install jest --ci --runInBand --bail --silent --coverage --projects jest.config.js`
 
@@ -80,4 +78,3 @@ To run tests with a debugger attached, use the Run and Debug panel within VS cod
 # Deploy
  
 Placeholder
-
