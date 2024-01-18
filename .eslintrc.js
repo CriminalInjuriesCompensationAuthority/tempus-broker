@@ -25,7 +25,23 @@ const config = {
         'import/extensions': ['off'],
         'fp/no-class': 'error'
     },
-    plugins: ['prettier', 'fp']
+    plugins: ['prettier', 'fp'],
+    overrides: [
+        {
+            files: ['**/*.mjs'],
+            parserOptions: {
+                ecmaVersion: 2022,
+                sourceType: 'module',
+                ecmaFeatures: {
+                    modules: true,
+                    classes: false
+                }
+            },
+            rules: {
+                'object-shorthand': ['error', 'always', {avoidQuotes: false}]
+            }
+        }
+    ]
 };
 /*! m0-end */
 
