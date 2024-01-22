@@ -40,6 +40,50 @@ describe('Application mapper', () => {
         expect(applicationFormJson.split_funeral).toBeTruthy();
     });
 
+    describe('Set the channel column with the application source', () => {
+        it('Should default channel column to "W" if not value is provided', async () =>{
+            applicationSummaryJson = fs.readFileSync(
+                'function/resources/testing/application-meta.json'
+            );
+            oracleObject = await mapApplicationDataToOracleObject(
+                JSON.parse(applicationSummaryJson),
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.channel).toEqual('W');
+        });
+
+        it('Should set channel column to "W" if ownerOrigin is a web application', async () =>{
+            applicationSummaryJson = fs.readFileSync(
+                'function/resources/testing/application-meta-web-app.json'
+            );
+            oracleObject = await mapApplicationDataToOracleObject(
+                JSON.parse(applicationSummaryJson),
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.channel).toEqual('W');
+        });
+
+        it('Should set channel column to "T" if ownerOrigin is a telephone application', async () =>{
+            applicationSummaryJson = fs.readFileSync(
+                'function/resources/testing/application-meta-telephone-app.json'
+            );
+            oracleObject = await mapApplicationDataToOracleObject(
+                JSON.parse(applicationSummaryJson),
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.channel).toEqual('T');
+        });
+    });
+
     it('Should map an application question to application_form', async () => {
         applicationSummaryJson = {
             id: 'q-applicant-british-citizen-or-eu-national',
