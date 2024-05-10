@@ -75,6 +75,9 @@ function checkEligibility(applicationFormJson) {
             applicationFormJson?.dmi === 'N';
     }
 
+    // 9. The applicant is ineligible if they are not related to the victim and they are not paying for funeral costs
+    const unrelatedAndNoFuneralCosts =  applicationFormJson?.relationship_to_deceased==='other' && applicationFormJson?.funeral_claim==='N'
+
     if (
         notReportedToPolice ||
         traffickedAndSeekingAsylum ||
@@ -83,7 +86,8 @@ function checkEligibility(applicationFormJson) {
         ineligibleLocation ||
         ineligibleDueToInjuries ||
         estrangedFromDeceased ||
-        noInjuries
+        noInjuries ||
+        unrelatedAndNoFuneralCosts
     ) {
         checkedApplicationFormJson.is_eligible = 'N';
     }

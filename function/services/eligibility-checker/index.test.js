@@ -17,7 +17,8 @@ describe('Eligibility checker', () => {
             date_time_of_incident_to: '15-FEB-2023',
             incident_country: 'england',
             injury_details_code: 'phyinj-048:phyinj-001:phyinj-149',
-            estranged_from_deceased: 'N'
+            estranged_from_deceased: 'N',
+            relationship_to_deceased: 'parent'
         };
         const checkedApplicationObject = checkEligibility(applicationObject);
         expect(checkedApplicationObject.is_eligible).toBe('Y');
@@ -157,6 +158,18 @@ describe('Eligibility checker', () => {
             loss_of_foetus: 'N',
             infections: 'N',
             dmi: 'N'
+        };
+        const checkedApplicationObject = checkEligibility(applicationObject);
+        expect(checkedApplicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be ineligible if the applicant was an other relation to the victim and did not pay for the funeral', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            relationship_to_deceased: 'other',
+            funeral_claim: 'N'
         };
         const checkedApplicationObject = checkEligibility(applicationObject);
         expect(checkedApplicationObject.is_eligible).toBe('N');
