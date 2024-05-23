@@ -196,7 +196,8 @@ module.exports = Object.freeze({
         'q-applicant-se-home-changes': 'applicant_expenses',
         'q-applicant-se-equipment': 'applicant_expenses',
         'q-applicant-se-aids': 'applicant_expenses',
-        'q-applicant-se-other': 'applicant_expenses'
+        'q-applicant-se-other': 'applicant_expenses',
+        'q-applicant-special-expenses': 'applicant_expenses'
     },
     'additional-info': {
         'q-applicant-additional-information': 'additional_info'
