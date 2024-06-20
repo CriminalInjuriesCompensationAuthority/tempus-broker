@@ -20,7 +20,10 @@ const commandActions = {
         console.log(result.stdout);
     },
     async 'upload-file'() {
-        const result = await $`aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers-sample.json s3://tempus-broker-bucket`;
+
+        // create new json files representing the data you want to test run this script then run the integration.test.js
+         // const result = await $`aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/check-your-answers-sample.json s3://tempus-broker-bucket`;
+        const result = await $`aws --endpoint-url=http://localhost:4566 s3 cp function/resources/testing/test-eligible-application.json s3://tempus-broker-bucket`;
         const result2 = await $`aws --endpoint-url=http://localhost:4566 s3 ls tempus-broker-bucket`;
 
         console.log(result.stdout);
@@ -63,7 +66,7 @@ const commandActions = {
     async 'send-message'() {
         const messageBody = JSON.stringify({
             applicationPDFDocumentSummaryKey: 'sample.pdf',
-            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+            applicationJSONDocumentSummaryKey: 'test-eligible-application.json'
         });
         const result = await $`aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url http://localhost:4566/000000000000/tempus-queue --message-body ${messageBody}`;
 

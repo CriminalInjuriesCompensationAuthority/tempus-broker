@@ -2,10 +2,10 @@
 
 const {DateTime} = require('luxon');
 const invalidInjuryCodes = require('../../constants/ineligible-injury-codes');
+const {setPreviouslyAppliedEligibility} = require('../question-helpers/previous-application');
 
 // Takes an application form json and checks for eligibility
-function checkEligibility(applicationFormJson) {
-    const checkedApplicationFormJson = applicationFormJson;
+function checkEligibilityRules(applicationFormJson) {
     const dateTimePolFirstTold = applicationFormJson?.date_time_pol_first_told
         ? DateTime.fromFormat(applicationFormJson?.date_time_pol_first_told, 'dd-MMM-yyyy')
         : null;
@@ -76,7 +76,9 @@ function checkEligibility(applicationFormJson) {
     }
 
     // 9. The applicant is ineligible if they are not related to the victim and they are not paying for funeral costs
-    const unrelatedAndNoFuneralCosts =  applicationFormJson?.relationship_to_deceased==='other' && applicationFormJson?.funeral_claim==='N'
+    const unrelatedAndNoFuneralCosts =
+        applicationFormJson?.relationship_to_deceased === 'other' &&
+        applicationFormJson?.funeral_claim === 'N';
 
     if (
         notReportedToPolice ||
@@ -89,10 +91,29 @@ function checkEligibility(applicationFormJson) {
         noInjuries ||
         unrelatedAndNoFuneralCosts
     ) {
-        checkedApplicationFormJson.is_eligible = 'N';
+        applicationFormJson.is_eligible = 'N';
+    }
+}
+
+/**
+ * Checks the eligibility of an application based on provided data and updates the database form.
+ *
+ * @param {Object} applicationData - The application data containing answers and other relevant information.
+ * @param {Object} dbApplicationForm - The database application form object that will be updated based on the eligibility rules.
+ */
+function checkEligibility(applicationData, dbApplicationForm) {
+    const INELIGIBLE = 'N';
+
+    // Apply previously applied eligibility rules
+    setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
+
+    // If an ineligibility rule has been triggered, the form cannot become eligible
+    if (dbApplicationForm.is_eligible === INELIGIBLE) {
+        return;
     }
 
-    return checkedApplicationFormJson;
+    // Apply the original eligibility rules
+    checkEligibilityRules(dbApplicationForm);
 }
 
 module.exports = checkEligibility;

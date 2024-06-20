@@ -44,8 +44,7 @@ Add an .env file containing:
    TEMPUS_QUEUE='http://localhost:4566/000000000000/tempus-queue'
    ```
 
-Configure local code:
-- In `function/index.test.js` unskip the `'Should run the function handler'` test
+Configure local code and running integration tests:
 - **(This step is only required if connecting to Oracle < 12.1, which is not supported in [thin mode](https://node-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html))** In `db/index.js` and `db/dbPool.js` uncomment the lines starting with `oracledb.init`. 
 
 Configure local AWS environment:
@@ -58,14 +57,17 @@ Once this is done, open this project directory in terminal and run:
  - `node Makefile.mjs init`
  - `node Makefile.mjs start`
  - `node Makefile.mjs create-bucket`
- - `node Makefile.mjs upload-file`
+ - `node Makefile.mjs upload-file` Uploads a sample DCS json file that can be used for integration testing
  - `node Makefile.mjs create-secrets`
  - `node Makefile.mjs create-parameters`
  - `node Makefile.mjs create-queue`
 
 To check the localstack container is running, you can run `docker ps`
 
-Use `npm run test` to run the function handler locally.
+I would recommend creating an account and downloading the [Localstack desktop](https://app.localstack.cloud/dashboard) to make life easier.
+
+- In `function/integration.test.js` unskip the `'Should run the function handler'` test
+Use `npm run test integration.test.js` to run the function handler locally which will start polling.
 
 The lambda function polls the queue that was created, so in order for it to pick up anything to process, ensure it contains a valid message. A message can be sent using `node Makefile.mjs send-message` once the queue has been created.
 

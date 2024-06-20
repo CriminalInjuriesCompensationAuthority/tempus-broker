@@ -74,20 +74,29 @@
                     "theme": "about-application"
                 },
                 {
-                    "id": "q-applicant-applied-before-for-this-crime",
-                    "type": "simple",
-                    "label": "Applied before for this crime",
-                    "value": true,
-                    "valueLabel": "Yes",
-                    "sectionId": "p-applicant-applied-before-for-this-crime",
-                    "theme": "about-application"
-                },
-                {
                     "id": "q-applicant-claim-type",
                     "type": "simple",
                     "label": "Applicant claim type",
                     "value": "I want to claim funeral costs only",
                     "sectionId": "p-funeral-costs",
+                    "theme": "about-application"
+                },
+                {
+                    "id": "q-applicant-applied-before-for-this-crime",
+                    "type": "simple",
+                    "label": "Applied before for this crime",
+                    "value": false,
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-applied-before-for-this-crime",
+                    "theme": "about-application"
+                },
+                {
+                    "id": "q-applicant-someone-else-applied-before-for-this-crime",
+                    "type": "simple",
+                    "label": "Someone else applied before for this crime",
+                    "value": "no",
+                    "valueLabel": "No",
+                    "sectionId": "p-applicant-someone-else-applied-before-for-this-crime",
                     "theme": "about-application"
                 }
             ]
