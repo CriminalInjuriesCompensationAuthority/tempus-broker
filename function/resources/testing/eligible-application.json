@@ -74,15 +74,6 @@
                     "theme": "about-application"
                 },
                 {
-                    "id": "q-applicant-applied-before-for-this-crime",
-                    "type": "simple",
-                    "label": "Applied before for this crime",
-                    "value": true,
-                    "valueLabel": "Yes",
-                    "sectionId": "p-applicant-applied-before-for-this-crime",
-                    "theme": "about-application"
-                },
-                {
                     "id": "q-applicant-claim-type",
                     "type": "simple",
                     "label": "Applicant claim type",

@@ -2,7 +2,10 @@
 
 const checkEligibility = require('.');
 
-describe('Eligibility checker', () => {
+// original eligibilty check does not care about the applicationData
+const emptyApplicationData = {};
+
+describe('checkEligibility', () => {
     it('Should be eligible when all checks pass', () => {
         const applicationObject = {
             case_reference_number: '027906',
@@ -20,8 +23,9 @@ describe('Eligibility checker', () => {
             estranged_from_deceased: 'N',
             relationship_to_deceased: 'parent'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('Y');
+
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
     });
 
     it('Should skip injury checking when claim is a fatality', () => {
@@ -39,8 +43,8 @@ describe('Eligibility checker', () => {
             incident_country: 'england',
             injury_details_code: 'phyinj-149'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('Y');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
     });
 
     it('Should skip checking for no injuries when the claim is a fatality', () => {
@@ -63,8 +67,8 @@ describe('Eligibility checker', () => {
             infections: 'N',
             dmi: 'N'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('Y');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
     });
 
     it('Should be ineligible when the crime was not reported', () => {
@@ -74,8 +78,8 @@ describe('Eligibility checker', () => {
             is_eligible: 'Y',
             incident_rep_police: 'N'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible when the human trafficiking and asylum application are both false', () => {
@@ -86,8 +90,8 @@ describe('Eligibility checker', () => {
             residency_09: 'N',
             residency_10: 'N'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible when the crime was reported 48 hours after the crime happened', () => {
@@ -98,8 +102,8 @@ describe('Eligibility checker', () => {
             date_time_of_incident: '15-FEB-2022',
             date_time_pol_first_told: '18-FEB-2022'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible if the crime happened 2 years before the submitted date', () => {
@@ -109,8 +113,8 @@ describe('Eligibility checker', () => {
             is_eligible: 'Y',
             date_time_of_incident: '03-JAN-2000'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible if the crime did not happen in Scotland, England or Wales', () => {
@@ -120,8 +124,8 @@ describe('Eligibility checker', () => {
             is_eligible: 'Y',
             incident_country: 'somewhere-else'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible if all the injury codes are ineligible', () => {
@@ -132,8 +136,8 @@ describe('Eligibility checker', () => {
             is_eligible: 'Y',
             injury_details_code: 'phyinj-149:phyinj-044:phyinj-048'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible if the applicant and deceased were estranged', () => {
@@ -143,8 +147,8 @@ describe('Eligibility checker', () => {
             is_eligible: 'Y',
             estranged_from_deceased: 'Y'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible if the applicant had no injuries', () => {
@@ -159,8 +163,8 @@ describe('Eligibility checker', () => {
             infections: 'N',
             dmi: 'N'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 
     it('Should be ineligible if the applicant was an other relation to the victim and did not pay for the funeral', () => {
@@ -171,7 +175,133 @@ describe('Eligibility checker', () => {
             relationship_to_deceased: 'other',
             funeral_claim: 'N'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be ineligible if applicant previously applied', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '17-FEB-2023',
+            is_eligible: 'Y',
+            incident_rep_police: 'Y',
+            residency_09: 'Y',
+            residency_10: 'N',
+            date_time_of_incident: '15-FEB-2023',
+            date_time_pol_first_told: '16-FEB-2023',
+            date_time_of_incident_to: '15-FEB-2023',
+            incident_country: 'england',
+            injury_details_code: 'phyinj-048:phyinj-001:phyinj-149',
+            estranged_from_deceased: 'N',
+            relationship_to_deceased: 'parent'
+        };
+
+        const applicationData = {
+            meta: {
+                caseReference: '23\\327507',
+                submittedDate: '2023-05-19T13:06:12.693Z',
+                splitFuneral: false
+            },
+            themes: [
+                {
+                    type: 'theme',
+                    id: 'about-application',
+                    title: 'About your application',
+                    values: [
+                        {
+                            id: 'q-applicant-applied-before-for-this-crime',
+                            type: 'simple',
+                            value: true,
+                            theme: 'about-application'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        checkEligibility(applicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be eligible if applicant has not previously applied', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '17-FEB-2023',
+            is_eligible: 'Y',
+            incident_rep_police: 'Y',
+            residency_09: 'Y',
+            residency_10: 'N',
+            date_time_of_incident: '15-FEB-2023',
+            date_time_pol_first_told: '16-FEB-2023',
+            date_time_of_incident_to: '15-FEB-2023',
+            incident_country: 'england',
+            injury_details_code: 'phyinj-048:phyinj-001:phyinj-149',
+            estranged_from_deceased: 'N',
+            relationship_to_deceased: 'parent'
+        };
+
+        const applicationData = {
+            meta: {
+                caseReference: '23\\327507',
+                submittedDate: '2023-05-19T13:06:12.693Z',
+                splitFuneral: false
+            },
+            themes: [
+                {
+                    type: 'theme',
+                    id: 'about-application',
+                    title: 'About your application',
+                    values: [
+                        {
+                            id: 'q-applicant-applied-before-for-this-crime',
+                            type: 'simple',
+                            value: false,
+                            theme: 'about-application'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        checkEligibility(applicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
+    });
+
+    it(`Should be ineligible if the applicant was an other relation to the victim
+         and did not pay for the funeral and has not previously applied`, () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            relationship_to_deceased: 'other',
+            funeral_claim: 'N'
+        };
+
+        const applicationData = {
+            meta: {
+                caseReference: '23\\327507',
+                submittedDate: '2023-05-19T13:06:12.693Z',
+                splitFuneral: false
+            },
+            themes: [
+                {
+                    type: 'theme',
+                    id: 'about-application',
+                    title: 'About your application',
+                    values: [
+                        {
+                            id: 'q-applicant-applied-before-for-this-crime',
+                            type: 'simple',
+                            value: false,
+                            theme: 'about-application'
+                        }
+                    ]
+                }
+            ]
+        };
+        checkEligibility(applicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 });
