@@ -25,7 +25,7 @@ async function deleteAnyPreviousTestData() {
 }
 
 describe('Tempus broker function', () => {
-    it.skip('Should run the function handler', async () => {
+    it('Should run the function handler', async () => {
         await deleteAnyPreviousTestData();
 
         jest.setTimeout(60000);

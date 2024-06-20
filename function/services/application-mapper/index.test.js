@@ -44,7 +44,7 @@ describe('Application mapper', () => {
     });
 
     describe('Set the channel column with the application source', () => {
-        it('Should default channel column to "W" if not value is provided', async () =>{
+        it('Should default channel column to "W" if not value is provided', async () => {
             oracleObject = await mapApplicationDataToOracleObject(
                 applicationSummary,
                 applicationFormDefault,
@@ -55,7 +55,7 @@ describe('Application mapper', () => {
             expect(applicationFormJson.channel).toEqual('W');
         });
 
-        it('Should set channel column to "W" if ownerOrigin is not a telephone application', async () =>{
+        it('Should set channel column to "W" if ownerOrigin is not a telephone application', async () => {
             oracleObject = await mapApplicationDataToOracleObject(
                 applicationSummaryWithWebOrigin,
                 applicationFormDefault,
@@ -66,7 +66,7 @@ describe('Application mapper', () => {
             expect(applicationFormJson.channel).toEqual('W');
         });
 
-        it('Should set channel column to "T" if ownerOrigin is a telephone application', async () =>{
+        it('Should set channel column to "T" if ownerOrigin is a telephone application', async () => {
             oracleObject = await mapApplicationDataToOracleObject(
                 applicationSummaryWithTelephoneOrigin,
                 applicationFormDefault,
@@ -306,5 +306,540 @@ describe('Application mapper', () => {
         addressDetailsJson = Object.values(oracleObject)[0][1].ADDRESS_DETAILS;
         expect(Object.hasOwn(addressDetailsJson[0], formField[0])).toBeTruthy();
         expect(addressDetailsJson[0][formField[0]]).toContain('Should');
+    });
+
+    describe('Set the previous app submitted and applied before columns to the correct values', () => {
+        it('Should set columns to "Y" if answered Yes to q-applicant-have-you-applied-to-us-before only', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: true,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to "N" if answered No to q-applicant-have-you-applied-to-us-before only', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: false,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('N');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('N');
+        });
+
+        it('Should set columns to `N` if answered No to applicant-applied-before', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('N');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('N');
+        });
+
+        it('Should set columns to `Y` if answered Yes to applicant-applied-before', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: true,
+                                theme: 'about-application'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to `Y` if answered Yes to someone-else-applied-before', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'yes',
+                                theme: 'about-application'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to `N` if answered No to someone-else-applied-before', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'no',
+                                theme: 'about-application'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('N');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('N');
+        });
+
+        it('Should set columns to null if answered I dont know to someone-else-applied-before', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'dont-know',
+                                theme: 'about-application'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe(null);
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe(null);
+        });
+
+        it('Should set columns to "Y" if answered No to someone-else-applied-before and applied-to-us-before answered Yes', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'no',
+                                theme: 'about-application'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: true,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to "Y" if answered Yes to someone-else-applied-before and applied-to-us-before answered Yes', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'yes',
+                                theme: 'about-application'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: true,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to "Y" if answered Yes to someone-else-applied-before and applied-to-us-before answered No', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'yes',
+                                theme: 'about-application'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: false,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to "N" if answered I dont know to someone-else-applied-before and applied-to-us-before answered Yes', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'dont-know',
+                                theme: 'about-application'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: true,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('Y');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('Y');
+        });
+
+        it('Should set columns to "N" if answered I dont know to someone-else-applied-before and applied-to-us-before answered No', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'about-application',
+                        title: 'About your application',
+                        values: [
+                            {
+                                id: 'q-applicant-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: false,
+                                theme: 'about-application'
+                            },
+                            {
+                                id: 'q-applicant-someone-else-applied-before-for-this-crime',
+                                type: 'simple',
+                                value: 'dont-know',
+                                theme: 'about-application'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'theme',
+                        id: 'other-compensation',
+                        title: 'Other compensation',
+                        values: [
+                            {
+                                id: 'q-applicant-have-you-applied-to-us-before',
+                                type: 'simple',
+                                value: false,
+                                theme: 'other-compensation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.previous_application_submitted).toBe('N');
+            expect(applicationFormJson.prev_app_for_ci_comp).toBe('N');
+        });
     });
 });

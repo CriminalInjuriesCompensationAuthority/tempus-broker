@@ -91,7 +91,8 @@ async function handler(event, context) {
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
         logger.info('Checking application eligibility');
-        const applicationFormJsonChecked = checkEligibility(applicationFormJson);
+        checkEligibility(s3ApplicationData, applicationFormJson);
+
         const addressDetailsWithInvoices = addressInvoiceMapper(
             addressDetailsJson,
             applicationFormJson
@@ -101,7 +102,7 @@ async function handler(event, context) {
 
         logger.info('Writing application data into Tariff');
 
-        await insertIntoTempus(applicationFormJsonChecked, 'APPLICATION_FORM');
+        await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
 
         if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {

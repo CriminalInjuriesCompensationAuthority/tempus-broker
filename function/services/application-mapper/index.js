@@ -4,10 +4,17 @@ const {DateTime} = require('luxon');
 const mapApplicationQuestion = require('./application-question');
 const logger = require('../logging/logger');
 const addressDetailsColumns = require('../../constants/address-details-columns');
+const {questionIDs, mapPreviousApplication} = require('../question-helpers/previous-application');
+
+// TODO refer to this via the previous-application code
+const appliedBeforeQuestionIds = questionIDs;
 
 async function mapApplicationDataToOracleObject(data, applicationFormJson, addressDetailsJson) {
     let crn;
     let refYear;
+
+    mapPreviousApplication(data, applicationFormJson);
+
     Object.entries(data).forEach(entry => {
         const [key, value] = entry;
 
@@ -27,9 +34,13 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
             applicationFormJson.split_funeral = true;
         }
         if (key === 'channel') {
-            applicationFormJson.channel = value === 'telephone' ? 'T' : "W";
+            applicationFormJson.channel = value === 'telephone' ? 'T' : 'W';
         }
-        if (key === 'id') {
+
+        // ignore applied before questions as they are handled at the start of this function
+        // and those questions can map to the same database columns
+        // and I don't want to rely on ordering of the data from the themes
+        if (key === 'id' && !appliedBeforeQuestionIds.includes(value)) {
             // If the key is an id then map the value to json and concatenate to the oracle object
             const applicationQuestion = mapApplicationQuestion(
                 data,

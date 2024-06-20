@@ -10,6 +10,14 @@ module.exports = Object.freeze({
             'application_type',
             'oas_userid',
             'is_injured_person'
+        ],
+        'q-applicant-applied-before-for-this-crime': [
+            'previous_application_submitted',
+            'prev_app_for_ci_comp'
+        ],
+        'q-applicant-someone-else-applied-before-for-this-crime': [
+            'previous_application_submitted',
+            'prev_app_for_ci_comp'
         ]
     },
     'applicant-details': {

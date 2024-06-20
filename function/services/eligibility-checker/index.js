@@ -2,10 +2,10 @@
 
 const {DateTime} = require('luxon');
 const invalidInjuryCodes = require('../../constants/ineligible-injury-codes');
+const {setPreviouslyAppliedEligibility} = require('../question-helpers/previous-application');
 
 // Takes an application form json and checks for eligibility
-function checkEligibility(applicationFormJson) {
-    const checkedApplicationFormJson = applicationFormJson;
+function checkEligibilityRules(applicationFormJson) {
     const dateTimePolFirstTold = applicationFormJson?.date_time_pol_first_told
         ? DateTime.fromFormat(applicationFormJson?.date_time_pol_first_told, 'dd-MMM-yyyy')
         : null;
@@ -76,7 +76,9 @@ function checkEligibility(applicationFormJson) {
     }
 
     // 9. The applicant is ineligible if they are not related to the victim and they are not paying for funeral costs
-    const unrelatedAndNoFuneralCosts =  applicationFormJson?.relationship_to_deceased==='other' && applicationFormJson?.funeral_claim==='N'
+    const unrelatedAndNoFuneralCosts =
+        applicationFormJson?.relationship_to_deceased === 'other' &&
+        applicationFormJson?.funeral_claim === 'N';
 
     if (
         notReportedToPolice ||
@@ -89,10 +91,22 @@ function checkEligibility(applicationFormJson) {
         noInjuries ||
         unrelatedAndNoFuneralCosts
     ) {
-        checkedApplicationFormJson.is_eligible = 'N';
+        applicationFormJson.is_eligible = 'N';
+    }
+}
+
+// ideally this would have been a simple rules engine
+// then firing a rule which triggers ineligibility would then break out
+// as there is no need to continue
+function checkEligibility(applicationData, dbApplicationForm) {
+    // requires the applicationData
+    setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
+    if (dbApplicationForm.is_eligible === 'N') {
+        return; // an ineligible rule once triggered cannot become eligible
     }
 
-    return checkedApplicationFormJson;
+    // the original
+    checkEligibilityRules(dbApplicationForm);
 }
 
 module.exports = checkEligibility;
