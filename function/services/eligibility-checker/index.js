@@ -68,7 +68,7 @@ function checkEligibilityRules(applicationFormJson) {
     let noInjuries = false;
     if (applicationType === 2 || applicationType === 3) {
         noInjuries =
-            applicationFormJson?.pi_type_cause !== 'SEX' &&
+            applicationFormJson?.pi_type_cause?.includes('SEX') === false &&
             applicationFormJson?.physical_injuries === 'N' &&
             applicationFormJson?.loss_of_foetus === 'N' &&
             applicationFormJson?.infections === 'N' &&
@@ -80,6 +80,14 @@ function checkEligibilityRules(applicationFormJson) {
         applicationFormJson?.relationship_to_deceased === 'other' &&
         applicationFormJson?.funeral_claim === 'N';
 
+    // 10. The applicant is ineligible if the incident type only contains other
+    // We skip this check if the claim is a fatality
+    let onlyOtherIncidentType = false;
+    if (applicationType === 2 || applicationType === 3) {
+        onlyOtherIncidentType =
+            applicationFormJson?.pi_type_cause === 'OTHER' &&
+            applicationFormJson?.pi_type_cause_other !== undefined;
+    }
     if (
         notReportedToPolice ||
         traffickedAndSeekingAsylum ||
@@ -89,7 +97,8 @@ function checkEligibilityRules(applicationFormJson) {
         ineligibleDueToInjuries ||
         estrangedFromDeceased ||
         noInjuries ||
-        unrelatedAndNoFuneralCosts
+        unrelatedAndNoFuneralCosts ||
+        onlyOtherIncidentType
     ) {
         applicationFormJson.is_eligible = 'N';
     }
