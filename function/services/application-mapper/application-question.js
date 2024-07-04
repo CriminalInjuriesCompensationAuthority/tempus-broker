@@ -329,10 +329,9 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 if (typeof data.value === 'string') {
                     columnValue = data.value;
                 } else {
-                    Object.values(data.value).forEach(option => {
-                        columnValue = `${columnValue + option},`;
-                    });
-                    columnValue = columnValue.slice(0, -1);
+                    // the value is an array
+                    // convert it to a comma-separated string
+                    columnValue = Object.values(data.value).join(',');
                 }
                 break;
             }
