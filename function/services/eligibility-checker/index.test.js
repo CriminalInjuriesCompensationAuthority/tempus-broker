@@ -21,7 +21,9 @@ describe('checkEligibility', () => {
             incident_country: 'england',
             injury_details_code: 'phyinj-048:phyinj-001:phyinj-149',
             estranged_from_deceased: 'N',
-            relationship_to_deceased: 'parent'
+            relationship_to_deceased: 'parent',
+            pi_type_cause: 'PHYS,OTHER',
+            pi_type_cause_other: 'other'
         };
 
         checkEligibility(emptyApplicationData, applicationObject);
@@ -303,5 +305,18 @@ describe('checkEligibility', () => {
         };
         checkEligibility(applicationData, applicationObject);
         expect(applicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be ineligible if the applicant only selected OTHER as incident type', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            pi_type_cause: 'OTHER',
+            pi_type_cause_other: 'other'
+        };
+        const checkedApplicationObject = checkEligibility(applicationObject);
+        expect(checkedApplicationObject.is_eligible).toBe('N');
     });
 });

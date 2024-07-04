@@ -420,4 +420,24 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue[0]).toBe('Y');
         expect(mappedQuestion.columnValue[1]).toBe('Police');
     });
+
+    it('Should map multiple incident types', () => {
+        const physicalInjuryData = {
+            theme: 'crime',
+            id: 'q-applicant-incident-type',
+            value: ['PHYS', 'FMLY', 'AORV']
+        };
+        const mappedQuestion = mapApplicationQuestion(physicalInjuryData);
+        expect(mappedQuestion.columnValue).toBe('PHYS,FMLY,AORV');
+    });
+
+    it('Should map legacy incident types', () => {
+        const physicalInjuryData = {
+            theme: 'crime',
+            id: 'q-applicant-incident-type',
+            value: 'OTHER'
+        };
+        const mappedQuestion = mapApplicationQuestion(physicalInjuryData);
+        expect(mappedQuestion.columnValue).toBe('OTHER');
+    });
 });
