@@ -99,6 +99,7 @@ module.exports = Object.freeze({
         ],
         'q-police-force-id': ['police_force_area', 'police_force'],
         'q-applicant-incident-type': 'pi_type_cause',
+        'q-applicant-incident-type-other': 'pi_type_cause_other',
         'q-applicant-incident-description': 'description_of_incident'
     },
     impact: {
