@@ -4,6 +4,38 @@ const {DateTime} = require('luxon');
 const invalidInjuryCodes = require('../../constants/ineligible-injury-codes');
 const {setPreviouslyAppliedEligibility} = require('../question-helpers/previous-application');
 
+function checkEligibilityForInvalidInjuries(applicationFormJson) {
+    let ineligibleDueToInjuries = false;
+    const applicationType = applicationFormJson?.application_type;
+    if (
+        applicationFormJson?.injury_details_code &&
+        (applicationType === 2 || applicationType === 3)
+    ) {
+        ineligibleDueToInjuries = true;
+        const injuryCodes = applicationFormJson.injury_details_code.split(':');
+        injuryCodes.forEach(code => {
+            if (!invalidInjuryCodes.includes(code)) {
+                ineligibleDueToInjuries = false;
+            }
+        });
+    }
+    return ineligibleDueToInjuries;
+}
+
+function checkEligibilityForNoInjuries(applicationFormJson) {
+    let noInjuries = false;
+    const applicationType = applicationFormJson?.application_type;
+    if (applicationType === 2 || applicationType === 3) {
+        noInjuries =
+            applicationFormJson?.pi_type_cause?.includes('SEX') === false &&
+            applicationFormJson?.physical_injuries === 'N' &&
+            applicationFormJson?.loss_of_foetus === 'N' &&
+            applicationFormJson?.infections === 'N' &&
+            applicationFormJson?.dmi === 'N';
+    }
+    return noInjuries;
+}
+
 // Takes an application form json and checks for eligibility
 function checkEligibilityRules(applicationFormJson) {
     const dateTimePolFirstTold = applicationFormJson?.date_time_pol_first_told
@@ -45,35 +77,17 @@ function checkEligibilityRules(applicationFormJson) {
 
     // 5. The crime did not happen in England, Scotland or Wales
     const ineligibleLocation = applicationFormJson?.incident_country === 'somewhere-else';
+
     // 6. The applicant is ineligible if only claiming for certain injuries
     // We skip this check if the claim is a fatality
-    let ineligibleDueToInjuries = false;
-    if (
-        applicationFormJson?.injury_details_code &&
-        (applicationType === 2 || applicationType === 3)
-    ) {
-        ineligibleDueToInjuries = true;
-        const injuryCodes = applicationFormJson.injury_details_code.split(':');
-        injuryCodes.forEach(code => {
-            if (!invalidInjuryCodes.includes(code)) {
-                ineligibleDueToInjuries = false;
-            }
-        });
-    }
+    const ineligibleDueToInjuries = checkEligibilityForInvalidInjuries(applicationFormJson);
+
     // 7. The applicant is ineligible if they were not in contact with the deceased
     const estrangedFromDeceased = applicationFormJson?.estranged_from_deceased === 'Y';
 
     // 8. The applicant is ineligible if they didn't have any injuries
     // We skip this check if the claim is a fatality
-    let noInjuries = false;
-    if (applicationType === 2 || applicationType === 3) {
-        noInjuries =
-            applicationFormJson?.pi_type_cause?.includes('SEX') === false &&
-            applicationFormJson?.physical_injuries === 'N' &&
-            applicationFormJson?.loss_of_foetus === 'N' &&
-            applicationFormJson?.infections === 'N' &&
-            applicationFormJson?.dmi === 'N';
-    }
+    const noInjuries = checkEligibilityForNoInjuries(applicationFormJson);
 
     // 9. The applicant is ineligible if they are not related to the victim and they are not paying for funeral costs
     const unrelatedAndNoFuneralCosts =
