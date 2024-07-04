@@ -431,6 +431,16 @@ describe('Application question', () => {
         expect(mappedQuestion.columnValue).toBe('PHYS,FMLY,AORV');
     });
 
+    it('Should map a single incident type', () => {
+        const physicalInjuryData = {
+            theme: 'crime',
+            id: 'q-applicant-incident-type',
+            value: ['OTHER']
+        };
+        const mappedQuestion = mapApplicationQuestion(physicalInjuryData);
+        expect(mappedQuestion.columnValue).toBe('OTHER');
+    });
+
     it('Should map legacy incident types', () => {
         const physicalInjuryData = {
             theme: 'crime',
