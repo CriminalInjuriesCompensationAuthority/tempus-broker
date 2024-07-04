@@ -316,7 +316,30 @@ describe('checkEligibility', () => {
             pi_type_cause: 'OTHER',
             pi_type_cause_other: 'other'
         };
-        const checkedApplicationObject = checkEligibility(applicationObject);
-        expect(checkedApplicationObject.is_eligible).toBe('N');
+
+        const applicationData = {
+            meta: {
+                caseReference: '23\\327507',
+                submittedDate: '2023-05-19T13:06:12.693Z',
+                splitFuneral: false
+            },
+            themes: [
+                {
+                    type: 'theme',
+                    id: 'about-application',
+                    title: 'About your application',
+                    values: [
+                        {
+                            id: 'q-applicant-applied-before-for-this-crime',
+                            type: 'simple',
+                            value: false,
+                            theme: 'about-application'
+                        }
+                    ]
+                }
+            ]
+        };
+        checkEligibility(applicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('N');
     });
 });
