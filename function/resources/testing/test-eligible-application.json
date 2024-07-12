@@ -1,8 +1,8 @@
 {
     "meta": {
-        "caseReference": "23\\327507",
-        "submittedDate": "2023-05-19T13:06:12.693Z",
-        "splitFuneral": true
+        "caseReference": "24\\756458",
+        "channel": "telephone",
+        "submittedDate": "2024-06-05T12:02:17.558Z"
     },
     "themes": [
         {
@@ -11,21 +11,22 @@
             "title": "About your application",
             "values": [
                 {
-                    "id": "q--new-or-existing-application",
+                    "id": "q-applicant-who-are-you-applying-for",
                     "type": "simple",
-                    "label": "What would you like to do?",
-                    "value": "new",
-                    "valueLabel": "Start a new application",
-                    "sectionId": "p--new-or-existing-application",
-                    "theme": "about-application"
+                    "label": "Who are you applying for?",
+                    "value": "myself",
+                    "valueLabel": "Myself",
+                    "sectionId": "p-applicant-who-are-you-applying-for",
+                    "theme": "about-application",
+                    "meta": {"integration": {"hideOnSummary": true}}
                 },
                 {
-                    "id": "q-applicant-fatal-claim",
+                    "id": "q-applicant-are-you-18-or-over",
                     "type": "simple",
-                    "label": "Are you applying because someone died?",
-                    "value": false,
-                    "valueLabel": "No",
-                    "sectionId": "p-applicant-fatal-claim",
+                    "label": "Are you 18 or over?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-are-you-18-or-over",
                     "theme": "about-application"
                 },
                 {
@@ -38,48 +39,14 @@
                     "theme": "about-application"
                 },
                 {
-                    "id": "q-applicant-has-crime-reference-number",
+                    "id": "q-applicant-fatal-claim",
                     "type": "simple",
-                    "label": "Do you have a crime reference number?",
-                    "value": true,
-                    "valueLabel": "Yes",
-                    "sectionId": "p-applicant-has-crime-reference-number",
-                    "theme": "about-application"
-                },
-                {
-                    "id": "q-applicant-who-are-you-applying-for",
-                    "type": "simple",
-                    "label": "Who are you applying for?",
-                    "value": "myself",
-                    "valueLabel": "Myself",
-                    "sectionId": "p-applicant-who-are-you-applying-for",
-                    "theme": "about-application"
-                },
-                {
-                    "id": "q-applicant-are-you-18-or-over",
-                    "type": "simple",
-                    "label": "Are you 18 or over?",
-                    "value": true,
-                    "valueLabel": "Yes",
-                    "sectionId": "p-applicant-are-you-18-or-over",
-                    "theme": "about-application"
-                },
-                {
-                    "id": "q-applicant-british-citizen-or-eu-national",
-                    "type": "simple",
-                    "label": "Are you a British citizen or EU national?",
-                    "value": true,
-                    "valueLabel": "Yes",
-                    "sectionId": "p-applicant-british-citizen-or-eu-national",
-                    "theme": "about-application"
-                },
-                {
-                    "id": "q-applicant-claim-type",
-                    "type": "simple",
-                    "label": "Applicant claim type",
-                    "value": "I want to claim funeral costs only",
-                    "sectionId": "p-funeral-costs",
-                    "theme": "about-application"
+                    "label": "Select why you are applying",
+                    "value": false,
+                    "valueLabel": "I am applying because I was the victim of a violent crime",
+                    "sectionId": "p-applicant-fatal-claim",
+                    "theme": "about-application",
+                    "meta": {"integration": {"hideOnSummary": true}}
                 },
                 {
                     "id": "q-applicant-applied-before-for-this-crime",
@@ -119,12 +86,10 @@
                     "id": "q-applicant-enter-your-email-address",
                     "type": "simple",
                     "label": "Email address",
-                    "value": "stephen.sinclair@digital.justice.gov.uk",
+                    "value": "Barry.Kerr@cica.gov.uk",
                     "sectionId": "p-applicant-confirmation-method",
                     "theme": "applicant-details",
-                    "format": {
-                        "value": "email"
-                    }
+                    "format": {"value": "email"}
                 },
                 {
                     "id": "applicant-name",
@@ -143,7 +108,7 @@
                             "id": "q-applicant-first-name",
                             "type": "simple",
                             "label": "First name",
-                            "value": "Foo",
+                            "value": "Test",
                             "sectionId": "p-applicant-enter-your-name",
                             "theme": "applicant-details"
                         },
@@ -151,7 +116,7 @@
                             "id": "q-applicant-last-name",
                             "type": "simple",
                             "label": "Last name",
-                            "value": "Bar",
+                            "value": "Case",
                             "sectionId": "p-applicant-enter-your-name",
                             "theme": "applicant-details"
                         }
@@ -162,7 +127,7 @@
                 {
                     "id": "q-applicant-have-you-been-known-by-any-other-names",
                     "type": "simple",
-                    "label": "Have you been known by another name?",
+                    "label": "Have you ever been known by any other names?",
                     "value": false,
                     "valueLabel": "No",
                     "sectionId": "p-applicant-have-you-been-known-by-any-other-names",
@@ -172,13 +137,10 @@
                     "id": "q-applicant-enter-your-date-of-birth",
                     "type": "simple",
                     "label": "Date of birth",
-                    "value": "1970-01-01T00:00:00.000Z",
+                    "value": "1988-05-22T00:00:00.000Z",
                     "sectionId": "p-applicant-enter-your-date-of-birth",
                     "theme": "applicant-details",
-                    "format": {
-                        "value": "date-time",
-                        "precision": "YYYY-MM-DD"
-                    }
+                    "format": {"value": "date-time", "precision": "YYYY-MM-DD"}
                 },
                 {
                     "id": "applicant-address",
@@ -188,8 +150,24 @@
                         {
                             "id": "q-applicant-building-and-street",
                             "type": "simple",
-                            "label": "Building and street",
-                            "value": "1 Test Lane",
+                            "label": "Address line 1",
+                            "value": "CICA",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-building-and-street-2",
+                            "type": "simple",
+                            "label": "Address line 2 (optional)",
+                            "value": "ALEXANDER BAIN HOUSE",
+                            "sectionId": "p-applicant-enter-your-address",
+                            "theme": "applicant-details"
+                        },
+                        {
+                            "id": "q-applicant-building-and-street-3",
+                            "type": "simple",
+                            "label": "Address line 3 (optional)",
+                            "value": "15 YORK STREET",
                             "sectionId": "p-applicant-enter-your-address",
                             "theme": "applicant-details"
                         },
@@ -197,29 +175,45 @@
                             "id": "q-applicant-town-or-city",
                             "type": "simple",
                             "label": "Town or city",
-                            "value": "Testertown",
-                            "sectionId": "p-applicant-enter-your-address",
-                            "theme": "applicant-details"
-                        },
-                        {
-                            "id": "q-applicant-county",
-                            "type": "simple",
-                            "label": "County (optional)",
-                            "value": "Testcounty",
+                            "value": "GLASGOW",
                             "sectionId": "p-applicant-enter-your-address",
                             "theme": "applicant-details"
                         },
                         {
                             "id": "q-applicant-postcode",
                             "type": "simple",
-                            "label": "Postcode (optional)",
-                            "value": "G2 8DU",
+                            "label": "Postcode",
+                            "value": "G2 8JQ",
                             "sectionId": "p-applicant-enter-your-address",
                             "theme": "applicant-details"
                         }
                     ],
                     "sectionId": "p-applicant-enter-your-address",
                     "theme": "applicant-details"
+                },
+                {
+                    "id": "q-applicant-enter-your-telephone-number",
+                    "type": "simple",
+                    "label": "Telephone number",
+                    "value": "01412281570",
+                    "sectionId": "p-applicant-enter-your-telephone-number",
+                    "theme": "applicant-details"
+                }
+            ]
+        },
+        {
+            "type": "theme",
+            "id": "residency-and-nationality",
+            "title": "About your residency and nationality",
+            "values": [
+                {
+                    "id": "q-applicant-british-citizen",
+                    "type": "simple",
+                    "label": "Were you a British citizen when the crime happened?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-british-citizen",
+                    "theme": "residency-and-nationality"
                 }
             ]
         },
@@ -232,8 +226,8 @@
                     "id": "q-applicant-incident-type",
                     "type": "simple",
                     "label": "What led to your injuries?",
-                    "value": "ASST",
-                    "valueLabel": "Physical assault",
+                    "value": "WEAP",
+                    "valueLabel": "Assault with a weapon",
                     "sectionId": "p-applicant-incident-type",
                     "theme": "crime"
                 },
@@ -250,50 +244,60 @@
                     "id": "q-applicant-when-did-the-crime-happen",
                     "type": "simple",
                     "label": "When did the crime happen?",
-                    "value": "2023-01-01T00:00:00.000Z",
+                    "value": "2023-06-19T00:00:00.000Z",
                     "sectionId": "p-applicant-when-did-the-crime-happen",
                     "theme": "crime",
-                    "format": {
-                        "value": "date-time",
-                        "precision": "YYYY-MM-DD"
-                    }
+                    "format": {"value": "date-time", "precision": "YYYY-MM-DD"}
                 },
                 {
                     "id": "q-applicant-where-did-the-crime-happen",
                     "type": "simple",
                     "label": "Where did the crime happen?",
-                    "value": "Somewhere-else",
-                    "valueLabel": "Somewhere-else",
+                    "value": "england",
+                    "valueLabel": "England",
                     "sectionId": "p-applicant-where-did-the-crime-happen",
                     "theme": "crime"
                 },
                 {
-                    "id": "q-applicant-crime-location",
-                    "type": "simple",
-                    "label": "Where did the crime happen?",
-                    "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mi lorem, tincidunt ac sapien",
-                    "valueLabel": "Somewhere-else",
-                    "sectionId": "p-applicant-crime-location",
+                    "id": "crime-location-england",
+                    "type": "composite",
+                    "label": "Where in England did the crime happen?",
+                    "values": [
+                        {
+                            "id": "q-applicant-english-town-or-city",
+                            "type": "simple",
+                            "label": "Town or city",
+                            "value": "town centre",
+                            "sectionId": "p-applicant-where-in-england-did-it-happen",
+                            "theme": "crime"
+                        },
+                        {
+                            "id": "q-applicant-english-location",
+                            "type": "simple",
+                            "label": "Location",
+                            "value": "location area",
+                            "sectionId": "p-applicant-where-in-england-did-it-happen",
+                            "theme": "crime"
+                        }
+                    ],
+                    "sectionId": "p-applicant-where-in-england-did-it-happen",
                     "theme": "crime"
                 },
                 {
                     "id": "q--when-was-the-crime-reported-to-police",
                     "type": "simple",
                     "label": "When was the crime reported?",
-                    "value": "2023-01-01T00:00:00.000Z",
+                    "value": "2023-06-19T00:00:00.000Z",
                     "sectionId": "p--when-was-the-crime-reported-to-police",
                     "theme": "crime",
-                    "format": {
-                        "value": "date-time",
-                        "precision": "YYYY-MM-DD"
-                    }
+                    "format": {"value": "date-time", "precision": "YYYY-MM-DD"}
                 },
                 {
                     "id": "q-police-force-id",
                     "type": "simple",
                     "label": "Which police force is investigating the crime?",
-                    "value": 10002424,
-                    "valueLabel": "Police Scotland Fife",
+                    "value": 10000140,
+                    "valueLabel": "Greater Manchester Police",
                     "sectionId": "p--which-police-force-is-investigating-the-crime",
                     "theme": "crime"
                 },
@@ -301,7 +305,7 @@
                     "id": "q--whats-the-crime-reference-number",
                     "type": "simple",
                     "label": "What's the crime reference number?",
-                    "value": "123refABC",
+                    "value": "6INMBVT",
                     "sectionId": "p--whats-the-crime-reference-number",
                     "theme": "crime"
                 },
@@ -318,7 +322,7 @@
                     "id": "q-applicant-incident-description",
                     "type": "simple",
                     "label": "Brief description of the crime",
-                    "value": "Some words about the crime. Big fight.",
+                    "value": "HG HDGF HDGF HDFH GHGDF HDGF HDGFH GFDH GHDFGH GFDHDGF HJH JHJHGFJ FJ HGFJHGJFGH.",
                     "sectionId": "p-applicant-incident-description",
                     "theme": "crime"
                 }
@@ -342,8 +346,8 @@
                     "id": "q-offender-enter-offenders-name",
                     "type": "simple",
                     "label": "Offenders name",
-                    "value": "Baz",
-                    "sectionId": "p-offender-enter-offenders-name",
+                    "value": "Mr Bad Man",
+                    "sectionId": "p-offender-do-you-know-the-name-of-the-offender",
                     "theme": "offender"
                 },
                 {
@@ -372,28 +376,31 @@
                     "theme": "injuries"
                 },
                 {
-                    "id": "q-applicant-physical-injuries-legs-ankle-other",
+                    "id": "q-applicant-physical-injury",
                     "type": "simple",
-                    "label": "Other leg injuries",
-                    "value": "Small cuts",
-                    "sectionId": "p-applicant-physical-injury-legs-leg",
+                    "label": "What was injured?",
+                    "value": ["upper"],
+                    "valueLabel": ["Head, face or neck"],
+                    "sectionId": "p-applicant-physical-injury",
                     "theme": "injuries"
+                },
+                {
+                    "id": "q-applicant-physical-injury-upper",
+                    "type": "simple",
+                    "label": "Head, face or neck injuries",
+                    "value": ["face"],
+                    "valueLabel": ["Face or jaw"],
+                    "sectionId": "p-applicant-physical-injury-upper",
+                    "theme": "injuries",
+                    "meta": {"integration": {"hideOnSummary": true}}
                 },
                 {
                     "id": "q-applicant-physical-injuries",
                     "type": "simple",
-                    "label": "Arm or hand skin injuries",
-                    "value": ["phyinj-007", "phyinj-008"],
-                    "valueLabel": ["Cuts", "Bruises"],
-                    "sectionId": "p-applicant-physical-injury-arms-skin",
-                    "theme": "injuries"
-                },
-                {
-                    "id": "q-applicant-physical-injuries-legs-leg-other",
-                    "type": "simple",
-                    "label": "Other leg injuries",
-                    "value": "Small cuts",
-                    "sectionId": "p-applicant-physical-injury-legs-leg",
+                    "label": "Face injuries",
+                    "value": ["phyinj-034"],
+                    "valueLabel": ["Face injuries - Broken jaw"],
+                    "sectionId": "p-applicant-physical-injury-upper-face",
                     "theme": "injuries"
                 },
                 {
@@ -448,9 +455,18 @@
                     "id": "q-applicant-job-when-crime-happened",
                     "type": "simple",
                     "label": "Did you have a job when the crime happened?",
-                    "value": true,
-                    "valueLabel": "Yes",
+                    "value": false,
+                    "valueLabel": "No",
                     "sectionId": "p-applicant-job-when-crime-happened",
+                    "theme": "impact"
+                },
+                {
+                    "id": "q-applicant-work-details-option",
+                    "type": "simple",
+                    "label": "Reason for not having a job",
+                    "value": ["care"],
+                    "valueLabel": ["Caring for someone"],
+                    "sectionId": "p-applicant-work-details-option",
                     "theme": "impact"
                 },
                 {
@@ -463,19 +479,10 @@
                     "theme": "impact"
                 },
                 {
-                    "id": "q-applicant-work-details-option",
-                    "type": "simple",
-                    "label": "Reason for not having a job",
-                    "value": ["education", "other", "searching", "care"],
-                    "valueLabel": ["Other"],
-                    "sectionId": "p-applicant-work-details-option",
-                    "theme": "impact"
-                },
-                {
                     "id": "q-applicant-affect-on-daily-life-dmi",
                     "type": "simple",
                     "label": "How your injuries have affected your daily life",
-                    "value": "Slowed running times.\n\nOther things.",
+                    "value": "hgh dg fhdfgh gfh gfdhdgf hdgf hdgf hdgfhdgfhdgfh dgf",
                     "sectionId": "p-applicant-affect-on-daily-life-dmi",
                     "theme": "impact"
                 }
@@ -490,7 +497,7 @@
                     "id": "q-applicant-treatment-for-physical-injuries",
                     "type": "simple",
                     "label": "Treatment for physical injuries",
-                    "value": "Hot stones.",
+                    "value": "fgds gdfsg fsdg sdfg sgsdfg dfsg dfsgdfsgds gds",
                     "sectionId": "p-applicant-treatment-for-physical-injuries",
                     "theme": "treatment"
                 },
@@ -524,21 +531,29 @@
                 {
                     "id": "applicant-gp-address",
                     "type": "composite",
-                    "label": "What is the GP's address?",
+                    "label": "Enter the GP's address",
                     "values": [
                         {
                             "id": "q-gp-organisation-name",
                             "type": "simple",
                             "label": "Practice name",
-                            "value": "TestDoctor",
+                            "value": "Dr Test",
                             "sectionId": "p-gp-enter-your-address",
                             "theme": "treatment"
                         },
                         {
                             "id": "q-gp-building-and-street",
                             "type": "simple",
-                            "label": "Building and street",
-                            "value": "1 Doctor street",
+                            "label": "Address line 1",
+                            "value": "ALEXANDER BAIN HOUSE",
+                            "sectionId": "p-gp-enter-your-address",
+                            "theme": "treatment"
+                        },
+                        {
+                            "id": "q-gp-building-and-street-2",
+                            "type": "simple",
+                            "label": "Address line 2 (optional)",
+                            "value": "15 YORK STREET",
                             "sectionId": "p-gp-enter-your-address",
                             "theme": "treatment"
                         },
@@ -546,20 +561,78 @@
                             "id": "q-gp-town-or-city",
                             "type": "simple",
                             "label": "Town or city",
-                            "value": "Doctortown",
+                            "value": "GLASGOW",
                             "sectionId": "p-gp-enter-your-address",
                             "theme": "treatment"
                         },
                         {
                             "id": "q-gp-postcode",
                             "type": "simple",
-                            "label": "Postcode (optional)",
-                            "value": "DR1 4RT",
+                            "label": "Postcode",
+                            "value": "G2 8JQ",
                             "sectionId": "p-gp-enter-your-address",
                             "theme": "treatment"
                         }
                     ],
                     "sectionId": "p-gp-enter-your-address",
+                    "theme": "treatment"
+                },
+                {
+                    "id": "q-applicant-dentist-visited",
+                    "type": "simple",
+                    "label": "Have you seen a dentist?",
+                    "value": true,
+                    "valueLabel": "Yes",
+                    "sectionId": "p-applicant-dentist-visited",
+                    "theme": "treatment"
+                },
+                {
+                    "id": "applicant-dentist-address",
+                    "type": "composite",
+                    "label": "Enter the dentist's address",
+                    "values": [
+                        {
+                            "id": "q-applicant-dentist-organisation-name",
+                            "type": "simple",
+                            "label": "Practice name",
+                            "value": "Mr Den Tist",
+                            "sectionId": "p-applicant-dentist-address",
+                            "theme": "treatment"
+                        },
+                        {
+                            "id": "q-applicant-dentist-address-building-and-street",
+                            "type": "simple",
+                            "label": "Address line 1",
+                            "value": "ALEXANDER BAIN HOUSE",
+                            "sectionId": "p-applicant-dentist-address",
+                            "theme": "treatment"
+                        },
+                        {
+                            "id": "q-applicant-dentist-address-building-and-street-2",
+                            "type": "simple",
+                            "label": "Address line 2 (optional)",
+                            "value": "15 YORK STREET",
+                            "sectionId": "p-applicant-dentist-address",
+                            "theme": "treatment"
+                        },
+                        {
+                            "id": "q-applicant-dentist-address-town-or-city",
+                            "type": "simple",
+                            "label": "Town or city",
+                            "value": "GLASGOW",
+                            "sectionId": "p-applicant-dentist-address",
+                            "theme": "treatment"
+                        },
+                        {
+                            "id": "q-applicant-dentist-address-postcode",
+                            "type": "simple",
+                            "label": "Postcode",
+                            "value": "G2 8JQ",
+                            "sectionId": "p-applicant-dentist-address",
+                            "theme": "treatment"
+                        }
+                    ],
+                    "sectionId": "p-applicant-dentist-address",
                     "theme": "treatment"
                 }
             ]
@@ -572,7 +645,7 @@
                 {
                     "id": "q-applicant-have-you-applied-to-us-before",
                     "type": "simple",
-                    "label": "Have you applied to us before?",
+                    "label": "Have you applied to us before in connection with this or any other crime?",
                     "value": false,
                     "valueLabel": "No",
                     "sectionId": "p-applicant-have-you-applied-to-us-before",
@@ -581,7 +654,7 @@
                 {
                     "id": "q-applicant-have-you-applied-for-or-received-any-other-compensation",
                     "type": "simple",
-                    "label": "Have you applied for other compensation?",
+                    "label": "Have you applied for or received any other form of compensation or damages?",
                     "value": false,
                     "valueLabel": "No",
                     "sectionId": "p-applicant-have-you-applied-for-or-received-any-other-compensation",
@@ -590,8 +663,8 @@
                 {
                     "id": "q-applicant-applied-for-other-compensation-briefly-explain-why-not",
                     "type": "simple",
-                    "label": "Reasons for not applying for other compensation",
-                    "value": "I didn't realise you could apply.",
+                    "label": "Tell us why you have not applied for or received any other compensation or damages",
+                    "value": "gdfs gdfsg dfg dfsg gdfsg",
                     "sectionId": "p-applicant-applied-for-other-compensation-briefly-explain-why-not",
                     "theme": "other-compensation"
                 }
@@ -606,327 +679,27 @@
                     "id": "q-applicant-provide-additional-information",
                     "type": "simple",
                     "label": "Would you like to add any information?",
-                    "value": false,
-                    "valueLabel": "No",
+                    "value": true,
+                    "valueLabel": "Yes",
                     "sectionId": "p-applicant-provide-additional-information",
+                    "theme": "additional-info"
+                },
+                {
+                    "id": "q-applicant-additional-information",
+                    "type": "simple",
+                    "label": "Additional information",
+                    "value": "gdsh g hdgfgfhhdgfh dgf",
+                    "sectionId": "p-applicant-additional-information",
                     "theme": "additional-info"
                 }
             ]
-        },
-        {
-            "type": "theme",
-            "id": "deceased",
-            "title": "Deceased",
-            "values": [
-                {
-                    "id": "deceased-name",
-                    "type": "composite",
-                    "label": "Their name",
-                    "values": [
-                        {
-                            "id": "q-deceased-title",
-                            "type": "simple",
-                            "label": "Title",
-                            "value": "Mr",
-                            "sectionId": "p-deceased-title",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-first-name",
-                            "type": "simple",
-                            "label": "First name",
-                            "value": "Lane",
-                            "sectionId": "p-deceased-name",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-last-name",
-                            "type": "simple",
-                            "label": "Last name",
-                            "value": "Pryce",
-                            "sectionId": "p-deceased-name",
-                            "theme": "deceased"
-                        }
-                    ],
-                    "sectionId": "p-deceased-name",
-                    "theme": "deceased"
-                },
-                {
-                    "id": "q-deceased-date-of-birth",
-                    "type": "simple",
-                    "label": "Enter their date of birth",
-                    "value": "1970-01-01T00:00:00.000Z",
-                    "sectionId": "p-deceased-date-of-birth",
-                    "theme": "deceased",
-                    "format": {
-                        "value": "date-time",
-                        "precision": "YYYY-MM-DD"
-                    }
-                },
-                {
-                    "id": "q-deceased-date-of-death",
-                    "type": "simple",
-                    "label": "Enter their date of death",
-                    "value": "2019-01-01T00:00:00.000Z",
-                    "sectionId": "p-deceased-date-of-death",
-                    "theme": "deceased",
-                    "format": {
-                        "value": "date-time",
-                        "precision": "YYYY-MM-DD"
-                    }
-                },
-                {
-                    "id": "deceased-address",
-                    "type": "composite",
-                    "label": "Their address",
-                    "values": [
-                        {
-                            "id": "q-deceased-building-and-street",
-                            "type": "simple",
-                            "label": "Building and street",
-                            "value": "36 Dickinson street",
-                            "sectionId": "p-deceased-building-and-street",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-building-and-street-2",
-                            "type": "simple",
-                            "label": "Building and street line 2",
-                            "value": "Highgate",
-                            "sectionId": "p-deceased-building-and-street-2",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-building-and-street-3",
-                            "type": "simple",
-                            "label": "Building and street line 3",
-                            "value": "Pripyat",
-                            "sectionId": "p-deceased-building-and-street-3",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-town-or-city",
-                            "type": "simple",
-                            "label": "Town or city",
-                            "value": "Wakefield",
-                            "sectionId": "p-deceased-town-or-city",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-county",
-                            "type": "simple",
-                            "label": "County (optional)",
-                            "value": "West Yorkshire",
-                            "sectionId": "p-deceased-county",
-                            "theme": "deceased"
-                        },
-                        {
-                            "id": "q-deceased-postcode",
-                            "type": "simple",
-                            "label": "Postcode (optional)",
-                            "value": "WF1 1BW",
-                            "sectionId": "p-deceased-postcode",
-                            "theme": "deceased"
-                        }
-                    ],
-                    "sectionId": "p-deceased-address",
-                    "theme": "deceased"
-                }
-            ]
-        },
-        {
-            "type": "theme",
-            "id": "relationship-to-deceased",
-            "title": "relationship-to-deceased",
-            "values": [
-                {
-                    "id": "q-applicant-relationship-to-deceased",
-                    "type": "simple",
-                    "label": "What is your relationship to the person who died?",
-                    "value": "other",
-                    "sectionId": "p-applicant-relationship-to-deceased",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-relationship-other",
-                    "type": "simple",
-                    "label": "Tell us how you are related",
-                    "value": "Associate",
-                    "sectionId": "p-applicant-relationship-to-deceased",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-living-together",
-                    "type": "simple",
-                    "label": "Living together",
-                    "value": true,
-                    "sectionId": "p-applicant-living-together",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-living-apart",
-                    "type": "simple",
-                    "label": "Living apart",
-                    "value": false,
-                    "sectionId": "p-applicant-living-apart",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-contact-with-deceased",
-                    "type": "simple",
-                    "label": "Contact with deceased",
-                    "value": "We were out of touch with each other",
-                    "sectionId": "p-applicant-contact-with-deceased",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-financial-help",
-                    "type": "simple",
-                    "label": "Financial help",
-                    "value": true,
-                    "sectionId": "p-applicant-financial-help",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-physical-help",
-                    "type": "simple",
-                    "label": "Physical help",
-                    "value": false,
-                    "sectionId": "p-applicant-physical-help",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-other-claimants",
-                    "type": "Other claimants",
-                    "value": true,
-                    "sectionId": "p-other-claimants",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-other-claimants-details",
-                    "type": "Other claimants name",
-                    "value": "Don Draper",
-                    "sectionId": "p-other-claimants-details",
-                    "theme": "relationship-to-deceased"
-                },
-                {
-                    "id": "q-applicant-immediate-aftermath",
-                    "type": "Present at incident",
-                    "value": false,
-                    "sectionId": "p-applicant-immediate-aftermath",
-                    "theme": "relationship-to-deceased"
-                }
-            ]
-        },
-        {
-            "type": "theme",
-            "id": "funeral-costs",
-            "title": "funeral-costs",
-            "values": [
-                {
-                    "id": "q-applicant-funeral-costs-paid",
-                    "type": "simple",
-                    "label": "Funeral costs paid",
-                    "value": true,
-                    "sectionId": "p-applicant-funeral-costs-paid",
-                    "theme": "funeral-costs"
-                },
-                {
-                    "id": "q-applicant-funeral-costs-total",
-                    "type": "simple",
-                    "label": "Funeral costs total",
-                    "value": 10002,
-                    "sectionId": "p-applicant-funeral-costs-total",
-                    "theme": "funeral-costs"
-                }
-            ]
-        },
-        {
-            "type": "theme",
-            "id": "residency-statements",
-            "title": "residency-statements",
-            "values": [
-                {
-                    "id": "q-applicant-ordinarily-resident",
-                    "type": "simple",
-                    "label": "Ordinarily resident",
-                    "value": true,
-                    "sectionId": "p-applicant-ordinarily-resident",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-british-citizen",
-                    "type": "simple",
-                    "label": "British citizen",
-                    "value": true,
-                    "sectionId": "p-applicant-british-citizen",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-british-citizen-relative",
-                    "type": "simple",
-                    "label": "British citizen relative",
-                    "value": false,
-                    "sectionId": "p-applicant-british-citizen-relative",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-eu-citizen",
-                    "type": "simple",
-                    "label": "EU citizen",
-                    "value": false,
-                    "sectionId": "p-applicant-eu-citizen",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-eu-citizen-relative",
-                    "type": "simple",
-                    "label": "EU citizen relative",
-                    "value": true,
-                    "sectionId": "p-applicant-eu-citizen-relative",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-other-citizen",
-                    "type": "simple",
-                    "label": "Other citizen",
-                    "value": true,
-                    "sectionId": "p-applicant-other-citizen",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-armed-forces",
-                    "type": "simple",
-                    "label": "Armed forces",
-                    "value": false,
-                    "sectionId": "p-applicant-armed-forces",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-armed-forces-relative",
-                    "type": "simple",
-                    "label": "Armed forces relative",
-                    "value": false,
-                    "sectionId": "p-applicant-armed-forces-relative",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-victim-human-trafficking",
-                    "type": "simple",
-                    "label": "Victim of human trafficking",
-                    "value": false,
-                    "sectionId": "p-applicant-victim-human-trafficking",
-                    "theme": "residency-statements"
-                },
-                {
-                    "id": "q-applicant-applied-for-asylum",
-                    "type": "simple",
-                    "label": "Applied for asylum",
-                    "value": true,
-                    "sectionId": "p-applicant-applied-for-asylum",
-                    "theme": "residency-statements"
-                }
-            ]
         }
-    ]
+    ],
+    "declaration": {
+        "type": "simple",
+        "id": "p-applicant-declaration",
+        "label": "<div id=\"declaration\"> <p class=\"govuk-body\"> You have told us that you are Mr Test Case and you are applying on behalf of yourself.</p> <p class=\"govuk-body\">By submitting this application, you confirm that you understand the following:</p> <ul class=\"govuk-list govuk-list--bullet\"> <li>the information given in this application for compensation is true</li> <li>Criminal Injuries Compensation Authority (CICA) may share and receive information with the following parties for the purposes of processing this application for compensation or verifying information provided:</li> <ul> <li>police, prosecutors and ACRO Criminal Records Office, including for the purposes of obtaining a report of the crime and a record of any criminal convictions you may have</li> <li>medical organisations, practitioners, and police medical staff to obtain medical evidence - including medical records and expert reports. CICA will let you know if this is required</li> <li>any other individuals or organisations where necessary to process this application</li> <li>any representative appointed to act for you in the course of this application</li> </ul> <li>CICA must be notified immediately of any change in circumstances relevant to this application, including any change of address and information about any other claim or proceedings which may give rise to a separate award or payment in respect of your injuries</li> </ul> <h2 class=\"govuk-heading-m\">Providing wrong or misleading information</h2> <p class=\"govuk-body\">If untrue or misleading information is deliberately provided, compensation may be refused and the person(s) responsible may be prosecuted.</p> <p class=\"govuk-body\">Read our privacy notice to see <a href=\"https://www.gov.uk/guidance/cica-privacy-notice\" class=\"govuk-link\" target=\"_blank\">how we use your data (opens in new tab)</a>. </p> <h2 class=\"govuk-heading-m\">Information about appointing a legal or another representative</h2> <p class=\"govuk-body\">It is not necessary to appoint a legal or other representative to act on a victim’s behalf. If a representative is appointed at any stage, please be aware that:</p> <ul class=\"govuk-list govuk-list--bullet\"> <li>CICA cannot meet their costs </li> <li>we will only communicate directly with any appointed representative</li> </ul> <p class=\"govuk-body\">If we make an award, we will pay it only to the victim or their legal representative. This is unless the application has been made on behalf of:</p> <ul class=\"govuk-list govuk-list--bullet\"> <li>an adult who cannot manage their own financial affairs</li> <li>a child who is under 18 years of age</li> </ul> <p class=\"govuk-body\"> It is our general policy to put an award for a child in an interest-earning deposit account until they reach the age of 18.</p> <p class=\"govuk-body\"> If a monetary award is to be made and there is a dispute about outstanding legal fees, it is our policy to retain the disputed amount until the dispute has been resolved.</p> <p class=\"govuk-body\"> If it is decided that a representative’s services are no longer required, CICA must be notified in writing as soon as possible.</p> </div>",
+        "value": "i-agree",
+        "valueLabel": "I have read and understood the declaration"
+    }
 }
