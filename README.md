@@ -67,9 +67,11 @@ To check the localstack container is running, you can run `docker ps`
 I would recommend creating an account and downloading the [Localstack desktop](https://app.localstack.cloud/dashboard) to make life easier.
 
 - In `function/integration.test.js` unskip the `'Should run the function handler'` test
-Use `npm run test integration.test.js` to run the function handler locally which will start polling.
+Use `npm run test-integration` to run the function handler locally which will start polling.
 
 The lambda function polls the queue that was created, so in order for it to pick up anything to process, ensure it contains a valid message. A message can be sent using `node Makefile.mjs send-message` once the queue has been created.
+
+If you need to remove all messages from the queue, for example to start testing from scratch run `node Makefile.mjs purge-queue`
 
 # Test
 To run all tests with test coverage, use:
