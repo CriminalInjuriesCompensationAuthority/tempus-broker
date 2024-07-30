@@ -76,11 +76,7 @@ function mapPreviousApplication(applicationData, dbApplicationForm) {
     }
 }
 
-function setPreviouslyAppliedEligibility(applicationData, dbApplicationForm) {
-    if (dbApplicationForm.is_eligible === 'N') {
-        return; // Another rule has already set eligibility to No
-    }
-
+function checkEligibilityPreviousApplications(applicationData) {
     const answers = getQuestionAnswersMap(applicationData);
     const someoneElseApplied =
         answers['q-applicant-someone-else-applied-before-for-this-crime'] === ANSWER_YES ||
@@ -88,7 +84,7 @@ function setPreviouslyAppliedEligibility(applicationData, dbApplicationForm) {
     const applicantAppliedBefore =
         answers['q-applicant-applied-before-for-this-crime'] === ANSWER_TRUE;
 
-    dbApplicationForm.is_eligible = someoneElseApplied || applicantAppliedBefore ? 'N' : 'Y';
+    return someoneElseApplied || applicantAppliedBefore ? false : true;
 }
 
-module.exports = {questionIDs, mapPreviousApplication, setPreviouslyAppliedEligibility};
+module.exports = {questionIDs, mapPreviousApplication, checkEligibilityPreviousApplications};
