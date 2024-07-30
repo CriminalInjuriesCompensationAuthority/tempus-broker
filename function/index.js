@@ -7,7 +7,7 @@ const createSqsService = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
-const checkEligibility = require('./services/eligibility-checker/index');
+const setEligibility = require('./services/eligibility-checker/index');
 const createJob = require('./services/kta/index');
 const addressInvoiceMapper = require('./services/address-invoice-mapper');
 const logger = require('./services/logging/logger');
@@ -91,7 +91,7 @@ async function handler(event, context) {
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
         logger.info('Checking application eligibility');
-        checkEligibility(s3ApplicationData, applicationFormJson);
+        setEligibility(s3ApplicationData, applicationFormJson);
 
         const addressDetailsWithInvoices = addressInvoiceMapper(
             addressDetailsJson,
