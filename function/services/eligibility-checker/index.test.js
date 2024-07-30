@@ -269,7 +269,7 @@ describe('checkEligibility', () => {
 
         checkEligibility(applicationData, applicationObject);
         expect(applicationObject.is_eligible).toBe('Y');
-    });
+    });   
 
     it(`Should be ineligible if the applicant was an other relation to the victim
          and did not pay for the funeral and has not previously applied`, () => {
@@ -341,5 +341,40 @@ describe('checkEligibility', () => {
         };
         checkEligibility(applicationData, applicationObject);
         expect(applicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be eligible if the applicant did not select OTHER as incident type', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            pi_type_cause: 'PHYS,FMLY,AORV'
+        };
+
+        const applicationData = {
+            meta: {
+                caseReference: '23\\327507',
+                submittedDate: '2023-05-19T13:06:12.693Z',
+                splitFuneral: false
+            },
+            themes: [
+                {
+                    type: 'theme',
+                    id: 'about-application',
+                    title: 'About your application',
+                    values: [
+                        {
+                            id: 'q-applicant-applied-before-for-this-crime',
+                            type: 'simple',
+                            value: false,
+                            theme: 'about-application'
+                        }
+                    ]
+                }
+            ]
+        };
+        checkEligibility(applicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
     });
 });

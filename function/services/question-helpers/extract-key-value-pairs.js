@@ -3,7 +3,7 @@
 function extractKeyValuePairs(data, targetIds) {
     const resultMap = new Map();
 
-    if (data.themes) {
+    if (data?.themes) {
         data.themes.forEach(theme => {
             theme.values.forEach(valueObj => {
                 if (targetIds.includes(valueObj.id)) {

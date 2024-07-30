@@ -323,9 +323,10 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 break;
             }
 
-            // Add the incident type codes
             case data.id === 'q-applicant-incident-type': {
-                // TODO: this if statement only needs to exist for 1 month after deployment of incident type changes to ensure old applications get through
+                // TODO: Remove this check 1 month after deployment of incident type changes
+                // This ensures that old applications with different data structures are handled properly
+                
                 if (typeof data.value === 'string') {
                     columnValue = data.value;
                 } else {
@@ -335,6 +336,7 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
             }
+            
 
             // If custom mapping is not required, map in a generic way
             default:
