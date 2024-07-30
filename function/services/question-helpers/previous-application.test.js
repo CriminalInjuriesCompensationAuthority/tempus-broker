@@ -1,6 +1,9 @@
 'use strict';
 
-const {mapPreviousApplication, setPreviouslyAppliedEligibility} = require('./previous-application');
+const {
+    mapPreviousApplication,
+    checkEligibilityPreviousApplications:isEligible
+} = require('./previous-application');
 
 describe('mapPreviousApplication', () => {
     describe('applicant ', () => {
@@ -640,62 +643,8 @@ describe('mapPreviousApplication', () => {
     });
 });
 
-describe('setPreviouslyAppliedEligibility', () => {
-    describe('applicant', () => {
-        describe('already set as in-eligible', () => {
-            it('Should remain in-eligible when already set as in-eligible and all questions answered No', () => {
-                const applicationData = {
-                    meta: {
-                        caseReference: '23\\327507',
-                        submittedDate: '2023-05-19T13:06:12.693Z',
-                        splitFuneral: false
-                    },
-                    themes: [
-                        {
-                            type: 'theme',
-                            id: 'about-application',
-                            title: 'About your application',
-                            values: [
-                                {
-                                    id: 'q-applicant-applied-before-for-this-crime',
-                                    type: 'simple',
-                                    value: false,
-                                    theme: 'about-application'
-                                },
-                                {
-                                    id: 'q-applicant-someone-else-applied-before-for-this-crime',
-                                    type: 'simple',
-                                    value: 'no',
-                                    theme: 'about-application'
-                                }
-                            ]
-                        },
-                        {
-                            type: 'theme',
-                            id: 'other-compensation',
-                            title: 'Other compensation',
-                            values: [
-                                {
-                                    id: 'q-applicant-have-you-applied-to-us-before',
-                                    type: 'simple',
-                                    value: false,
-                                    theme: 'other-compensation'
-                                }
-                            ]
-                        }
-                    ]
-                };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'N',
-                    prev_app_for_ci_comp: 'N',
-                    is_eligible: 'N'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('N');
-            });
-        });
-
-        describe('eligibility has not previously been set', () => {
+describe('previouslyAppliedEligibility', () => {
+    describe('applicant', () => {       
             it('Should be eligible when all previous app questions asked are false', () => {
                 const applicationData = {
                     meta: {
@@ -738,12 +687,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'N',
-                    prev_app_for_ci_comp: 'N'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it('Should be eligible when all previous app questions have not been asked and applied before to cica answered No', () => {
@@ -769,12 +713,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'N',
-                    prev_app_for_ci_comp: 'N'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it('Should be eligible when all previous app questions have not been asked and applied before to cica answered Yes', () => {
@@ -800,12 +739,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it(`Should be eligible when applied-before-for-this-crime answered 
@@ -851,12 +785,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it(`Should be eligible when applied-before-for-this-crime answered 
@@ -902,12 +831,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it(`Should be in-eligible when applied-before-for-this-crime answered 
@@ -953,12 +877,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('N');
+                expect(isEligible(applicationData)).toBe(false);
             });
 
             it(`Should be in-eligible when applicant applied-before-for-this-crime answered 
@@ -998,71 +917,12 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('N');
+                expect(isEligible(applicationData)).toBe(false);
             });
-        });
+        
     });
 
     describe('proxy', () => {
-        describe('already set as in-eligible', () => {
-            it('Should remain in-eligible when already set as in-eligible and all questions answered No by proxy', () => {
-                const applicationData = {
-                    meta: {
-                        caseReference: '23\\327507',
-                        submittedDate: '2023-05-19T13:06:12.693Z',
-                        splitFuneral: false
-                    },
-                    themes: [
-                        {
-                            type: 'theme',
-                            id: 'about-application',
-                            title: 'About your application',
-                            values: [
-                                {
-                                    id: 'q-applicant-applied-before-for-this-crime',
-                                    type: 'simple',
-                                    value: false,
-                                    theme: 'about-application'
-                                },
-                                {
-                                    id: 'q-proxy-someone-else-applied-before-for-this-crime',
-                                    type: 'simple',
-                                    value: false,
-                                    theme: 'about-application'
-                                }
-                            ]
-                        },
-                        {
-                            type: 'theme',
-                            id: 'other-compensation',
-                            title: 'Other compensation',
-                            values: [
-                                {
-                                    id: 'q-applicant-have-you-applied-to-us-before',
-                                    type: 'simple',
-                                    value: false,
-                                    theme: 'other-compensation'
-                                }
-                            ]
-                        }
-                    ]
-                };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'N',
-                    prev_app_for_ci_comp: 'N',
-                    is_eligible: 'N'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('N');
-            });
-        });
-
-        describe('eligibility has not previously been set', () => {
             it('Should be eligible when all previous app questions asked are false', () => {
                 const applicationData = {
                     meta: {
@@ -1105,12 +965,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'N',
-                    prev_app_for_ci_comp: 'N'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it(`Should be eligible when applied-before-for-this-crime answered 
@@ -1156,12 +1011,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('Y');
+                expect(isEligible(applicationData)).toBe(true);
             });
 
             it(`Should be in-eligible when applied-before-for-this-crime answered 
@@ -1207,13 +1057,7 @@ describe('setPreviouslyAppliedEligibility', () => {
                         }
                     ]
                 };
-                const dbApplicationForm = {
-                    previous_application_submitted: 'Y',
-                    prev_app_for_ci_comp: 'Y'
-                };
-                setPreviouslyAppliedEligibility(applicationData, dbApplicationForm);
-                expect(dbApplicationForm.is_eligible).toBe('N');
+                expect(isEligible(applicationData)).toBe(false);
             });
-        });
     });
 });
