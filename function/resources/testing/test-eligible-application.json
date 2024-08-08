@@ -2,7 +2,10 @@
     "meta": {
         "caseReference": "24\\756458",
         "channel": "telephone",
-        "submittedDate": "2024-06-05T12:02:17.558Z"
+        "submittedDate": "2024-06-05T12:02:17.558Z",
+        "owner": {
+            "isAuthenticated": false
+        }
     },
     "themes": [
         {

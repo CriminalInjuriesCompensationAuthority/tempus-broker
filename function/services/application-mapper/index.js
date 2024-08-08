@@ -35,6 +35,10 @@ async function mapApplicationDataToOracleObject(data, applicationFormJson, addre
         if (key === 'channel') {
             applicationFormJson.channel = value === 'telephone' ? 'T' : 'W';
         }
+        if( key === 'owner'){
+            applicationFormJson.cica_account = value.isAuthenticated ? 'Y' : 'N';
+        }
+
 
         // ignore applied before questions as they are handled at the start of this function
         // and those questions can map to the same database columns

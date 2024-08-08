@@ -68,7 +68,8 @@ function getDefaultApplicationForm() {
         residency_06: 'N',
         residency_07: 'N',
         residency_08: 'N',
-        earn_lost_gt_28_weeks: 'N'
+        earn_lost_gt_28_weeks: 'N',
+        cica_account: 'N'
     };
 }
 
