@@ -51,6 +51,10 @@ Configure local AWS environment:
 
 The tempus broker uses localstack for easy setup of AWS services and resources. The setup can be found in the Makefile of this directory.
 
+You will also require a local running [Tariff DB](https://github.com/CriminalInjuriesCompensationAuthority/q-dev-utilities/commit/6fd7c37c1164b16206f2093541f12823368a9a25) within your a docker container, ensure that docker is up and the tariff DB instance is running.
+Ensure you have used the latest version of the create-tables.sql script to build your tariff DB or you may encounter errors. 
+You can also connect a DB Gui for example [SQL Developer](https://www.oracle.com/uk/database/sqldeveloper/) to view your local tariff DB instance. 
+
 In the Makefile.mjs `create-secrets` job, you will need update the connection details as required. The defaults will work with the DB instance provided by the local development environment.
 
 Once this is done, open this project directory in terminal and run:
@@ -66,10 +70,9 @@ To check the localstack container is running, you can run `docker ps`
 
 I would recommend creating an account and downloading the [Localstack desktop](https://app.localstack.cloud/dashboard) to make life easier.
 
-- In `function/integration.test.js` unskip the `'Should run the function handler'` test
-Use `npm run test-integration` to run the function handler locally which will start polling.
-
 The lambda function polls the queue that was created, so in order for it to pick up anything to process, ensure it contains a valid message. A message can be sent using `node Makefile.mjs send-message` once the queue has been created.
+
+Use `npm run test:integration` to run the function handler locally which will start polling.
 
 If you need to remove all messages from the queue, for example to start testing from scratch run `node Makefile.mjs purge-queue`
 

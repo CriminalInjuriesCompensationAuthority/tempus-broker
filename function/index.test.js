@@ -7,7 +7,8 @@ const mapApplicationDataToOracleObject = require('./services/application-mapper/
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
 const getParameter = require('./services/ssm');
-const {handler} = require('./index');
+const {handler, handleTempusBrokerMessage} = require('./index');
+const fs = require('fs');
 
 jest.mock('./services/s3/index');
 jest.mock('./services/sqs/index');
@@ -417,5 +418,12 @@ describe('handler', () => {
 
         expect(result).toBe('Nothing to process');
         expect(receiveSQS).toHaveBeenCalled();
+    });
+
+     it('Should parse message body correctly', async () => {
+        const sqsMessage = fs.readFileSync('function/resources/testing/sqsMessage.json');
+        const response = handleTempusBrokerMessage(JSON.parse(sqsMessage).Messages[0].Body);
+        expect(Object.keys(response)).toContain('applicationJSONDocumentSummaryKey');
+        expect(Object.keys(response)).toContain('applicationPDFDocumentSummaryKey');
     });
 });
