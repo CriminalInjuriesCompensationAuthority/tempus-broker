@@ -322,6 +322,22 @@ function mapApplicationQuestion(data, applicationForm, addressDetails) {
                 }
                 break;
             }
+
+            case data.id === 'q-applicant-incident-type': {
+                // TODO: Remove this check 1 month after deployment of incident type changes
+                // This ensures that old applications with different data structures are handled properly
+                
+                if (typeof data.value === 'string') {
+                    columnValue = data.value;
+                } else {
+                    // the value is an array
+                    // convert it to a comma-separated string
+                    columnValue = Object.values(data.value).join(',');
+                }
+                break;
+            }
+            
+
             // If custom mapping is not required, map in a generic way
             default:
                 // Check to see if value can be parsed from an ISO to a DateTime

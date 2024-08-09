@@ -842,4 +842,67 @@ describe('Application mapper', () => {
             expect(applicationFormJson.prev_app_for_ci_comp).toBe('N');
         });
     });
+
+    describe('CICA_ACCOUNT column mapping for logged in users', () => {
+        it('Should set columns to "N" if owner not present', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                }
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.cica_account).toBe('N');
+        });
+
+        it('Should set columns to "N" if owner isAuthenticated is false', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false,
+                    owner: {ownerId: 'A3vCv24d7c8mBNs', isAuthenticated: false}
+                }
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.cica_account).toBe('N');
+        });
+
+        it('Should set columns to "Y" if owner isAuthenticated is true', async () => {
+            applicationSummaryJson = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false,
+                    owner: {ownerId: 'A3vCv24d7c8mBNs', isAuthenticated: true}
+                }
+            };
+
+            oracleObject = await mapApplicationDataToOracleObject(
+                applicationSummaryJson,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+            applicationFormJson = Object.values(oracleObject)[0][0].APPLICATION_FORM;
+
+            expect(applicationFormJson.cica_account).toBe('Y');
+        });
+
+    });
+
 });

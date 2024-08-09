@@ -3,7 +3,7 @@
 const config = {
     testTimeout: 20000,
     transformIgnorePatterns: ['/dist/.+\\.js'],
-    testPathIgnorePatterns: ['/function/integration.test.js']
+    testMatch: ['**/function/integration.test.js']
 };
 
 config.coverageThreshold = {
