@@ -6,6 +6,9 @@ on:
       - '**/LICENSE'
       - '**/.gitignore'
 
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
