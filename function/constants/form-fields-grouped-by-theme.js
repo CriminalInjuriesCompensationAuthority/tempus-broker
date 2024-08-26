@@ -162,7 +162,9 @@ module.exports = Object.freeze({
         'q-applicant-have-you-applied-for-or-received-any-other-compensation':
             'claimed_other_compensation',
         'q-applicant-applied-for-other-compensation-briefly-explain-why-not':
-            'why_no_other_compensation'
+            'why_no_other_compensation',
+        'q-applicant-who-did-you-apply-to': 'OTHER_COMP_DETAILS',
+        'q-how-much-was-award': 'OTHER_COMP_AWARDED'
     },
     pregnancy: {
         'q-applicant-pregnancy': 'pregnancy',

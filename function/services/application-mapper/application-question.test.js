@@ -450,4 +450,24 @@ describe('Application question', () => {
         const mappedQuestion = mapApplicationQuestion(physicalInjuryData);
         expect(mappedQuestion.columnValue).toBe('OTHER');
     });
+
+    it('Should map which other compensation a claimant applied for', () => {
+        const questionData = {
+            theme: 'other-compensation',
+            id: 'q-applicant-who-did-you-apply-to',
+            value: 'I applied to someone else'
+        };
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('I applied to someone else');
+    });
+
+    it('Should map how much other compensation a claimant was awarded', () => {
+        const questionData = {
+            theme: 'other-compensation',
+            id: 'q-how-much-was-award',
+            value: '300'
+        };
+        const mappedQuestion = mapApplicationQuestion(questionData);
+        expect(mappedQuestion.columnValue).toBe('300');
+    });
 });
