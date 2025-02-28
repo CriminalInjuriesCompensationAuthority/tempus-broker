@@ -44,6 +44,25 @@ function handleTempusBrokerMessage(data) {
     return s3Keys;
 }
 
+
+function getAnswerFromThemes (themes, themeId, answerId) {
+    return themes.find(theme => theme.id === themeId)
+        ?.values?.find(answer => answer.id === answerId)
+        ?.value;
+}
+
+function getApplicationOrigin(applicationData){
+    const testEmails = process.env.TEST_EMAILS || '';
+
+    const emailAddresses = [
+        getAnswerFromThemes(applicationData.themes, 'applicant-details', 'q-applicant-enter-your-email-address'),
+        getAnswerFromThemes(applicationData.themes, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
+        getAnswerFromThemes(applicationData.themes, 'rep-details', 'q-rep-email-address')
+    ];
+
+    return emailAddresses.some(email => email && testEmails.includes(email)) ? 'internal' : 'external';
+}
+
 async function handler(event, context) {
     const applicationFormDefault = getApplicationFormDefault();
     const addressDetailsDefault = getAddressDetailsDefault();
@@ -78,6 +97,13 @@ async function handler(event, context) {
             bucketName,
             Object.values(s3Keys)[1]
         );
+
+        const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+        
+        if (maintenanceMode && getApplicationOrigin(s3ApplicationData) === 'external') {
+            logger.info('External traffic received. Maintenance mode is on.');
+            return 'Nothing to process';
+        }
 
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(
