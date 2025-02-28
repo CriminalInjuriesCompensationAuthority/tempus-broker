@@ -15,6 +15,8 @@ const getParameter = require('./services/ssm');
 const getApplicationFormDefault = require('./constants/application-form-default');
 const getAddressDetailsDefault = require('./constants/address-details-default');
 
+const maintenanceMode = process.env.MAINTENANCE_MODE === "true";
+
 function serialize(object) {
     return JSON.stringify(object, null, 2);
 }
@@ -78,6 +80,16 @@ async function handler(event, context) {
             bucketName,
             Object.values(s3Keys)[1]
         );
+
+        // Check if the application has come from within CICA
+        // the channel value will be set to telephone if it does
+        const internalTraffic = s3ApplicationData?.channel === 'telephone';
+
+        // Return early if the service is in maintenance mode and the traffic is external.
+        if (maintenanceMode && !internalTraffic) {
+            logger.info('External traffic received. Maintenance mode is on.');
+            return 'Nothing to process';
+        }
 
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(
