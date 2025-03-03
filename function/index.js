@@ -15,8 +15,6 @@ const getParameter = require('./services/ssm');
 const getApplicationFormDefault = require('./constants/application-form-default');
 const getAddressDetailsDefault = require('./constants/address-details-default');
 
-const maintenanceMode = process.env.MAINTENANCE_MODE === "true";
-
 function serialize(object) {
     return JSON.stringify(object, null, 2);
 }
@@ -82,8 +80,16 @@ async function handler(event, context) {
         );
 
         // Check if the application has come from within CICA
-        // the channel value will be set to telephone if it does
-        const internalTraffic = s3ApplicationData?.channel === 'telephone';
+        // the email value will be set to an allowed value if it does
+        const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+        const testEmails = process.env.TEST_EMAILS;
+
+        const emailAddress = s3ApplicationData?.themes
+            ?.filter(theme => theme.id === 'applicant-details')[0]
+            ?.values?.filter(answer => answer.id === 'q-applicant-enter-your-email-address')[0]
+            ?.value;
+
+        const internalTraffic = testEmails.includes(emailAddress);
 
         // Return early if the service is in maintenance mode and the traffic is external.
         if (maintenanceMode && !internalTraffic) {

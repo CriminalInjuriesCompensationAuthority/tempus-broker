@@ -45,6 +45,8 @@ describe('handler', () => {
         // Mock environment variables
         process.env.TEMPUS_QUEUE = 'fake-queue-url';
         process.env.NODE_ENV = 'test';
+        process.env.TEST_EMAILS = 'test@test.co.uk';
+        process.env.MAINTENANCE_MODE = false;
 
         // Mock SQS service
         const receiveSQS = jest.fn().mockResolvedValue({
@@ -122,6 +124,8 @@ describe('handler', () => {
         // Mock environment variables
         process.env.TEMPUS_QUEUE = 'fake-queue-url';
         process.env.NODE_ENV = 'test';
+        process.env.TEST_EMAILS = 'test@test.co.uk';
+        process.env.MAINTENANCE_MODE = false;
 
         // Mock SQS service
         const receiveSQS = jest.fn().mockResolvedValue({
@@ -200,6 +204,8 @@ describe('handler', () => {
         // Mock environment variables
         process.env.TEMPUS_QUEUE = 'fake-queue-url';
         process.env.NODE_ENV = 'test';
+        process.env.TEST_EMAILS = 'test@test.co.uk';
+        process.env.MAINTENANCE_MODE = false;
 
         // Mock SQS service
         const receiveSQS = jest.fn().mockResolvedValue({
@@ -305,6 +311,8 @@ describe('handler', () => {
         // Mock environment variables
         process.env.TEMPUS_QUEUE = 'fake-queue-url';
         process.env.NODE_ENV = 'test';
+        process.env.TEST_EMAILS = 'test@test.co.uk';
+        process.env.MAINTENANCE_MODE = false;
 
         // Mock SQS service
         const receiveSQS = jest.fn().mockResolvedValue({
@@ -420,10 +428,173 @@ describe('handler', () => {
         expect(receiveSQS).toHaveBeenCalled();
     });
 
-     it('Should parse message body correctly', async () => {
+    it('Should parse message body correctly', async () => {
         const sqsMessage = fs.readFileSync('function/resources/testing/sqsMessage.json');
         const response = handleTempusBrokerMessage(JSON.parse(sqsMessage).Messages[0].Body);
         expect(Object.keys(response)).toContain('applicationJSONDocumentSummaryKey');
         expect(Object.keys(response)).toContain('applicationPDFDocumentSummaryKey');
+    });
+
+    describe('In maintenance mode', () => {
+        it('should return "Nothing to process" if external traffic is received', async () => {
+            // Mock environment variables
+            process.env.TEMPUS_QUEUE = 'fake-queue-url';
+            process.env.NODE_ENV = 'test';
+            process.env.TEST_EMAILS = 'test@test.co.uk';
+            process.env.MAINTENANCE_MODE = true;
+
+            // Mock SQS service
+            const receiveSQS = jest.fn().mockResolvedValue({
+                Messages: [
+                    {
+                        Body: JSON.stringify({
+                            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        }),
+                        ReceiptHandle: 'fake-handle'
+                    }
+                ]
+            });
+            const deleteSQS = jest.fn();
+            createSqsService.mockReturnValue({receiveSQS, deleteSQS});
+
+            // Mock other services and functions
+            getParameter.mockResolvedValue('fake-bucket-name');
+            const s3applicationData = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'applicant-details',
+                        title: 'Your details',
+                        values: [
+                            {
+                                id: 'q-applicant-enter-your-email-address',
+                                type: 'simple',
+                                label: 'Email address',
+                                value: 'real@address.co.uk',
+                                sectionId: 'p-applicant-confirmation-method',
+                                theme: 'applicant-details'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            s3.retrieveObjectFromBucket.mockResolvedValue(s3applicationData);
+            const applicationForm = {
+                prefix: 'U',
+                section_ref: 'TEMP',
+                NEW_OAS: 'Y',
+                is_eligible: 'Y',
+                claim_reference_number: '327507',
+                ref_year: '23',
+                created_date: '19-MAY-2023'
+            };
+
+            mapApplicationDataToOracleObject.mockResolvedValue({
+                tables: [
+                    {
+                        APPLICATION_FORM: applicationForm
+                    },
+                    {
+                        ADDRESS_DETAILS: addressDetails
+                    }
+                ]
+            });
+
+            createDBPool.mockResolvedValue({});
+            insertIntoTempus.mockResolvedValue();
+
+            const event = {}; // Your mock event
+            const context = {}; // Your mock context
+            const result = await handler(event, context);
+
+            expect(result).toBe('Nothing to process');
+            expect(receiveSQS).toHaveBeenCalled();
+        });
+        it('should return "Success!" if test traffic is received', async () => {
+            // Mock environment variables
+            process.env.TEMPUS_QUEUE = 'fake-queue-url';
+            process.env.NODE_ENV = 'test';
+            process.env.TEST_EMAILS = 'test@test.co.uk';
+            process.env.MAINTENANCE_MODE = true;
+
+            // Mock SQS service
+            const receiveSQS = jest.fn().mockResolvedValue({
+                Messages: [
+                    {
+                        Body: JSON.stringify({
+                            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        }),
+                        ReceiptHandle: 'fake-handle'
+                    }
+                ]
+            });
+            const deleteSQS = jest.fn();
+            createSqsService.mockReturnValue({receiveSQS, deleteSQS});
+
+            // Mock other services and functions
+            getParameter.mockResolvedValue('fake-bucket-name');
+            const s3applicationData = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'applicant-details',
+                        title: 'Your details',
+                        values: [
+                            {
+                                id: 'q-applicant-enter-your-email-address',
+                                type: 'simple',
+                                label: 'Email address',
+                                value: 'test@test.co.uk',
+                                sectionId: 'p-applicant-confirmation-method',
+                                theme: 'applicant-details'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            s3.retrieveObjectFromBucket.mockResolvedValue(s3applicationData);
+            const applicationForm = {
+                prefix: 'U',
+                section_ref: 'TEMP',
+                NEW_OAS: 'Y',
+                is_eligible: 'Y',
+                claim_reference_number: '327507',
+                ref_year: '23',
+                created_date: '19-MAY-2023'
+            };
+
+            mapApplicationDataToOracleObject.mockResolvedValue({
+                tables: [
+                    {
+                        APPLICATION_FORM: applicationForm
+                    },
+                    {
+                        ADDRESS_DETAILS: addressDetails
+                    }
+                ]
+            });
+
+            createDBPool.mockResolvedValue({});
+            insertIntoTempus.mockResolvedValue();
+
+            const event = {}; // Your mock event
+            const context = {}; // Your mock context
+            const result = await handler(event, context);
+
+            expect(result).toBe('Success!');
+            expect(receiveSQS).toHaveBeenCalled();
+        });
     });
 });
