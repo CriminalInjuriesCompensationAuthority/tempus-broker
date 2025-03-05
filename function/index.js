@@ -84,12 +84,21 @@ async function handler(event, context) {
         const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
         const testEmails = process.env.TEST_EMAILS;
 
-        const emailAddress = s3ApplicationData?.themes
+        const applicantEmailAddress = s3ApplicationData?.themes
             ?.filter(theme => theme.id === 'applicant-details')[0]
             ?.values?.filter(answer => answer.id === 'q-applicant-enter-your-email-address')[0]
             ?.value;
+        const mainapplicantEmailAddress = s3ApplicationData?.themes
+            ?.filter(theme => theme.id === 'main-applicant-details')[0]
+            ?.values?.filter(answer => answer.id === 'q-mainapplicant-enter-your-email-address')[0]
+            ?.value;
+        const repEmailAddress = s3ApplicationData?.themes
+            ?.filter(theme => theme.id === 'rep-details')[0]
+            ?.values?.filter(answer => answer.id === 'q-rep-email-address')[0]?.value;
 
-        const internalTraffic = testEmails.includes(emailAddress);
+        const emailAddresses = [applicantEmailAddress, mainapplicantEmailAddress, repEmailAddress];
+
+        const internalTraffic = emailAddresses.some(email => testEmails.includes(email));
 
         // Return early if the service is in maintenance mode and the traffic is external.
         if (maintenanceMode && !internalTraffic) {
