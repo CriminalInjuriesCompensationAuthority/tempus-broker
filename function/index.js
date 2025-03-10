@@ -44,6 +44,13 @@ function handleTempusBrokerMessage(data) {
     return s3Keys;
 }
 
+
+function getAnswerFromThemes (themes, themeId, answerId) {
+    return themes?.find(theme => theme.id === themeId)
+        ?.values?.find(answer => answer.id === answerId)
+        ?.value;
+}
+
 async function handler(event, context) {
     const applicationFormDefault = getApplicationFormDefault();
     const addressDetailsDefault = getAddressDetailsDefault();
@@ -82,23 +89,17 @@ async function handler(event, context) {
         // Check if the application has come from within CICA
         // the email value will be set to an allowed value if it does
         const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
-        const testEmails = process.env.TEST_EMAILS;
+        const testEmails = process.env.TEST_EMAILS || '';
 
-        const applicantEmailAddress = s3ApplicationData?.themes
-            ?.filter(theme => theme.id === 'applicant-details')[0]
-            ?.values?.filter(answer => answer.id === 'q-applicant-enter-your-email-address')[0]
-            ?.value;
-        const mainapplicantEmailAddress = s3ApplicationData?.themes
-            ?.filter(theme => theme.id === 'main-applicant-details')[0]
-            ?.values?.filter(answer => answer.id === 'q-mainapplicant-enter-your-email-address')[0]
-            ?.value;
-        const repEmailAddress = s3ApplicationData?.themes
-            ?.filter(theme => theme.id === 'rep-details')[0]
-            ?.values?.filter(answer => answer.id === 'q-rep-email-address')[0]?.value;
+        const themesArray = s3ApplicationData?.themes || [];
 
-        const emailAddresses = [applicantEmailAddress, mainapplicantEmailAddress, repEmailAddress];
+        const emailAddresses = [
+            getAnswerFromThemes(themesArray, 'applicant-details', 'q-applicant-enter-your-email-address'),
+            getAnswerFromThemes(themesArray, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
+            getAnswerFromThemes(themesArray, 'rep-details', 'q-rep-email-address')
+        ];
 
-        const internalTraffic = emailAddresses.some(email => testEmails.includes(email));
+        const internalTraffic = emailAddresses.some(email => email && testEmails.includes(email));
 
         // Return early if the service is in maintenance mode and the traffic is external.
         if (maintenanceMode && !internalTraffic) {
