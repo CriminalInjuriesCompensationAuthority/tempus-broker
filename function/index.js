@@ -46,9 +46,23 @@ function handleTempusBrokerMessage(data) {
 
 
 function getAnswerFromThemes (themes, themeId, answerId) {
-    return themes?.find(theme => theme.id === themeId)
+    return themes.find(theme => theme.id === themeId)
         ?.values?.find(answer => answer.id === answerId)
         ?.value;
+}
+
+function getApplicationOrigin(applicationData){
+    const testEmails = process.env.TEST_EMAILS || '';
+
+    const themesArray = applicationData.themes || [];
+
+    const emailAddresses = [
+        getAnswerFromThemes(themesArray, 'applicant-details', 'q-applicant-enter-your-email-address'),
+        getAnswerFromThemes(themesArray, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
+        getAnswerFromThemes(themesArray, 'rep-details', 'q-rep-email-address')
+    ];
+
+    return emailAddresses.some(email => email && testEmails.includes(email)) ? "internal" : "external";
 }
 
 async function handler(event, context) {
@@ -86,23 +100,10 @@ async function handler(event, context) {
             Object.values(s3Keys)[1]
         );
 
-        // Check if the application has come from within CICA
-        // the email value will be set to an allowed value if it does
         const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
-        const testEmails = process.env.TEST_EMAILS || '';
-
-        const themesArray = s3ApplicationData?.themes || [];
-
-        const emailAddresses = [
-            getAnswerFromThemes(themesArray, 'applicant-details', 'q-applicant-enter-your-email-address'),
-            getAnswerFromThemes(themesArray, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
-            getAnswerFromThemes(themesArray, 'rep-details', 'q-rep-email-address')
-        ];
-
-        const internalTraffic = emailAddresses.some(email => email && testEmails.includes(email));
 
         // Return early if the service is in maintenance mode and the traffic is external.
-        if (maintenanceMode && !internalTraffic) {
+        if (maintenanceMode && getApplicationOrigin(s3ApplicationData) === 'external') {
             logger.info('External traffic received. Maintenance mode is on.');
             return 'Nothing to process';
         }
