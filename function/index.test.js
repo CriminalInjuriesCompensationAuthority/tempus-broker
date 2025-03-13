@@ -436,15 +436,19 @@ describe('handler', () => {
     });
 
     describe('In maintenance mode', () => {
-        it('should return "Nothing to process" if external traffic is received', async () => {
+        let receiveSQS, deleteSQS;
+        let event, context;
+        let s3applicationData;
+
+        beforeEach(() => {
             // Mock environment variables
             process.env.TEMPUS_QUEUE = 'fake-queue-url';
             process.env.NODE_ENV = 'test';
-            process.env.TEST_EMAILS = 'test@test.co.uk';
+            process.env.TEST_EMAILS = '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
             process.env.MAINTENANCE_MODE = true;
 
             // Mock SQS service
-            const receiveSQS = jest.fn().mockResolvedValue({
+            receiveSQS = jest.fn().mockResolvedValue({
                 Messages: [
                     {
                         Body: JSON.stringify({
@@ -454,12 +458,11 @@ describe('handler', () => {
                     }
                 ]
             });
-            const deleteSQS = jest.fn();
-            createSqsService.mockReturnValue({receiveSQS, deleteSQS});
+            deleteSQS = jest.fn();
+            createSqsService.mockReturnValue({ receiveSQS, deleteSQS });
 
-            // Mock other services and functions
-            getParameter.mockResolvedValue('fake-bucket-name');
-            const s3applicationData = {
+            // Define shared mock data
+            s3applicationData = {
                 meta: {
                     caseReference: '23\\327507',
                     submittedDate: '2023-05-19T13:06:12.693Z',
@@ -475,7 +478,7 @@ describe('handler', () => {
                                 id: 'q-applicant-enter-your-email-address',
                                 type: 'simple',
                                 label: 'Email address',
-                                value: 'real@address.co.uk',
+                                value: '', // Will be set per test
                                 sectionId: 'p-applicant-confirmation-method',
                                 theme: 'applicant-details'
                             }
@@ -485,20 +488,19 @@ describe('handler', () => {
             };
 
             s3.retrieveObjectFromBucket.mockResolvedValue(s3applicationData);
-            const applicationForm = {
-                prefix: 'U',
-                section_ref: 'TEMP',
-                NEW_OAS: 'Y',
-                is_eligible: 'Y',
-                claim_reference_number: '327507',
-                ref_year: '23',
-                created_date: '19-MAY-2023'
-            };
 
             mapApplicationDataToOracleObject.mockResolvedValue({
                 tables: [
                     {
-                        APPLICATION_FORM: applicationForm
+                        APPLICATION_FORM: {
+                            prefix: 'U',
+                            section_ref: 'TEMP',
+                            NEW_OAS: 'Y',
+                            is_eligible: 'Y',
+                            claim_reference_number: '327507',
+                            ref_year: '23',
+                            created_date: '19-MAY-2023'
+                        }
                     },
                     {
                         ADDRESS_DETAILS: addressDetails
@@ -509,92 +511,29 @@ describe('handler', () => {
             createDBPool.mockResolvedValue({});
             insertIntoTempus.mockResolvedValue();
 
-            const event = {}; // Your mock event
-            const context = {}; // Your mock context
+            event = {}; // Your mock event
+            context = {}; // Your mock context
+        });
+
+        it('should return "Nothing to process" if external traffic is received', async () => {
+            // Set email to a non-test address
+            s3applicationData.themes[0].values[0].value = 'dc02c225-fec8-43a3-8bdd-5775039e9c0b@gov.uk';
+
             const result = await handler(event, context);
 
             expect(result).toBe('Nothing to process');
             expect(receiveSQS).toHaveBeenCalled();
         });
+
         it('should return "Success!" if test traffic is received', async () => {
-            // Mock environment variables
-            process.env.TEMPUS_QUEUE = 'fake-queue-url';
-            process.env.NODE_ENV = 'test';
-            process.env.TEST_EMAILS = 'test@test.co.uk';
-            process.env.MAINTENANCE_MODE = true;
+            // Set email to a test address
+            s3applicationData.themes[0].values[0].value = '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
 
-            // Mock SQS service
-            const receiveSQS = jest.fn().mockResolvedValue({
-                Messages: [
-                    {
-                        Body: JSON.stringify({
-                            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
-                        }),
-                        ReceiptHandle: 'fake-handle'
-                    }
-                ]
-            });
-            const deleteSQS = jest.fn();
-            createSqsService.mockReturnValue({receiveSQS, deleteSQS});
-
-            // Mock other services and functions
-            getParameter.mockResolvedValue('fake-bucket-name');
-            const s3applicationData = {
-                meta: {
-                    caseReference: '23\\327507',
-                    submittedDate: '2023-05-19T13:06:12.693Z',
-                    splitFuneral: false
-                },
-                themes: [
-                    {
-                        type: 'theme',
-                        id: 'applicant-details',
-                        title: 'Your details',
-                        values: [
-                            {
-                                id: 'q-applicant-enter-your-email-address',
-                                type: 'simple',
-                                label: 'Email address',
-                                value: 'test@test.co.uk',
-                                sectionId: 'p-applicant-confirmation-method',
-                                theme: 'applicant-details'
-                            }
-                        ]
-                    }
-                ]
-            };
-
-            s3.retrieveObjectFromBucket.mockResolvedValue(s3applicationData);
-            const applicationForm = {
-                prefix: 'U',
-                section_ref: 'TEMP',
-                NEW_OAS: 'Y',
-                is_eligible: 'Y',
-                claim_reference_number: '327507',
-                ref_year: '23',
-                created_date: '19-MAY-2023'
-            };
-
-            mapApplicationDataToOracleObject.mockResolvedValue({
-                tables: [
-                    {
-                        APPLICATION_FORM: applicationForm
-                    },
-                    {
-                        ADDRESS_DETAILS: addressDetails
-                    }
-                ]
-            });
-
-            createDBPool.mockResolvedValue({});
-            insertIntoTempus.mockResolvedValue();
-
-            const event = {}; // Your mock event
-            const context = {}; // Your mock context
             const result = await handler(event, context);
 
             expect(result).toBe('Success!');
             expect(receiveSQS).toHaveBeenCalled();
         });
     });
+
 });
