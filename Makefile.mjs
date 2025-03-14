@@ -5,7 +5,7 @@ import {$} from 'execa';
 // Can remove console.log statements pending the release of: https://github.com/sindresorhus/execa/issues/627
 const commandActions = {
     async init() {
-        const result = await $`docker run --detach --name localstack -p 4566:4566 -e SERVICES=s3 -e DEFAULT_REGION=eu-west-2 localstack/localstack`;
+        const result = await $`docker run --detach --name localstack -p 4566:4566 -e SERVICES=s3,cloudwatch -e DEFAULT_REGION=eu-west-2 localstack/localstack`;
 
         console.log(result.stdout);
     },
@@ -19,6 +19,13 @@ const commandActions = {
 
         console.log(result.stdout);
     },
+
+    async 'create-cloudwatch-namespace'() {
+        const result = await $`aws --endpoint-url=http://localhost:4566 cloudwatch put-metric-data --namespace tempusBrokerFunction/requests --metric-name TestMetric --value 100 --unit Milliseconds`;
+
+        console.log(result.stdout);
+    },
+
     async 'upload-file'() {
 
         // create new json files representing the data you want to test run this script then run the integration.test.js

@@ -111,6 +111,19 @@ Resources:
                 - kms:GenerateDataKey*
                 - kms:DescribeKey
               Resource: '*'
+            - Sid: TempusBrokerFunctionCloudWatchPolicy
+              Effect: Allow
+              Action:
+                  - cloudwatch:PutMetricData
+              Resource: '*'
+            - Sid: CloudWatchDashboardPolicy
+              Effect: Allow
+              Action:
+                  - cloudwatch:PutDashboard
+                  - cloudwatch:GetDashboard
+                  - cloudwatch:ListDashboards
+                  - cloudwatch:DeleteDashboards
+              Resource: "*"
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
@@ -153,3 +166,52 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: '0.0.0.0/0'
+  TempusBrokerDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: TempusBrokerFunctionDashboard
+      DashboardBody:
+        Fn::Sub: |
+          {
+            "widgets": [
+              {
+                "type": "metric",
+                "x": 0,
+                "y": 0,
+                "width": 6,
+                "height": 6,
+                "properties": {
+                  "metrics": [
+                    [ "tempusBrokerFunction/requests", "ktaRequestLatency", "ktaRequestUrl", "ALL" ]
+                  ],
+                  "view": "gauge",
+                  "stat": "p50",
+                  "region": "${AWS::Region}",
+                  "title": "KTA Request Latency (Average)",
+                  "yAxis": {
+                    "left": {
+                      "min": 0,
+                      "max": 1000
+                    }
+                  }
+                }
+              },
+              {
+                "type": "metric",
+                "x": 6,
+                "y": 0,
+                "width": 3,
+                "height": 3,
+                "properties": {
+                  "metrics": [
+                    [ { "expression": "SUM(METRICS())", "label": "Total Duplicates", "id": "e1" } ],
+                    [ "tempusBrokerFunction/requests", "DuplicateSQSMessagesDeleted", "QueueName", "TempusBrokerQueue" ]
+                  ],
+                  "view": "singleValue",
+                  "region": "${AWS::Region}",
+                  "title": "Total Duplicate SQS Messages Deleted",
+                  "stat": "Sum"
+                }
+              }
+            ]
+          }
