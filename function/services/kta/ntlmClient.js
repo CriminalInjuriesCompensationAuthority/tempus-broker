@@ -3,6 +3,7 @@
 const httpNtlmClient = require('httpntlm');
 const getParameter = require('../ssm/index');
 const getSecret = require('../secret-manager/index');
+const logger = require('../logging/logger');
 
 const client = {
     async sendRequest(serviceUrl, jsonRequest) {
@@ -19,7 +20,15 @@ const client = {
                 json: jsonRequest
             };
 
+            const startTime = process.hrtime(); // Start timer
+            logger.info(`Sending request to: ${opts.url}`);
+
             httpNtlmClient.post(opts, function(err, response) {
+                const [seconds, nanoseconds] = process.hrtime(startTime); // Get elapsed time
+                const durationMs = (seconds * 1e3) + (nanoseconds / 1e6); // Convert to milliseconds
+
+                logger.info(`Response received from: ${opts.url} in ${durationMs.toFixed(3)}ms`);
+
                 if (err) {
                     reject(err);
                 } else {

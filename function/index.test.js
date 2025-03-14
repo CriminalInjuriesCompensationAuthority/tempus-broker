@@ -8,6 +8,7 @@ const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
 const getParameter = require('./services/ssm');
 const {handler, handleTempusBrokerMessage} = require('./index');
+const kta = require('./services/kta/index');
 const fs = require('fs');
 
 jest.mock('./services/s3/index');
@@ -19,6 +20,10 @@ jest.mock('./db/index');
 jest.mock('./services/ssm');
 jest.mock('./constants/application-form-default');
 jest.mock('./constants/address-details-default');
+jest.mock('./services/kta/index', () => ({
+    getJob: jest.fn(),
+    createJob: jest.fn()
+}));
 
 const addressDetails = [
     {
@@ -528,6 +533,111 @@ describe('handler', () => {
         it('should return "Success!" if test traffic is received', async () => {
             // Set email to a test address
             s3applicationData.themes[0].values[0].value = '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
+
+            const result = await handler(event, context);
+
+            expect(result).toBe('Success!');
+            expect(receiveSQS).toHaveBeenCalled();
+        });
+    });
+
+    describe('Duplicate message received', () => {
+        let receiveSQS, deleteSQS;
+        let event, context;
+        let s3applicationData;
+
+        beforeEach(() => {
+            // Mock environment variables
+            process.env.TEMPUS_QUEUE = 'fake-queue-url';
+            process.env.NODE_ENV = 'test';
+            process.env.TEST_EMAILS = '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
+            process.env.MAINTENANCE_MODE = false;
+
+            // Mock SQS service
+            receiveSQS = jest.fn().mockResolvedValue({
+                Messages: [
+                    {
+                        Body: JSON.stringify({
+                            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        }),
+                        ReceiptHandle: 'fake-handle'
+                    }
+                ]
+            });
+            deleteSQS = jest.fn();
+            createSqsService.mockReturnValue({ receiveSQS, deleteSQS });
+
+            // Define shared mock data
+            s3applicationData = {
+                meta: {
+                    caseReference: '23\\327507',
+                    submittedDate: '2023-05-19T13:06:12.693Z',
+                    splitFuneral: false
+                },
+                themes: [
+                    {
+                        type: 'theme',
+                        id: 'applicant-details',
+                        title: 'Your details',
+                        values: [
+                            {
+                                id: 'q-applicant-enter-your-email-address',
+                                type: 'simple',
+                                label: 'Email address',
+                                value: 'dc02c225-fec8-43a3-8bdd-5775039e9c0b@gov.uk',
+                                sectionId: 'p-applicant-confirmation-method',
+                                theme: 'applicant-details'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            s3.retrieveObjectFromBucket.mockResolvedValue(s3applicationData);
+
+            mapApplicationDataToOracleObject.mockResolvedValue({
+                tables: [
+                    {
+                        APPLICATION_FORM: {
+                            prefix: 'U',
+                            section_ref: 'TEMP',
+                            NEW_OAS: 'Y',
+                            is_eligible: 'Y',
+                            claim_reference_number: '327507',
+                            ref_year: '23',
+                            created_date: '19-MAY-2023'
+                        }
+                    },
+                    {
+                        ADDRESS_DETAILS: addressDetails
+                    }
+                ]
+            });
+
+            createDBPool.mockResolvedValue({});
+            insertIntoTempus.mockResolvedValue();
+
+            event = {}; // Your mock event
+            context = {}; // Your mock context
+        });
+
+        it('should return "Nothing to process" if a KTA job already exists for this message', async () => {
+            // Mock getJob to simulate existing job
+            kta.getJob.mockResolvedValue({
+                Jobs: [{ id: 'foo' }] // Simulate existing job
+            });
+
+            const result = await handler(event, context);
+
+            expect(result).toBe('Nothing to process');
+            expect(receiveSQS).toHaveBeenCalled();
+        });
+
+        it('should return "Success!" if no KTA job exists for message', async () => {
+            // Mock getJob to simulate no existing job
+            kta.getJob.mockResolvedValue({
+                Jobs: [] // No existing jobs
+            });
 
             const result = await handler(event, context);
 
