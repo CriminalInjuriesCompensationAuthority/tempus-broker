@@ -8,7 +8,7 @@ const mapApplicationDataToOracleObject = require('./services/application-mapper/
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
 const setEligibility = require('./services/eligibility-checker/index');
-const createJob = require('./services/kta/index');
+const kta = require('./services/kta/index');
 const addressInvoiceMapper = require('./services/address-invoice-mapper');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
@@ -69,6 +69,8 @@ async function handler(event, context) {
     logger.info(`## CONTEXT: ${serialize(context)}`);
     logger.info(`## EVENT: ${serialize(event)}`);
 
+    const sessionId = await getParameter('kta-session-id');
+
     const sqsService = createSqsService();
 
     // Currently the tempus broker is setup to handle one event at a time
@@ -105,6 +107,22 @@ async function handler(event, context) {
             return 'Nothing to process';
         }
 
+        const queryParams = [
+            {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}/${Object.values(s3Keys)[0]}`}
+        ];
+        const jobExists = await kta.getJob(sessionId, queryParams);
+
+        // Delete the message and return early if a job in KTA already exists for this case.
+        if (jobExists?.Jobs.length > 0) {
+            logger.info(`Duplicate application received. KTA Job already exists for ${`s3://${bucketName}/${Object.values(s3Keys)[0]}`}`);
+            const deleteInput = {
+                QueueUrl: process.env.TEMPUS_QUEUE,
+                ReceiptHandle: message.ReceiptHandle
+            };
+            sqsService.deleteSQS(deleteInput);
+            return 'Nothing to process';
+        }
+
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(
             s3ApplicationData,
@@ -133,14 +151,13 @@ async function handler(event, context) {
 
         if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
             logger.info('Call out to KTA SDK');
-            const sessionId = await getParameter('kta-session-id');
             const inputVars = [
                 {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
                 {Id: 'pSUMMARY_URL', Value: `s3://${bucketName}/${Object.values(s3Keys)[0]}`}
             ];
             logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
-            await createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
+            await kta.createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
         }
 
         // Finally delete the consumed message from the Tempus Queue
