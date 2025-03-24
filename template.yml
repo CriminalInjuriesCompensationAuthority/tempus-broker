@@ -56,6 +56,8 @@ Resources:
       Environment:
         Variables:
           TEMPUS_QUEUE: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueUrl]
+          MAINTENANCE_MODE: false
+          TEST_EMAILS: !Sub "{{resolve:secretsmanager:tempus-broker-secrets:SecretString:test-emails}}"
       CodeUri: function/.
       Description: Call the AWS Lambda API
       Timeout: 30
