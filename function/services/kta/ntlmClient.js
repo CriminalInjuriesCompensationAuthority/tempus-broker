@@ -4,6 +4,7 @@ const httpNtlmClient = require('httpntlm');
 const getParameter = require('../ssm/index');
 const getSecret = require('../secret-manager/index');
 const logger = require('../logging/logger');
+const cloudWatch = require('../cloudwatch/index');
 
 const client = {
     async sendRequest(serviceUrl, jsonRequest) {
@@ -23,7 +24,7 @@ const client = {
             const startTime = process.hrtime(); // Start timer
             logger.info(`Sending request to: ${opts.url}`);
 
-            httpNtlmClient.post(opts, function(err, response) {
+            httpNtlmClient.post(opts, async function(err, response) {
                 const [seconds, nanoseconds] = process.hrtime(startTime); // Get elapsed time
                 const durationMs = (seconds * 1e3) + (nanoseconds / 1e6); // Convert to milliseconds
 
@@ -32,6 +33,7 @@ const client = {
                 if (err) {
                     reject(err);
                 } else {
+                    await cloudWatch.logKTALatency(durationMs, serviceUrl);
                     const parsedResponse = JSON.parse(response.body);
                     if (parsedResponse.Message) {
                         reject(parsedResponse.Message);
