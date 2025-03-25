@@ -14,6 +14,7 @@ const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
 const getApplicationFormDefault = require('./constants/application-form-default');
 const getAddressDetailsDefault = require('./constants/address-details-default');
+const getSecret = require('./services/secret-manager/index');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
@@ -51,16 +52,14 @@ function getAnswerFromThemes (themes, themeId, answerId) {
         ?.value;
 }
 
-function getApplicationOrigin(applicationData){
-    const testEmails = process.env.TEST_EMAILS || '';
-
+function getApplicationOrigin(applicationData, TEST_EMAILS = ''){
     const emailAddresses = [
         getAnswerFromThemes(applicationData.themes, 'applicant-details', 'q-applicant-enter-your-email-address'),
         getAnswerFromThemes(applicationData.themes, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
         getAnswerFromThemes(applicationData.themes, 'rep-details', 'q-rep-email-address')
     ];
 
-    return emailAddresses.some(email => email && testEmails.includes(email)) ? 'internal' : 'external';
+    return emailAddresses.some(email => email && TEST_EMAILS.includes(email)) ? 'internal' : 'external';
 }
 
 async function handler(event, context) {
@@ -98,9 +97,10 @@ async function handler(event, context) {
             Object.values(s3Keys)[1]
         );
 
-        const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+        const {MAINTENANCE_MODE, TEST_EMAILS} = JSON.parse(await getSecret(process.env.TEMPUS_BROKER_SECRET_ARN));
+        const maintenanceMode = MAINTENANCE_MODE === 'true';
         
-        if (maintenanceMode && getApplicationOrigin(s3ApplicationData) === 'external') {
+        if (maintenanceMode && getApplicationOrigin(s3ApplicationData, TEST_EMAILS) === 'external') {
             logger.info('External traffic received. Maintenance mode is on.');
             return 'Nothing to process';
         }
