@@ -26,6 +26,7 @@ Mappings:
       SubnetIdA: subnet-02f7ae7f6b1db987f
       SubnetIdB: subnet-0a5e7b48efcb931ba
       TariffSGId: sg-0ebad8b7f67749a6e
+      TempusBrokerSecretArn: arn:aws:secretsmanager:eu-west-2:589450497571:secret:tempus-broker-secrets-dev-RC6TNS
     uat:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-uat-claim-criminal-injuries-tempus-queue
       TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-dev-team-uat-claim-criminal-injuries-tempus-queue
@@ -33,6 +34,7 @@ Mappings:
       SubnetIdA: subnet-0fd3a560d90368fdc
       SubnetIdB: subnet-078b2047045b77bb0
       TariffSGId: sg-04998e82221c5e57c
+      TempusBrokerSecretArn: arn:aws:secretsmanager:eu-west-2:621815915101:secret:tempus-broker-secrets-mFh0th
     stag:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-staging-claim-criminal-injuries-tempus-queue
       TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-staging-claim-criminal-injuries-tempus-queue
@@ -40,6 +42,7 @@ Mappings:
       SubnetIdA: subnet-02f7ae7f6b1db987f
       SubnetIdB: subnet-0a5e7b48efcb931ba
       TariffSGId: sg-0ebad8b7f67749a6e
+      TempusBrokerSecretArn: arn:aws:secretsmanager:eu-west-2:589450497571:secret:tempus-broker-secrets-stag-9wu90l
     prod:
       TempusQueueArn: arn:aws:sqs:eu-west-2:754256621582:cica-dev-team-prod-claim-criminal-injuries-tempus-queue
       TempusQueueUrl: https://sqs.eu-west-2.amazonaws.com/754256621582/cica-dev-team-prod-claim-criminal-injuries-tempus-queue
@@ -47,6 +50,7 @@ Mappings:
       SubnetIdA: subnet-0d1fcbfc03a28f433
       SubnetIdB: subnet-08c81bc6ffb13be3d
       TariffSGId: sg-03345c1ce948c936f
+      TempusBrokerSecretArn: arn:aws:secretsmanager:eu-west-2:597470279442:secret:tempus-broker-secrets-43bEwb
 Resources:
   function:
     Type: AWS::Serverless::Function
@@ -56,6 +60,7 @@ Resources:
       Environment:
         Variables:
           TEMPUS_QUEUE: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueUrl]
+          TEMPUS_BROKER_SECRET_ARN: !FindInMap [EnvironmentMap, !Ref Environment, TempusBrokerSecretArn]
       CodeUri: function/.
       Description: Call the AWS Lambda API
       Timeout: 30
