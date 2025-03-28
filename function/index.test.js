@@ -557,8 +557,7 @@ describe('handler', () => {
             // Mock environment variables
             process.env.TEMPUS_QUEUE = 'fake-queue-url';
             process.env.NODE_ENV = 'test';
-            process.env.TEST_EMAILS = '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
-            process.env.MAINTENANCE_MODE = false;
+            process.env.TEMPUS_BROKER_SECRET_ARN = 'arn:aws:secretsmanager:eu-west-2:dummy-arn:maitnenance-mode-on';
 
             // Mock SQS service
             receiveSQS = jest.fn().mockResolvedValue({
@@ -620,6 +619,8 @@ describe('handler', () => {
                     }
                 ]
             });
+
+            getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}');
 
             createDBPool.mockResolvedValue({});
             insertIntoTempus.mockResolvedValue();
