@@ -199,7 +199,7 @@ Resources:
                 "properties": {
                   "metrics": [
                     [ { "expression": "SUM(METRICS())", "label": "Total Duplicates", "id": "e1" } ],
-                    [ "tempusBrokerFunction/requests", "DuplicateSQSMessagesDeleted", "QueueName", "${TEMPUS_QUEUE}" ]
+                    [ "tempusBrokerFunction/requests", "DuplicateSQSMessagesDeleted", "QueueName", "!Ref TEMPUS_QUEUE" ]
                   ],
                   "view": "singleValue",  # 🔹 Display Single Value (Total Count)
                   "region": "${AWS::Region}",
