@@ -15,6 +15,7 @@ const getParameter = require('./services/ssm');
 const getApplicationFormDefault = require('./constants/application-form-default');
 const getAddressDetailsDefault = require('./constants/address-details-default');
 const getSecret = require('./services/secret-manager/index');
+const cloudWatch = require('./services/cloudwatch/index');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
@@ -120,6 +121,7 @@ async function handler(event, context) {
                 ReceiptHandle: message.ReceiptHandle
             };
             sqsService.deleteSQS(deleteInput);
+            await cloudWatch.publishDuplicateJobMetric();
             return 'Nothing to process';
         }
 

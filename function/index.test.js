@@ -9,6 +9,7 @@ const insertIntoTempus = require('./db/index');
 const getParameter = require('./services/ssm');
 const {handler, handleTempusBrokerMessage} = require('./index');
 const getSecret = require('./services/secret-manager/index');
+const cloudWatch = require('./services/cloudwatch/index');
 const kta = require('./services/kta/index');
 const fs = require('fs');
 
@@ -26,6 +27,7 @@ jest.mock('./services/kta/index', () => ({
     getJob: jest.fn(),
     createJob: jest.fn()
 }));
+jest.mock('./services/cloudwatch/index');
 
 const addressDetails = [
     {
@@ -621,6 +623,8 @@ describe('handler', () => {
             });
 
             getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}');
+
+            cloudWatch.publishDuplicateJobMetric.mockResolvedValue();
 
             createDBPool.mockResolvedValue({});
             insertIntoTempus.mockResolvedValue();

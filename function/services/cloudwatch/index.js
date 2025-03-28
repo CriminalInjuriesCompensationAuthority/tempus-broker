@@ -47,4 +47,20 @@ async function logKTALatency(duration, requestUrl){
     )
 }
 
-module.exports = {logKTALatency};
+async function publishDuplicateJobMetric(){
+    const namespace = "tempusBrokerFunction/requests";
+    const data = [
+        {
+            MetricName: "DuplicateSQSMessagesDeleted",
+            Dimensions:[{ Name: "QueueName", Value: process.env.TEMPUS_QUEUE }],
+            Value: 1,
+            Unit: "Count"
+        },
+    ];
+    return logCustomCloudWatchMetric(
+        namespace,
+        data
+    )
+}
+
+module.exports = {logKTALatency, publishDuplicateJobMetric};
