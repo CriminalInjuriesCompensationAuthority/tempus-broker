@@ -111,6 +111,11 @@ Resources:
                 - kms:GenerateDataKey*
                 - kms:DescribeKey
               Resource: '*'
+            - Sid: TempusBrokerFunctionCloudWatchPolicy
+              Effect: Allow
+              Action:
+                  - cloudwatch:PutMetricData
+              Resource: '*'
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
