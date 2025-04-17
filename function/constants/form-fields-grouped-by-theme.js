@@ -151,7 +151,8 @@ module.exports = Object.freeze({
     },
     'mental-health': {
         'q-applicant-do-you-have-disabling-mental-injury': 'dmi',
-        'q-applicant-mental-injury-duration': 'dmi_gt_6_weeks'
+        'q-applicant-mental-injury-duration': 'dmi_gt_6_weeks',
+        'q-applicant-mental-injury-ongoing': 'DMI_ONGOING'
     },
     offender: {
         'q-offender-do-you-know-the-name-of-the-offender': 'assailant_identified',
