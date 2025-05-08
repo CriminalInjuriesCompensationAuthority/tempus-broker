@@ -134,7 +134,7 @@ async function handler(event, context) {
             };
             sqsService.deleteSQS(deleteInput);*/
             await cloudWatch.publishDuplicateJobMetric();
-            return 'Nothing to process';
+            //return 'Nothing to process';
         }
 
         logger.info('Mapping application data to Oracle object.');
