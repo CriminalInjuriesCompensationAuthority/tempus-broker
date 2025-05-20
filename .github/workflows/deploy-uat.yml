@@ -1,6 +1,7 @@
 on:
   push:
-    branches: uat
+    branches: 
+      - uat
     paths-ignore:
       - '**/*.md'
       - '**/LICENSE'
