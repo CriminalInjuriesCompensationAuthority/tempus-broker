@@ -25,7 +25,7 @@ The project source includes the following directories:
 
 
 # Requirements
-- [Node.js 18.16.1 or later with npm](https://nodejs.org/en/download/releases/)
+- [Node.js 22.15.0 or later with npm greater than 10](https://nodejs.org/en/download/releases/)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Oracledb for nodejs](https://node-oracledb.readthedocs.io/en/latest/) - **(This step is only required if connecting to Oracle < 12.1, which is not supported in [thin mode](https://node-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html))** Will need to follow step 2.3 onwards to set this up. Select the latest version, at least Version 21_10 required. The function/db/dbPool.js and function/db/index.js files will need updating accordingly.
 - An Oracle DB instance e.g. https://www.oracle.com/uk/database/free/. An instance is available as part of our local development environment.
