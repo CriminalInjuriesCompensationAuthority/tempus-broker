@@ -16,6 +16,11 @@ Parameters:
     Type: String
     Default: '192.168.0.1/16'
     Description: "The CIDR range for CICA's on premise"
+  DashboardName:
+    Type: String
+    Default: TempusBrokerFunctionDashboard
+    Description: Unique name for the CloudWatch Dashboard
+
 
 Mappings:
   EnvironmentMap:
@@ -56,7 +61,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs22.x
       Environment:
         Variables:
           TEMPUS_QUEUE: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueUrl]
@@ -144,7 +149,7 @@ Resources:
       Description: Dependencies for the tempus broker function.
       ContentUri: lib/.
       CompatibleRuntimes:
-        - nodejs18.x
+        - nodejs22.x
   tempusBrokerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -169,7 +174,7 @@ Resources:
   TempusBrokerDashboard:
     Type: AWS::CloudWatch::Dashboard
     Properties:
-      DashboardName: TempusBrokerFunctionDashboard
+      DashboardName: !Ref DashboardName
       DashboardBody:
         Fn::Sub: |
           {
