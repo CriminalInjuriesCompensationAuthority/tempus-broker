@@ -200,23 +200,6 @@ Resources:
                     }
                   }
                 }
-              },
-              {
-                "type": "metric",
-                "x": 6,
-                "y": 0,
-                "width": 3,
-                "height": 3,
-                "properties": {
-                  "metrics": [
-                    [ { "expression": "SUM(METRICS())", "label": "Total Duplicates", "id": "e1" } ],
-                    [ "tempusBrokerFunction/requests", "DuplicateSQSMessagesDeleted", "QueueName", "TempusBrokerQueue" ]
-                  ],
-                  "view": "singleValue",
-                  "region": "${AWS::Region}",
-                  "title": "Total Duplicate SQS Messages Deleted",
-                  "stat": "Sum"
-                }
               }
             ]
           }

@@ -47,20 +47,4 @@ async function logKTAResponseTime(duration, requestUrl){
     )
 }
 
-async function publishDuplicateJobMetric(){
-    const namespace = "tempusBrokerFunction/requests";
-    const data = [
-        {
-            MetricName: "DuplicateSQSMessagesDeleted",
-            Dimensions:[{ Name: "QueueName", Value: "TempusBrokerQueue" }],
-            Value: 1,
-            Unit: "Count"
-        },
-    ];
-    return logCustomCloudWatchMetric(
-        namespace,
-        data
-    )
-}
-
-module.exports = {logKTAResponseTime, publishDuplicateJobMetric};
+module.exports = {logKTAResponseTime};

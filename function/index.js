@@ -8,14 +8,13 @@ const mapApplicationDataToOracleObject = require('./services/application-mapper/
 const createDBPool = require('./db/dbPool');
 const insertIntoTempus = require('./db/index');
 const setEligibility = require('./services/eligibility-checker/index');
-const kta = require('./services/kta/index');
+const createKtaJob = require('./services/kta/index');
 const addressInvoiceMapper = require('./services/address-invoice-mapper');
 const logger = require('./services/logging/logger');
 const getParameter = require('./services/ssm');
 const getApplicationFormDefault = require('./constants/application-form-default');
 const getAddressDetailsDefault = require('./constants/address-details-default');
 const getSecret = require('./services/secret-manager/index');
-const cloudWatch = require('./services/cloudwatch/index');
 
 function serialize(object) {
     return JSON.stringify(object, null, 2);
@@ -61,21 +60,6 @@ function getApplicationOrigin(applicationData, TEST_EMAILS = ''){
     ];
 
     return emailAddresses.some(email => email && TEST_EMAILS.includes(email)) ? 'internal' : 'external';
-}
-
-async function isDuplicateApplication (sessionId, summaryUrl) {
-    try{
-        const queryParams = [
-            {Id: 'pSUMMARY_URL', Value: summaryUrl}
-        ];
-        const applicationForCompensationProcessId = '8ECF206F3DD5493FA21BB3D90611DFA3';
-        const ktaJobs = await kta.getJob(sessionId, queryParams);
-
-        return ktaJobs.Jobs.some(job => job?.Process?.Id === applicationForCompensationProcessId);
-    } catch (err){
-        logger.warn({err, summaryUrl},`Unable to check for duplicates`);
-        return false;
-    }
 }
 
 async function handler(event, context) {
@@ -124,19 +108,6 @@ async function handler(event, context) {
             return 'Nothing to process';
         }
 
-        const duplicateApplication = await isDuplicateApplication(sessionId, summaryUrl);
-        
-        if (duplicateApplication) {
-            logger.info(`Duplicate application received. KTA Job already exists for ${summaryUrl}`);
-            /*const deleteInput = {
-                QueueUrl: process.env.TEMPUS_QUEUE,
-                ReceiptHandle: message.ReceiptHandle
-            };
-            sqsService.deleteSQS(deleteInput);*/
-            await cloudWatch.publishDuplicateJobMetric();
-            return 'Nothing to process';
-        }
-
         logger.info('Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(
             s3ApplicationData,
@@ -171,7 +142,7 @@ async function handler(event, context) {
             ];
             logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
 
-            await kta.createJob(sessionId, 'Case Work - Application for Compensation', inputVars);
+            await createKtaJob(sessionId, 'Case Work - Application for Compensation', inputVars);
         }
 
         // Finally delete the consumed message from the Tempus Queue
