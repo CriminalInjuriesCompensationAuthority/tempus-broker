@@ -81,7 +81,8 @@ describe('handler', () => {
             is_eligible: 'Y',
             claim_reference_number: '327507',
             ref_year: '23',
-            created_date: '19-MAY-2023'
+            created_date: '19-MAY-2023',
+            date_of_birth: '01-JAN-2000'
         };
 
         mapApplicationDataToOracleObject.mockResolvedValue({
@@ -98,7 +99,9 @@ describe('handler', () => {
         createDBPool.mockResolvedValue({});
         insertIntoTempus.mockResolvedValue();
 
-        getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}');
+        getSecret.mockResolvedValue(
+            '{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}'
+        );
 
         const event = {}; // Your mock event
         const context = {}; // Your mock context
@@ -119,7 +122,8 @@ describe('handler', () => {
             is_eligible: 'Y',
             claim_reference_number: '327507',
             ref_year: '23',
-            created_date: '19-MAY-2023'
+            created_date: '19-MAY-2023',
+            date_of_birth: '01-JAN-2000'
         };
 
         expect(insertIntoTempus).toHaveBeenNthCalledWith(
@@ -162,7 +166,8 @@ describe('handler', () => {
             incident_rep_police: 'N',
             claim_reference_number: '327507',
             ref_year: '23',
-            created_date: '19-MAY-2023'
+            created_date: '19-MAY-2023',
+            date_of_birth: '01-JAN-2000'
         };
 
         mapApplicationDataToOracleObject.mockResolvedValue({
@@ -179,7 +184,9 @@ describe('handler', () => {
         createDBPool.mockResolvedValue({});
         insertIntoTempus.mockResolvedValue();
 
-        getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}');
+        getSecret.mockResolvedValue(
+            '{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}'
+        );
 
         const event = {}; // Your mock event
         const context = {}; // Your mock context
@@ -201,7 +208,8 @@ describe('handler', () => {
             incident_rep_police: 'N',
             claim_reference_number: '327507',
             ref_year: '23',
-            created_date: '19-MAY-2023'
+            created_date: '19-MAY-2023',
+            date_of_birth: '01-JAN-2000'
         };
         expect(insertIntoTempus).toHaveBeenNthCalledWith(
             1,
@@ -285,7 +293,9 @@ describe('handler', () => {
         createDBPool.mockResolvedValue({});
         insertIntoTempus.mockResolvedValue();
 
-        getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}');
+        getSecret.mockResolvedValue(
+            '{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}'
+        );
 
         const event = {}; // Your mock event
         const context = {}; // Your mock context
@@ -394,7 +404,9 @@ describe('handler', () => {
         createDBPool.mockResolvedValue({});
         insertIntoTempus.mockResolvedValue();
 
-        getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}');
+        getSecret.mockResolvedValue(
+            '{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}'
+        );
 
         const event = {}; // Your mock event
         const context = {}; // Your mock context
@@ -457,7 +469,8 @@ describe('handler', () => {
             // Mock environment variables
             process.env.TEMPUS_QUEUE = 'fake-queue-url';
             process.env.NODE_ENV = 'test';
-            process.env.TEMPUS_BROKER_SECRET_ARN = 'arn:aws:secretsmanager:eu-west-2:dummy-arn:maitnenance-mode-on';
+            process.env.TEMPUS_BROKER_SECRET_ARN =
+                'arn:aws:secretsmanager:eu-west-2:dummy-arn:maitnenance-mode-on';
 
             // Mock SQS service
             receiveSQS = jest.fn().mockResolvedValue({
@@ -471,7 +484,7 @@ describe('handler', () => {
                 ]
             });
             deleteSQS = jest.fn();
-            createSqsService.mockReturnValue({ receiveSQS, deleteSQS });
+            createSqsService.mockReturnValue({receiveSQS, deleteSQS});
 
             // Define shared mock data
             s3applicationData = {
@@ -495,6 +508,25 @@ describe('handler', () => {
                                 theme: 'applicant-details'
                             }
                         ]
+                    },
+                    {
+                        type: 'theme',
+                        id: 'applicant-details',
+                        title: 'Your details',
+                        values: [
+                            {
+                                id: 'q-applicant-enter-your-date-of-birth',
+                                type: 'simple',
+                                label: 'Date of birth',
+                                value: '2000-01-01T00:00:00.000Z',
+                                sectionId: 'p-applicant-enter-your-date-of-birth',
+                                theme: 'applicant-details',
+                                format: {
+                                    value: 'date-time',
+                                    precision: 'YYYY-MM-DD'
+                                }
+                            }
+                        ]
                     }
                 ]
             };
@@ -511,7 +543,8 @@ describe('handler', () => {
                             is_eligible: 'Y',
                             claim_reference_number: '327507',
                             ref_year: '23',
-                            created_date: '19-MAY-2023'
+                            created_date: '19-MAY-2023',
+                            date_of_birth: '01-JAN-2000'
                         }
                     },
                     {
@@ -523,7 +556,9 @@ describe('handler', () => {
             createDBPool.mockResolvedValue({});
             insertIntoTempus.mockResolvedValue();
 
-            getSecret.mockResolvedValue('{"MAINTENANCE_MODE": "true", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk"}');
+            getSecret.mockResolvedValue(
+                '{"MAINTENANCE_MODE": "true", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk"}'
+            );
 
             event = {}; // Your mock event
             context = {}; // Your mock context
@@ -531,7 +566,8 @@ describe('handler', () => {
 
         it('should return "Nothing to process" if external traffic is received', async () => {
             // Set email to a non-test address
-            s3applicationData.themes[0].values[0].value = 'dc02c225-fec8-43a3-8bdd-5775039e9c0b@gov.uk';
+            s3applicationData.themes[0].values[0].value =
+                'dc02c225-fec8-43a3-8bdd-5775039e9c0b@gov.uk';
 
             const result = await handler(event, context);
 
@@ -541,7 +577,8 @@ describe('handler', () => {
 
         it('should return "Success!" if test traffic is received', async () => {
             // Set email to a test address
-            s3applicationData.themes[0].values[0].value = '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
+            s3applicationData.themes[0].values[0].value =
+                '410581a0-3d5c-4d11-92dd-e9f942e10817@gov.uk';
 
             const result = await handler(event, context);
 
