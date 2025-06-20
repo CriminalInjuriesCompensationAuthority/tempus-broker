@@ -16,6 +16,7 @@ function checkGeneralEligibilityRules(dbApplicationForm) {
         : null;
     const submittedDate = DateTime.fromFormat(dbApplicationForm?.created_date, 'dd-MMM-yyyy');
     const applicationType = dbApplicationForm?.application_type;
+    const dateOfBirth = DateTime.fromFormat(dbApplicationForm?.date_of_birth, 'dd-MMM-yyyy');
 
     // ------------- Business rules -------------
     // 1. The crime must be reported to the police
@@ -38,9 +39,11 @@ function checkGeneralEligibilityRules(dbApplicationForm) {
             dateTimePolFirstTold.diff(dateTimeOfIncident, 'minutes').toObject().minutes > 2880;
     }
 
-    // 4. The crime happened (if PI/Fatality) or stopped (if POA) 2 years before the user is submitting
+    // 4. The crime happened (if PI/Fatality) or stopped (if POA) 2 years before the user is submitting, and the user was over 20 years old at time of submission
     const reportedAfterTwoYears =
-        dateTimeOfIncident && submittedDate.diff(dateTimeOfIncident, 'days').toObject().days > 730;
+        dateTimeOfIncident &&
+        submittedDate.diff(dateTimeOfIncident, 'days').toObject().days > 730 &&
+        submittedDate.diff(dateOfBirth, 'years').toObject().years > 20;
 
     // 5. The crime did not happen in England, Scotland or Wales
     const ineligibleLocation = dbApplicationForm?.incident_country === 'somewhere-else';
