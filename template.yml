@@ -71,11 +71,15 @@ Resources:
       Timeout: 30
       # Trigger
       Events:
-        Trigger:
+        Schedule1:
           Type: Schedule
           Properties:
-            Schedule: 'rate(1 minute)'
-      # Function's execution role
+            Schedule: 'cron(0-59 6-11 ? * * *)'
+        Schedule2:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0-59 15-18 ? * * *)'
+        # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
         - Statement:
