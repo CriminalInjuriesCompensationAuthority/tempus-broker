@@ -74,11 +74,15 @@ Resources:
         Schedule1:
           Type: Schedule
           Properties:
-            Schedule: 'cron(0-59 6-11 ? * * *)'
+            Schedule: 'cron(0-59 0-17 ? * * *)'
         Schedule2:
           Type: Schedule
           Properties:
-            Schedule: 'cron(0-59 15-18 ? * * *)'
+            Schedule: 'cron(31-59 22 ? * * *)'
+        Schedule3:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(0-59 23 ? * * *)'
         # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
