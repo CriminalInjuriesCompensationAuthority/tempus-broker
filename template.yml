@@ -71,27 +71,22 @@ Resources:
       Timeout: 30
       # Trigger
       Events:
-        # ScheduleMidnightToSeven: # Covers 00:00 till 19:00
-          # Type: Schedule
-          # Properties:
-            # Schedule: 'cron(0-59 0-17 ? * * *)' # 00:00 - 17:59 GMT / 01:00 - 18:59 BST
-            # Schedule: 'cron(0-59 0-18 ? * * *)' # 00:00 - 18:59 GMT
-        # ScheduleHalfElevenToMidnight: # Covers 11:30 till 00:00
-          # Type: Schedule
-          # Properties:
-            # Schedule: 'cron(30-59 22 ? * * *)' # 22:30 - 22:59 GMT / 23:30 - 23:59 BST
-            # Schedule: 'cron(30-59 23 ? * * *)' # 23:30 - 23:59 GMT
+        ScheduleMidnightToSeven: # Covers 00:00 till 19:00
+          Type: Schedule
+          Properties:
+            # Schedule: 'cron(0-59 0-17 ? * * *)' # 00:00 - 17:59 UTC / 01:00 - 18:59 BST
+            Schedule: 'cron(0-59 0-18 ? * * *)' # 00:00 - 18:59 GMT
+        ScheduleHalfElevenToMidnight: # Covers 11:30 till 00:00
+          Type: Schedule
+          Properties:
+            # Schedule: 'cron(30-59 22 ? * * *)' # 22:30 - 22:59 UTC / 23:30 - 23:59 BST
+            Schedule: 'cron(30-59 23 ? * * *)' # 23:30 - 23:59 GMT
         # ScheduleDaylightSavingsHour: # Covers daylight savings discrepancy
             # Third schedule is not needed whilst using GMT
           # Type: Schedule
           # Properties:
-            # Schedule: 'cron(0-59 23 ? * * *)' # 23:00 - 23:59 GMT / 00:00 - 01:00 BST
-        ScheduleTwentyFourSeven: 
-            # Use this only when the job needs to run all day
-            Type: Schedule
-            Properties:
-                Schedule: rate(1 minute)
-                Enabled: true
+            # Schedule: 'cron(0-59 23 ? * * *)' # 23:00 - 23:59 UTC / 00:00 - 01:00 BST
+        # Function's execution role
       Policies:
         # Policies defined inline for AWS Services
         - Statement:
