@@ -27,7 +27,8 @@ module.exports = Object.freeze({
         'q-applicant-county': 'address_line_5',
         'q-applicant-postcode': 'post_code',
         'q-applicant-capable': 'under_18_or_incapable',
-        'q-applicant-confirmation-method': 'claimant_contact_preference'
+        'q-applicant-confirmation-method': 'claimant_contact_preference',
+        'q-applicant-contact-preference': 'APPLY_CONTACT_PREFERENCE'
     },
     'main-applicant-details': {
         'q-mainapplicant-title': 'U18_OR_INC_TITLE',
@@ -46,7 +47,8 @@ module.exports = Object.freeze({
         'q-mainapplicant-shared-responsibility-name': 'shared_parental_respon_name',
         'q-mainapplicant-care-order': 'care_order',
         'q-mainapplicant-care-order-authority': 'care_order_details',
-        'q-mainapplicant-confirmation-method': 'claimant_contact_preference'
+        'q-mainapplicant-confirmation-method': 'claimant_contact_preference',
+        'q-mainapplicant-contact-preference': 'APPLY_CONTACT_PREFERENCE'
     },
     'rep-details': {
         'q-rep-type': [
@@ -68,7 +70,8 @@ module.exports = Object.freeze({
         'q-rep-email-address': 'rep_email_address',
         'q-rep-telephone-number': 'rep_telephone',
         'q-rep-claims-management-reg': 'rep_claims_company_reg',
-        'q-rep-reference-number': 'rep_reference'
+        'q-rep-reference-number': 'rep_reference',
+        'q-rep-contact-preference': 'APPLY_CONTACT_PREFERENCE'
     },
     crime: {
         'q-applicant-when-did-the-crime-happen': 'date_time_of_incident',
