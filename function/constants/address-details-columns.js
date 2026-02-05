@@ -41,7 +41,7 @@ module.exports = Object.freeze({
         'q-applicant-town-or-city': 'address_line_4',
         'q-applicant-county': 'address_line_5',
         'q-applicant-postcode': 'post_code',
-        'q-applicant-contact-preference': 'APPLICANT_CONTACT_PREFERENCE'
+        'q-applicant-contact-preference': 'APPLY_CONTACT_PREFERENCE'
     },
     PAB: {
         'q-mainapplicant-building-and-street': 'address_line_1',
@@ -50,7 +50,7 @@ module.exports = Object.freeze({
         'q-mainapplicant-town-or-city': 'address_line_4',
         'q-mainapplicant-county': 'address_line_5',
         'q-mainapplicant-postcode': 'post_code',
-        'q-mainapplicant-contact-preference': 'APPLICANT_CONTACT_PREFERENCE'
+        'q-mainapplicant-contact-preference': 'APPLY_CONTACT_PREFERENCE'
     },
     RPA: {
         'q-rep-building-and-street': 'address_line_1',
@@ -59,7 +59,7 @@ module.exports = Object.freeze({
         'q-rep-town-or-city': 'address_line_4',
         'q-rep-county': 'address_line_5',
         'q-rep-postcode': 'post_code',
-        'q-rep-contact-preference': 'APPLICANT_CONTACT_PREFERENCE'
+        'q-rep-contact-preference': 'APPLY_CONTACT_PREFERENCE'
     },
     DCA: {
         'q-deceased-building-and-street': 'address_line_1',
