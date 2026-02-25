@@ -204,7 +204,7 @@ describe('checkEligibility', () => {
         expect(applicationObject.is_eligible).toBe('N');
     });
 
-    it('Should be ineligible if the applicant had no injuries', () => {
+    it('Should be ineligible if the applicant had no injuries and incident type does not include SEX', () => {
         const applicationObject = {
             case_reference_number: '027906',
             application_type: 2,
@@ -221,7 +221,7 @@ describe('checkEligibility', () => {
         expect(applicationObject.is_eligible).toBe('N');
     });
 
-    it('Should be ineligible if the applicant had no injuries and a DMI that lasted less than 6 weeks and is not ongoing', () => {
+    it('Should be ineligible if the applicant had no injuries and a DMI that lasted less than 6 weeks and is not ongoing and incident type does not include SEX', () => {
         const applicationObject = {
             case_reference_number: '027906',
             application_type: 2,
@@ -238,6 +238,63 @@ describe('checkEligibility', () => {
         };
         checkEligibility(emptyApplicationData, applicationObject);
         expect(applicationObject.is_eligible).toBe('N');
+    });
+
+    it('Should be eligible if the applicant had no injuries, and a DMI that lasted less than 6 weeks, and is not ongoing, and incident type does not include SEX, and got infections true', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            pi_type_cause: 'ASST',
+            physical_injuries: 'N',
+            loss_of_foetus: 'N',
+            infections: 'Y',
+            dmi: 'N',
+            dmi_gt_6_weeks: 'N',
+            DMI_ONGOING: 'N',
+            date_of_birth: '01-JAN-2000'
+        };
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
+    });
+
+    it('Should be eligible if the applicant had no injuries, and a DMI that lasted less than 6 weeks, and is not ongoing, and incident type does not include SEX, and got loss of foetus true', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            pi_type_cause: 'ASST',
+            physical_injuries: 'N',
+            loss_of_foetus: 'Y',
+            infections: 'N',
+            dmi: 'N',
+            dmi_gt_6_weeks: 'N',
+            DMI_ONGOING: 'N',
+            date_of_birth: '01-JAN-2000'
+        };
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
+    });
+
+    it('Should be eligible if the applicant had no injuries, and a DMI that lasted less than 6 weeks, and is not ongoing, and incident type does not include SEX, and got physical injuries true', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '02-JAN-2022',
+            is_eligible: 'Y',
+            pi_type_cause: 'ASST',
+            physical_injuries: 'Y',
+            loss_of_foetus: 'N',
+            infections: 'N',
+            dmi: 'N',
+            dmi_gt_6_weeks: 'N',
+            DMI_ONGOING: 'N',
+            date_of_birth: '01-JAN-2000'
+        };
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
     });
 
     it('Should be eligible if the applicant had no injuries and a DMI that lasted less than 6 weeks and is ongoing', () => {
@@ -489,6 +546,54 @@ describe('checkEligibility', () => {
             ]
         };
         checkEligibility(applicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
+    });
+
+    it('Should be eligible if the applicant selected SEX as incident type AND no eligible injuries', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '17-FEB-2023',
+            is_eligible: 'Y',
+            incident_rep_police: 'Y',
+            residency_09: 'Y',
+            residency_10: 'N',
+            date_time_of_incident: '15-FEB-2023',
+            date_time_pol_first_told: '16-FEB-2023',
+            date_time_of_incident_to: '15-FEB-2023',
+            incident_country: 'england',
+            injury_details_code: 'phyinj-048:phyinj-149',
+            estranged_from_deceased: 'N',
+            relationship_to_deceased: 'parent',
+            pi_type_cause: 'SEX',
+            pi_type_cause_other: 'other',
+            date_of_birth: '01-JAN-2000'
+        };
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
+    });
+
+    it('Should be eligible if the applicant selected SEX and OTHER as incident type AND no eligible injuries', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 2,
+            created_date: '17-FEB-2023',
+            is_eligible: 'Y',
+            incident_rep_police: 'Y',
+            residency_09: 'Y',
+            residency_10: 'N',
+            date_time_of_incident: '15-FEB-2023',
+            date_time_pol_first_told: '16-FEB-2023',
+            date_time_of_incident_to: '15-FEB-2023',
+            incident_country: 'england',
+            injury_details_code: 'phyinj-048:phyinj-149',
+            estranged_from_deceased: 'N',
+            relationship_to_deceased: 'parent',
+            pi_type_cause: 'SEX, OTHER',
+            pi_type_cause_other: 'other',
+            date_of_birth: '01-JAN-2000'
+        };
+        checkEligibility(emptyApplicationData, applicationObject);
         expect(applicationObject.is_eligible).toBe('Y');
     });
 });

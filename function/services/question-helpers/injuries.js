@@ -4,51 +4,18 @@ const invalidInjuryCodes = require('../../constants/ineligible-injury-codes');
 const ApplicationType = require('../../constants/application-type');
 
 /**
- * The applicant is ineligible if only claiming for certain injuries
- *  We skip this check if the claim is a fatality
+ * Checks eligibility based on injury-related rules for Personal Injury (PI) and Period of Abuse (POA) applications.
  *
- * @param {Object} dbApplicationForm - The database application form object that will be updated based on the eligibility rules.
- */
-function checkEligibilityForInvalidInjuries(dbApplicationForm) {
-    const {application_type, injury_details_code, dmi_gt_6_weeks, DMI_ONGOING} =
-        dbApplicationForm || {};
-
-    // Early return if no injury details or irrelevant application type
-    if (
-        !injury_details_code ||
-        !(
-            application_type === ApplicationType.PERSONAL_INJURY ||
-            application_type === ApplicationType.PERIOD_OF_ABUSE
-        )
-    ) {
-        return true;
-    }
-
-    const injuryCodes = injury_details_code.split(':');
-    let hasValidCode = false;
-
-    for (const code of injuryCodes) {
-        if (invalidInjuryCodes.includes(code)) {
-            continue; // Skip invalid codes
-        } else {
-            hasValidCode = true; // Found a valid code
-            break; // Exit the loop since at least one valid code is enough
-        }
-    }
-
-    // Return true if a valid code is found or a DMI that lasted for more than 6 weeks is present, otherwise false
-    return hasValidCode || dmi_gt_6_weeks === 'Y' || DMI_ONGOING === 'Y';
-}
-
-/**
- *   The applicant is ineligible if they didn't have any injuries
- *   We skip this check if the claim is a fatality
+ * Returns false only when a PI/POA applicant has no injuries AND no valid injury codes.
+ * Handles 'SEX' cause + DMI >6wks/ongoing as auto‑eligible.
  *
- * @param {Object} dbApplicationForm - The database application form object that will be updated based on the eligibility rules.
+ * @param {Object} dbApplicationForm - Form values used for eligibility rules.
+ * @returns {boolean} true if eligible under injury rules, otherwise false.
  */
-function checkEligibilityForNoInjuries(dbApplicationForm) {
+function checkEligibilityForInjuries(dbApplicationForm) {
     const {
         application_type,
+        injury_details_code,
         pi_type_cause,
         physical_injuries,
         loss_of_foetus,
@@ -58,21 +25,40 @@ function checkEligibilityForNoInjuries(dbApplicationForm) {
         DMI_ONGOING
     } = dbApplicationForm || {};
 
-    if (
+    const isRelevantApplication =
         application_type === ApplicationType.PERSONAL_INJURY ||
-        application_type === ApplicationType.PERIOD_OF_ABUSE
-    ) {
-        const noInjuries =
-            !pi_type_cause?.includes('SEX') &&
-            physical_injuries === 'N' &&
-            loss_of_foetus === 'N' &&
-            infections === 'N' &&
-            (dmi === 'N' || (dmi === 'Y' && dmi_gt_6_weeks === 'N' && DMI_ONGOING === 'N'));
+        application_type === ApplicationType.PERIOD_OF_ABUSE;
 
-        return !noInjuries;
+    if (
+        !isRelevantApplication ||
+        dmi_gt_6_weeks === 'Y' ||
+        DMI_ONGOING === 'Y' ||
+        pi_type_cause?.includes('SEX')
+    ) {
+        return true;
     }
 
-    return true; // Default eligibility if application type does not match
+    if (injury_details_code) {
+        const hasValidCode = injury_details_code
+            .split(':')
+            .some(code => !invalidInjuryCodes.includes(code));
+
+        return hasValidCode;
+    }
+
+    const hasNoInjuries =
+        physical_injuries === 'N' &&
+        loss_of_foetus === 'N' &&
+        infections === 'N' &&
+        (dmi === 'N' || (dmi === 'Y' && dmi_gt_6_weeks === 'N' && DMI_ONGOING === 'N'));
+
+    if (hasNoInjuries) {
+        return false;
+    }
+
+    return true;
 }
 
-module.exports = {checkEligibilityForNoInjuries, checkEligibilityForInvalidInjuries};
+module.exports = {
+    checkEligibilityForInjuries
+};

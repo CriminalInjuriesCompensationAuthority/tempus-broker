@@ -1,18 +1,14 @@
 'use strict';
 
 const {checkEligibilityPreviousApplications} = require('../question-helpers/previous-application');
-const {
-    checkEligibilityForInvalidInjuries,
-    checkEligibilityForNoInjuries
-} = require('../question-helpers/injuries');
+const {checkEligibilityForInjuries} = require('../question-helpers/injuries');
 const checkGeneralEligibilityRules = require('../question-helpers/general-eligibility-rules');
 
 const INELIGIBLE = 'N';
 
 const eligibilityRules = [
     checkEligibilityPreviousApplications,
-    checkEligibilityForInvalidInjuries,
-    checkEligibilityForNoInjuries,
+    checkEligibilityForInjuries,
     checkGeneralEligibilityRules
 ];
 
@@ -58,13 +54,12 @@ function runEligibilityRulesEngine(applicationData, dbApplicationForm) {
  *
  */
 function setEligibility(applicationData, dbApplicationForm) {
-    let isEligible = runEligibilityRulesEngine(applicationData, dbApplicationForm);
+    const isEligible = runEligibilityRulesEngine(applicationData, dbApplicationForm);
 
     if (!isEligible) {
         // If an ineligibility rule has returned false, the application cannot become eligible
         dbApplicationForm.is_eligible = INELIGIBLE;
-        return;
-    }    
+    }
 }
 
 module.exports = setEligibility;
