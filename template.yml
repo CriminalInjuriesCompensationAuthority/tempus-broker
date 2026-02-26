@@ -61,7 +61,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      Runtime: nodejs22.x
+      Runtime: nodejs24.x
       Environment:
         Variables:
           TEMPUS_QUEUE: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueUrl]
@@ -165,7 +165,7 @@ Resources:
       Description: Dependencies for the tempus broker function.
       ContentUri: lib/.
       CompatibleRuntimes:
-        - nodejs22.x
+        - nodejs24.x
   tempusBrokerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
