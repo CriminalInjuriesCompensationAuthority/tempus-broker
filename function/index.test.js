@@ -460,6 +460,51 @@ describe('handler', () => {
         expect(Object.keys(response)).toContain('applicationPDFDocumentSummaryKey');
     });
 
+    it('Should handle scan job messages correctly', async () => {
+        // Mock environment variables
+        process.env.TEMPUS_QUEUE = 'fake-queue-url';
+        process.env.NODE_ENV = 'test';
+        process.env.TEMPUS_BROKER_SECRET_ARN = 'arn:aws:secretsmanager:eu-west-2:dummy-arn';
+
+        const barcode = 'ABCD9DE400AA787881234567809ADCB-LLLL-028';
+        const fileName = 'review-request-sample.pdf';
+        // Mock SQS service
+        const receiveSQS = jest.fn().mockResolvedValue({
+            Messages: [
+                {
+                    Body: JSON.stringify({
+                        applicationPDFDocumentSummaryKey: `scanned-documents/${fileName}`,
+                        barcode: barcode,
+                        jobType: 'scan'
+                    }),
+                    ReceiptHandle: 'fake-handle'
+                }
+            ]
+        });
+        const deleteSQS = jest.fn();
+        createSqsService.mockReturnValue({receiveSQS, deleteSQS});
+
+        // Mock other services and functions
+        getParameter.mockResolvedValue('fake-bucket-name');
+
+        createDBPool.mockResolvedValue({});
+
+        getSecret.mockResolvedValue(
+            '{"MAINTENANCE_MODE": "false", "TEST_EMAILS": "410581a0-3d5c-4d11-92dd-000000000000@gov.uk"}'
+        );
+
+        const event = {}; // Your mock event
+        const context = {}; // Your mock context
+        const result = await handler(event, context);
+
+        expect(result).toBe('Success!');
+        expect(receiveSQS).toHaveBeenCalled();
+        expect(deleteSQS).toHaveBeenCalledWith({
+            QueueUrl: 'fake-queue-url',
+            ReceiptHandle: 'fake-handle'
+        });
+    });
+
     describe('In maintenance mode', () => {
         let receiveSQS, deleteSQS;
         let event, context;
