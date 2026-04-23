@@ -45,21 +45,62 @@ function handleTempusBrokerMessage(data) {
     return s3Keys;
 }
 
-
-function getAnswerFromThemes (themes, themeId, answerId) {
-    return themes.find(theme => theme.id === themeId)
-        ?.values?.find(answer => answer.id === answerId)
-        ?.value;
+// Determine which KTA job to apply to the received data
+function getJobType(data) {
+    const keys = JSON.parse(data);
+    const jobType = keys.jobType;
+    return jobType;
 }
 
-function getApplicationOrigin(applicationData, TEST_EMAILS = ''){
+function getAnswerFromThemes(themes, themeId, answerId) {
+    return themes
+        .find(theme => theme.id === themeId)
+        ?.values?.find(answer => answer.id === answerId)?.value;
+}
+
+function getApplicationOrigin(applicationData, TEST_EMAILS = '') {
     const emailAddresses = [
-        getAnswerFromThemes(applicationData.themes, 'applicant-details', 'q-applicant-enter-your-email-address'),
-        getAnswerFromThemes(applicationData.themes, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
+        getAnswerFromThemes(
+            applicationData.themes,
+            'applicant-details',
+            'q-applicant-enter-your-email-address'
+        ),
+        getAnswerFromThemes(
+            applicationData.themes,
+            'main-applicant-details',
+            'q-mainapplicant-enter-your-email-address'
+        ),
         getAnswerFromThemes(applicationData.themes, 'rep-details', 'q-rep-email-address')
     ];
 
-    return emailAddresses.some(email => email && TEST_EMAILS.includes(email)) ? 'internal' : 'external';
+    return emailAddresses.some(email => email && TEST_EMAILS.includes(email))
+        ? 'internal'
+        : 'external';
+}
+
+async function processScanJob(message, sessionId, maintenanceMode) {
+    if (maintenanceMode) {
+        logger.info('Scanning traffic received. Maintenance mode is on.');
+        return 'Nothing to process';
+    }
+    const {applicationPDFDocumentSummaryKey, barcode} = JSON.parse(message.Body);
+    const fileName = applicationPDFDocumentSummaryKey.split('/').at(-1);
+    const currentDate = new Date(Date.now());
+    const dateStamp = currentDate.toISOString().split('T')[0];
+    if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
+        logger.info('Call out to KTA SDK');
+        const inputVars = [
+            {Id: 'BARCODE', Value: barcode},
+            {
+                Id: 'BATCH_ID',
+                Value: `Online_${dateStamp}_${100000 + Math.floor(Math.random() * 900000)}-Auto`
+            },
+            {Id: 'DOCUMENT_URL', Value: `postApply\\${fileName}`}
+        ];
+        logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
+
+        await createKtaJob(sessionId, 'Process AWS scanned document', inputVars);
+    }
 }
 
 async function handler(event, context) {
@@ -93,58 +134,76 @@ async function handler(event, context) {
     try {
         logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
-        const {applicationJSONDocumentSummaryKey, applicationPDFDocumentSummaryKey} = handleTempusBrokerMessage(message.Body);
-        const s3ApplicationData = await s3.retrieveObjectFromBucket(
-            bucketName,
-            applicationJSONDocumentSummaryKey
-        );
-        const summaryUrl = `s3://${bucketName}/${applicationPDFDocumentSummaryKey}`;
+        const jobType = getJobType(message.Body);
 
-        const {MAINTENANCE_MODE, TEST_EMAILS} = JSON.parse(await getSecret(process.env.TEMPUS_BROKER_SECRET_ARN));
+        const {MAINTENANCE_MODE, TEST_EMAILS} = JSON.parse(
+            await getSecret(process.env.TEMPUS_BROKER_SECRET_ARN)
+        );
         const maintenanceMode = MAINTENANCE_MODE === 'true';
-        
-        if (maintenanceMode && getApplicationOrigin(s3ApplicationData, TEST_EMAILS) === 'external') {
-            logger.info('External traffic received. Maintenance mode is on.');
-            return 'Nothing to process';
+
+        if (jobType === 'scan') {
+            await processScanJob(message, sessionId, maintenanceMode);
+        } else {
+            const {
+                applicationJSONDocumentSummaryKey,
+                applicationPDFDocumentSummaryKey
+            } = handleTempusBrokerMessage(message.Body);
+            const s3ApplicationData = await s3.retrieveObjectFromBucket(
+                bucketName,
+                applicationJSONDocumentSummaryKey
+            );
+            const summaryUrl = `s3://${bucketName}/${applicationPDFDocumentSummaryKey}`;
+
+            if (
+                maintenanceMode &&
+                getApplicationOrigin(s3ApplicationData, TEST_EMAILS) === 'external'
+            ) {
+                logger.info('External traffic received. Maintenance mode is on.');
+                return 'Nothing to process';
+            }
+
+            logger.info('Mapping application data to Oracle object.');
+            const applicationOracleObject = await mapApplicationDataToOracleObject(
+                s3ApplicationData,
+                applicationFormDefault,
+                addressDetailsDefault
+            );
+
+            logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
+            const applicationFormJson = Object.values(applicationOracleObject)[0][0]
+                .APPLICATION_FORM;
+            const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
+
+            logger.info('Checking application eligibility');
+            setEligibility(s3ApplicationData, applicationFormJson);
+
+            const addressDetailsWithInvoices = addressInvoiceMapper(
+                addressDetailsJson,
+                applicationFormJson
+            );
+            logger.info('Creating Database Pool');
+            dbConn = await createDBPool();
+
+            logger.info('Writing application data into Tariff');
+
+            await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
+            await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
+
+            if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
+                logger.info('Call out to KTA SDK');
+                const inputVars = [
+                    {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
+                    {Id: 'pSUMMARY_URL', Value: summaryUrl}
+                ];
+                logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
+
+                await createKtaJob(
+                    sessionId,
+                    'Case Work - Application for Compensation',
+                    inputVars
+                );
+            }
         }
-
-        logger.info('Mapping application data to Oracle object.');
-        const applicationOracleObject = await mapApplicationDataToOracleObject(
-            s3ApplicationData,
-            applicationFormDefault,
-            addressDetailsDefault
-        );
-
-        logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
-        const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
-        const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
-
-        logger.info('Checking application eligibility');
-        setEligibility(s3ApplicationData, applicationFormJson);
-
-        const addressDetailsWithInvoices = addressInvoiceMapper(
-            addressDetailsJson,
-            applicationFormJson
-        );
-        logger.info('Creating Database Pool');
-        dbConn = await createDBPool();
-
-        logger.info('Writing application data into Tariff');
-
-        await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
-        await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
-
-        if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
-            logger.info('Call out to KTA SDK');
-            const inputVars = [
-                {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
-                {Id: 'pSUMMARY_URL', Value: summaryUrl}
-            ];
-            logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
-
-            await createKtaJob(sessionId, 'Case Work - Application for Compensation', inputVars);
-        }
-
         // Finally delete the consumed message from the Tempus Queue
         const deleteInput = {
             QueueUrl: process.env.TEMPUS_QUEUE,
