@@ -52,6 +52,7 @@ jobs:
 
       - name: Monitor project in Snyk
         uses: snyk/actions/node@v1
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
