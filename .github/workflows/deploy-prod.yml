@@ -49,3 +49,11 @@ jobs:
 
       # deploy
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name tempus-broker --resolve-s3 --capabilities CAPABILITY_IAM --region eu-west-2 --profile assumed-role --parameter-overrides DashboardName=TempusBrokerFunctionDashboard-prod Environment=prod
+
+      - name: Monitor project in Snyk
+        uses: snyk/actions/node@v1
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
