@@ -47,8 +47,7 @@
         "lint:fix": "eslint --fix ."
     },
     "overrides": {
-        "underscore": "1.13.8",
-        "fast-xml-parser": "5.5.7"
+        "underscore": "1.13.8"
     },
     "license": "MIT"
 }
