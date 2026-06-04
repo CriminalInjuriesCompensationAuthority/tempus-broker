@@ -27,6 +27,9 @@ function extractTariffReference(applicationJson) {
 // validate that the response contains JSON and PDF keys only
 function validateS3Keys(keys) {
     Object.values(keys).forEach(value => {
+        if (!value || typeof value !== 'string') {
+            throw new Error('Tempus broker queue message is missing required S3 keys');
+        }
         if (value.endsWith('.json') || value.endsWith('.pdf')) {
             logger.info(`S3 Key received from tempus broker queue: ${value}`);
         } else {
@@ -37,14 +40,23 @@ function validateS3Keys(keys) {
     });
 }
 
-// Parses the data from an event body which has been recieved from the tempus broker queue
+// Parses the data from an event body which has been received from the tempus broker queue
 function handleTempusBrokerMessage(data) {
-    // convert message to JSON - Holds S3 object keys
-    const s3Keys = JSON.parse(data);
-    validateS3Keys(s3Keys);
-    return s3Keys;
-}
+    let messageBody;
+    try {
+        messageBody = JSON.parse(data);
+    } catch (err) {
+        logger.error({err}, 'Failed to parse Tempus broker message body');
+        throw err;
+    }
 
+    const {applicationJSONDocumentSummaryKey, applicationPDFDocumentSummaryKey} = messageBody;
+
+    // Only validate the S3 keys — not the questionnaireId
+    validateS3Keys({applicationJSONDocumentSummaryKey, applicationPDFDocumentSummaryKey});
+
+    return {applicationJSONDocumentSummaryKey, applicationPDFDocumentSummaryKey};
+}
 function getAnswerFromThemes(themes, themeId, answerId) {
     return themes
         .find(theme => theme.id === themeId)
@@ -98,19 +110,32 @@ async function handler(event, context) {
     logger.info('Message received from SQS queue: ', message);
 
     let dbConn;
+    let questionnaireId;
+    let caseReference;
 
     try {
         logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
+
         const {
             applicationJSONDocumentSummaryKey,
             applicationPDFDocumentSummaryKey
         } = handleTempusBrokerMessage(message.Body);
+
+        try {
+            questionnaireId = JSON.parse(message.Body).questionnaireId;
+        } catch (err) {
+            logger.warn({err}, 'Failed to extract questionnaireId from message body');
+        }
+
         const s3ApplicationData = await s3.retrieveObjectFromBucket(
             bucketName,
             applicationJSONDocumentSummaryKey
         );
         const summaryUrl = `s3://${bucketName}/${applicationPDFDocumentSummaryKey}`;
+        caseReference = s3ApplicationData.meta.caseReference;
+
+        logger.info({questionnaireId, caseReference}, 'Processing Tempus broker message');
 
         const {MAINTENANCE_MODE, TEST_EMAILS} = JSON.parse(
             await getSecret(process.env.TEMPUS_BROKER_SECRET_ARN)
@@ -121,43 +146,50 @@ async function handler(event, context) {
             maintenanceMode &&
             getApplicationOrigin(s3ApplicationData, TEST_EMAILS) === 'external'
         ) {
-            logger.info('External traffic received. Maintenance mode is on.');
+            logger.info(
+                {questionnaireId, caseReference},
+                'External traffic received. Maintenance mode is on.'
+            );
             return 'Nothing to process';
         }
 
-        logger.info('Mapping application data to Oracle object.');
+        logger.info({questionnaireId, caseReference}, 'Mapping application data to Oracle object.');
         const applicationOracleObject = await mapApplicationDataToOracleObject(
             s3ApplicationData,
             applicationFormDefault,
             addressDetailsDefault
         );
 
-        logger.info(`Successfully mapped to Oracle object: ${applicationOracleObject}`);
+        logger.info({questionnaireId, caseReference}, `Successfully mapped to Oracle object`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
-        logger.info('Checking application eligibility');
+        logger.info({questionnaireId, caseReference}, 'Checking application eligibility');
         setEligibility(s3ApplicationData, applicationFormJson);
 
         const addressDetailsWithInvoices = addressInvoiceMapper(
             addressDetailsJson,
             applicationFormJson
         );
-        logger.info('Creating Database Pool');
+        logger.info({questionnaireId, caseReference}, 'Creating Database Pool');
         dbConn = await createDBPool();
 
-        logger.info('Writing application data into Tariff');
+        logger.info({questionnaireId, caseReference}, 'Writing application data into Tariff');
 
         await insertIntoTempus(applicationFormJson, 'APPLICATION_FORM');
         await insertIntoTempus(addressDetailsWithInvoices, 'ADDRESS_DETAILS');
 
         if (!(process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test')) {
-            logger.info('Call out to KTA SDK');
+            logger.info({questionnaireId, caseReference}, 'Call out to KTA SDK');
+            const tariffReference = extractTariffReference(s3ApplicationData);
             const inputVars = [
-                {Id: 'pTARIFF_REFERENCE', Value: extractTariffReference(s3ApplicationData)},
+                {Id: 'pTARIFF_REFERENCE', Value: tariffReference},
                 {Id: 'pSUMMARY_URL', Value: summaryUrl}
             ];
-            logger.info(`InputVars: ${JSON.stringify(inputVars)}`);
+            logger.info(
+                {questionnaireId, caseReference, tariffReference},
+                `InputVars: ${JSON.stringify(inputVars)}`
+            );
 
             await createKtaJob(sessionId, 'Case Work - Application for Compensation', inputVars);
         }
@@ -168,8 +200,12 @@ async function handler(event, context) {
             ReceiptHandle: message.ReceiptHandle
         };
         sqsService.deleteSQS(deleteInput);
+        logger.info({questionnaireId, caseReference}, 'Tempus broker processing complete');
     } catch (error) {
-        logger.error(error);
+        logger.error(
+            {err: error, questionnaireId, caseReference},
+            'Tempus broker processing failed'
+        );
         throw error;
     } finally {
         if (dbConn) {
