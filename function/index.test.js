@@ -1,6 +1,7 @@
 'use strict';
 
 const oracledb = require('oracledb');
+const fs = require('fs');
 const s3 = require('./services/s3/index');
 const createSqsService = require('./services/sqs/index');
 const mapApplicationDataToOracleObject = require('./services/application-mapper/index');
@@ -9,9 +10,6 @@ const insertIntoTempus = require('./db/index');
 const getParameter = require('./services/ssm');
 const {handler, handleTempusBrokerMessage} = require('./index');
 const getSecret = require('./services/secret-manager/index');
-const cloudWatch = require('./services/cloudwatch/index');
-const kta = require('./services/kta/index');
-const fs = require('fs');
 
 jest.mock('./services/s3/index');
 jest.mock('./services/sqs/index');
@@ -61,7 +59,8 @@ describe('handler', () => {
             Messages: [
                 {
                     Body: JSON.stringify({
-                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json',
+                        applicationPDFDocumentSummaryKey: 'sample.pdf'
                     }),
                     ReceiptHandle: 'fake-handle'
                 }
@@ -145,7 +144,8 @@ describe('handler', () => {
             Messages: [
                 {
                     Body: JSON.stringify({
-                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json',
+                        applicationPDFDocumentSummaryKey: 'sample.pdf'
                     }),
                     ReceiptHandle: 'fake-handle'
                 }
@@ -230,7 +230,8 @@ describe('handler', () => {
             Messages: [
                 {
                     Body: JSON.stringify({
-                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json',
+                        applicationPDFDocumentSummaryKey: 'sample.pdf'
                     }),
                     ReceiptHandle: 'fake-handle'
                 }
@@ -340,7 +341,8 @@ describe('handler', () => {
             Messages: [
                 {
                     Body: JSON.stringify({
-                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                        applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json',
+                        applicationPDFDocumentSummaryKey: 'sample.pdf'
                     }),
                     ReceiptHandle: 'fake-handle'
                 }
@@ -461,8 +463,10 @@ describe('handler', () => {
     });
 
     describe('In maintenance mode', () => {
-        let receiveSQS, deleteSQS;
-        let event, context;
+        let receiveSQS;
+        let deleteSQS;
+        let event;
+        let context;
         let s3applicationData;
 
         beforeEach(() => {
@@ -477,7 +481,8 @@ describe('handler', () => {
                 Messages: [
                     {
                         Body: JSON.stringify({
-                            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json'
+                            applicationJSONDocumentSummaryKey: 'check-your-answers-sample.json',
+                            applicationPDFDocumentSummaryKey: 'sample.pdf'
                         }),
                         ReceiptHandle: 'fake-handle'
                     }

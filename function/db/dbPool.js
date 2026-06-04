@@ -15,7 +15,7 @@ async function createDBPool() {
 
     const connectString = `${tariffSecret.host}/${tariffSecret.dbname}`;
 
-    logger.info(`Connecting to Oracle Database on: ${connectString}}`);
+    logger.info('Connecting to Oracle Database');
 
     await oracledb.createPool({
         user: tariffSecret.username,
