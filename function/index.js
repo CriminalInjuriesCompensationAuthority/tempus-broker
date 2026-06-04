@@ -45,21 +45,30 @@ function handleTempusBrokerMessage(data) {
     return s3Keys;
 }
 
-
-function getAnswerFromThemes (themes, themeId, answerId) {
-    return themes.find(theme => theme.id === themeId)
-        ?.values?.find(answer => answer.id === answerId)
-        ?.value;
+function getAnswerFromThemes(themes, themeId, answerId) {
+    return themes
+        .find(theme => theme.id === themeId)
+        ?.values?.find(answer => answer.id === answerId)?.value;
 }
 
-function getApplicationOrigin(applicationData, TEST_EMAILS = ''){
+function getApplicationOrigin(applicationData, TEST_EMAILS = '') {
     const emailAddresses = [
-        getAnswerFromThemes(applicationData.themes, 'applicant-details', 'q-applicant-enter-your-email-address'),
-        getAnswerFromThemes(applicationData.themes, 'main-applicant-details', 'q-mainapplicant-enter-your-email-address'),
+        getAnswerFromThemes(
+            applicationData.themes,
+            'applicant-details',
+            'q-applicant-enter-your-email-address'
+        ),
+        getAnswerFromThemes(
+            applicationData.themes,
+            'main-applicant-details',
+            'q-mainapplicant-enter-your-email-address'
+        ),
         getAnswerFromThemes(applicationData.themes, 'rep-details', 'q-rep-email-address')
     ];
 
-    return emailAddresses.some(email => email && TEST_EMAILS.includes(email)) ? 'internal' : 'external';
+    return emailAddresses.some(email => email && TEST_EMAILS.includes(email))
+        ? 'internal'
+        : 'external';
 }
 
 async function handler(event, context) {
@@ -93,17 +102,25 @@ async function handler(event, context) {
     try {
         logger.info('Retrieving data from bucket.');
         const bucketName = await getParameter('kta-bucket-name');
-        const {applicationJSONDocumentSummaryKey, applicationPDFDocumentSummaryKey} = handleTempusBrokerMessage(message.Body);
+        const {
+            applicationJSONDocumentSummaryKey,
+            applicationPDFDocumentSummaryKey
+        } = handleTempusBrokerMessage(message.Body);
         const s3ApplicationData = await s3.retrieveObjectFromBucket(
             bucketName,
             applicationJSONDocumentSummaryKey
         );
         const summaryUrl = `s3://${bucketName}/${applicationPDFDocumentSummaryKey}`;
 
-        const {MAINTENANCE_MODE, TEST_EMAILS} = JSON.parse(await getSecret(process.env.TEMPUS_BROKER_SECRET_ARN));
+        const {MAINTENANCE_MODE, TEST_EMAILS} = JSON.parse(
+            await getSecret(process.env.TEMPUS_BROKER_SECRET_ARN)
+        );
         const maintenanceMode = MAINTENANCE_MODE === 'true';
-        
-        if (maintenanceMode && getApplicationOrigin(s3ApplicationData, TEST_EMAILS) === 'external') {
+
+        if (
+            maintenanceMode &&
+            getApplicationOrigin(s3ApplicationData, TEST_EMAILS) === 'external'
+        ) {
             logger.info('External traffic received. Maintenance mode is on.');
             return 'Nothing to process';
         }
