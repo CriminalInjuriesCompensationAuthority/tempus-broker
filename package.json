@@ -1,6 +1,6 @@
 {
     "name": "tempus-broker",
-    "version": "1.4.9",
+    "version": "1.4.10",
     "engines": {
         "npm": ">=11.6.2",
         "node": ">=24.13.0"
