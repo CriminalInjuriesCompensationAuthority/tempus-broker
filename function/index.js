@@ -160,10 +160,7 @@ async function handler(event, context) {
             addressDetailsDefault
         );
 
-        logger.info(
-            {questionnaireId, caseReference, applicationOracleObject},
-            `Successfully mapped to Oracle object`
-        );
+        logger.info({questionnaireId, caseReference}, `Successfully mapped to Oracle object`);
         const applicationFormJson = Object.values(applicationOracleObject)[0][0].APPLICATION_FORM;
         const addressDetailsJson = Object.values(applicationOracleObject)[0][1].ADDRESS_DETAILS;
 
