@@ -101,7 +101,7 @@ describe('checkEligibility', () => {
         expect(applicationObject.is_eligible).toBe('N');
     });
 
-    it('Should be ineligible when the crime was reported 48 hours after the crime happened', () => {
+    it('Should be eligible when the crime was reported more than 48 hours after the crime happened', () => {
         const applicationObject = {
             case_reference_number: '027906',
             created_date: '02-JAN-2023',
@@ -111,7 +111,7 @@ describe('checkEligibility', () => {
             date_of_birth: '01-JAN-2000'
         };
         checkEligibility(emptyApplicationData, applicationObject);
-        expect(applicationObject.is_eligible).toBe('N');
+        expect(applicationObject.is_eligible).toBe('Y');
     });
 
     it('Should be ineligible if the crime happened 2 years before the submitted date', () => {
@@ -133,6 +133,19 @@ describe('checkEligibility', () => {
             is_eligible: 'Y',
             date_time_of_incident: '03-JAN-2015',
             date_of_birth: '01-JAN-2015'
+        };
+        checkEligibility(emptyApplicationData, applicationObject);
+        expect(applicationObject.is_eligible).toBe('Y');
+    });
+
+    it('Should be eligible if the crime happened 2 years before the submitted date and the applicant is over 20 years old but the claim is a period of abuse', () => {
+        const applicationObject = {
+            case_reference_number: '027906',
+            application_type: 3,
+            created_date: '28-APR-2024',
+            is_eligible: 'Y',
+            date_time_of_incident: '03-JAN-2000',
+            date_of_birth: '01-JAN-2000'
         };
         checkEligibility(emptyApplicationData, applicationObject);
         expect(applicationObject.is_eligible).toBe('Y');
