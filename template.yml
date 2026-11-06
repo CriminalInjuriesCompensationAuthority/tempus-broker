@@ -21,7 +21,6 @@ Parameters:
     Default: TempusBrokerFunctionDashboard
     Description: Unique name for the CloudWatch Dashboard
 
-
 Mappings:
   EnvironmentMap:
     dev:
@@ -65,7 +64,8 @@ Resources:
       Environment:
         Variables:
           TEMPUS_QUEUE: !FindInMap [EnvironmentMap, !Ref Environment, TempusQueueUrl]
-          TEMPUS_BROKER_SECRET_ARN: !FindInMap [EnvironmentMap, !Ref Environment, TempusBrokerSecretArn]
+          TEMPUS_BROKER_SECRET_ARN:
+            !FindInMap [EnvironmentMap, !Ref Environment, TempusBrokerSecretArn]
       CodeUri: function/.
       Description: Call the AWS Lambda API
       Timeout: 30
@@ -74,18 +74,18 @@ Resources:
         ScheduleMidnightToSeven: # Covers 00:00 till 19:00
           Type: Schedule
           Properties:
-            Schedule: 'cron(0-59 0-17 ? * * *)' # 00:00 - 17:59 UTC / 01:00 - 18:59 BST
-            # Schedule: 'cron(0-59 0-18 ? * * *)' # 00:00 - 18:59 GMT
+            # Schedule: 'cron(0-59 0-17 ? * * *)' # 00:00 - 17:59 UTC / 01:00 - 18:59 BST
+            Schedule: 'cron(0-59 0-18 ? * * *)' # 00:00 - 18:59 GMT
         ScheduleHalfElevenToMidnight: # Covers 11:30 till 00:00
           Type: Schedule
           Properties:
-            Schedule: 'cron(30-59 22 ? * * *)' # 22:30 - 22:59 UTC / 23:30 - 23:59 BST
-            # Schedule: 'cron(30-59 23 ? * * *)' # 23:30 - 23:59 GMT
+            # Schedule: 'cron(30-59 22 ? * * *)' # 22:30 - 22:59 UTC / 23:30 - 23:59 BST
+            Schedule: 'cron(30-59 23 ? * * *)' # 23:30 - 23:59 GMT
         ScheduleDaylightSavingsHour: # Covers daylight savings discrepancy
-            # Third schedule is not needed whilst using GMT
-          Type: Schedule
-          Properties:
-            Schedule: 'cron(0-59 23 ? * * *)' # 23:00 - 23:59 UTC / 00:00 - 00:59 BST
+          # Third schedule is not needed whilst using GMT
+          # Type: Schedule
+          # Properties:
+          #   Schedule: 'cron(0-59 23 ? * * *)' # 23:00 - 23:59 UTC / 00:00 - 00:59 BST
         Schedule24Hour: # Runs every minute of the day - no schedule
           Type: Schedule
           Properties:
@@ -135,16 +135,16 @@ Resources:
             - Sid: TempusBrokerFunctionCloudWatchPolicy
               Effect: Allow
               Action:
-                  - cloudwatch:PutMetricData
+                - cloudwatch:PutMetricData
               Resource: '*'
             - Sid: CloudWatchDashboardPolicy
               Effect: Allow
               Action:
-                  - cloudwatch:PutDashboard
-                  - cloudwatch:GetDashboard
-                  - cloudwatch:ListDashboards
-                  - cloudwatch:DeleteDashboards
-              Resource: "*"
+                - cloudwatch:PutDashboard
+                - cloudwatch:GetDashboard
+                - cloudwatch:ListDashboards
+                - cloudwatch:DeleteDashboards
+              Resource: '*'
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
