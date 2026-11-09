@@ -71,7 +71,7 @@ Resources:
       Timeout: 30
       # Trigger
       Events:
-        ScheduleMidnightToSeven:
+        ScheduleV2MidnightToSeven:
           Type: ScheduleV2
           Properties:
             ScheduleExpression: 'cron(* 0-18 ? * * *)'
@@ -79,7 +79,7 @@ Resources:
             FlexibleTimeWindow:
               Mode: OFF
 
-        ScheduleHalfElevenToMidnight:
+        ScheduleV2HalfElevenToMidnight:
           Type: ScheduleV2
           Properties:
             ScheduleExpression: 'cron(30-59 23 ? * * *)'
@@ -87,7 +87,7 @@ Resources:
             FlexibleTimeWindow:
               Mode: OFF
 
-        Schedule24Hour:
+        ScheduleV224Hour:
           Type: ScheduleV2
           Properties:
             ScheduleExpression: 'rate(1 minute)'
